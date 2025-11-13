@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zp.haoke</groupId>
+        <artifactId>haoke-dubbo-server-house-resource</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>haoke-dubbo-server-house-resource-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>haoke-dubbo-server-house-resource-service</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.zp.haoke</groupId>
+            <artifactId>haoke-common</artifactId>
+        </dependency>
+        <!-- SpringDoc OpenAPI 核心依赖 -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
