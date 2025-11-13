@@ -21,6 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <haoke.version>0.0.1-SNAPSHOT</haoke.version>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <mysql.version>8.3.0</mysql.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
@@ -33,6 +34,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
     <dependencyManagement>

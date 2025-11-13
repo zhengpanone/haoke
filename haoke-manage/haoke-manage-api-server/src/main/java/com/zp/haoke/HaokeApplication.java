@@ -4,6 +4,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author : zhengpanone
+ * Date : 2025/11/24 19:29
+ * Version : v1.0.0
+ * Description:
+ */
 @SpringBootApplication
 @MapperScan("com.zp.haoke.house.mapper")
 public class HaokeApplication {
