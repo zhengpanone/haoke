@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zp.haoke</groupId>
+    <artifactId>haoke_manage</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>haoke_manage</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>haoke_manage_api_server</module>
+        <module>haoke_manage_dubbo_server</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>3.2.2</spring-boot.version>
+        <apache-commons-lang3>3.16.0</apache-commons-lang3>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache-commons-lang3}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>
