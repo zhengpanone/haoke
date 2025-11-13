@@ -23,10 +23,32 @@ public interface HouseResourceConvert {
 
     HouseResourceVO toVO(HouseResourcePO po);
 
+    @Mapping(target = "houseResources", source = "po")
+    @Mapping(target = "estate", ignore = true)
+    @Mapping(target = "images", source = "pic", qualifiedByName = "mapImages")
     @Mapping(target = "facilities", source = "facilities", qualifiedByName = "mapFacilities")
     HouseResourceDetailVO toDetailVO(HouseResourcePO po);
 
     List<HouseResourceVO> toDTOList(List<HouseResourcePO> list);
+
+    @Named("mapImages")
+    default List<HouseResourceDetailVO.ImageVO> mapImages(String pic) {
+        if (pic == null || pic.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        // 将逗号分隔的图片URL字符串转换为ImageVO列表
+        String[] urls = pic.split(",");
+        List<HouseResourceDetailVO.ImageVO> imageList = new ArrayList<>();
+        for (int i = 0; i < urls.length; i++) {
+            if (!urls[i].trim().isEmpty()) {
+                HouseResourceDetailVO.ImageVO imageVO = new HouseResourceDetailVO.ImageVO();
+                imageVO.setUrl(urls[i].trim());
+                imageVO.setSortOrder(i + 1);
+                imageList.add(imageVO);
+            }
+        }
+        return imageList;
+    }
 
     @Named("mapFacilities")
     default List<HouseResourceDetailVO.FacilityVO> mapFacilities(String facilities) {
