@@ -20,9 +20,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("estate")
-@Schema(title = "Estate", description = "楼盘数据表")
-public class EstatePO implements Serializable {
+@TableName("house_estate")
+@Schema(title = "HouseEstate", description = "楼盘数据表")
+public class HouseEstatePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

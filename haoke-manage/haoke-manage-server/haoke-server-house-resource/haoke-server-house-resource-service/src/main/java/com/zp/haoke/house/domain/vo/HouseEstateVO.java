@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Schema(description = "楼盘响应VO")
-public class EstateVO {
+public class HouseEstateVO {
     
     @Schema(description = "楼盘ID", example = "1")
     private Long id;

@@ -1,5 +1,5 @@
 -- 楼盘数据表
-CREATE TABLE `estate`
+CREATE TABLE `house_estate`
 (
     id               varchar(32) PRIMARY KEY COMMENT '楼盘id',
     name             VARCHAR(10) COMMENT '楼盘名称',

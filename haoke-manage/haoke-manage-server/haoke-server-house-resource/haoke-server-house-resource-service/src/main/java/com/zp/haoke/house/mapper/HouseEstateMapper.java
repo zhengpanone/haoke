@@ -1,7 +1,7 @@
 package com.zp.haoke.house.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zp.haoke.house.domain.po.EstatePO;
+import com.zp.haoke.house.domain.po.HouseEstatePO;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.zp.haoke.house.domain.po.EstatePO;
  * @author zhengpanone
  * @since 2025-11-14
  */
-public interface EstateMapper extends BaseMapper<EstatePO> {
+public interface HouseEstateMapper extends BaseMapper<HouseEstatePO> {
 
 }

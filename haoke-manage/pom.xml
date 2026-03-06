@@ -23,7 +23,7 @@
         <haoke.version>0.0.1-SNAPSHOT</haoke.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <mysql.version>8.3.0</mysql.version>
-        <mybatis-plus.version>3.0.5</mybatis-plus.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <spring-boot.version>3.2.2</spring-boot.version>
         <apache-commons-lang3>3.16.0</apache-commons-lang3>
         <springdoc.version>2.3.0</springdoc.version>
@@ -81,7 +81,7 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <!-- MapStruct 运行时依赖 -->

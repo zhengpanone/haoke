@@ -15,7 +15,7 @@ public class HouseResourceVO {
     private String title;
 
     @Schema(description = "楼盘信息")
-    private EstateVO estate;
+    private HouseEstateVO estate;
 
     @Schema(description = "楼号", example = "A栋")
     private String buildingNum;

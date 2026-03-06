@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:30306/haoke?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+  # flyway
+  flyway:
+    locations: classpath:db/migration # 迁移脚本的位置
+    baseline-on-migrate: true # 在没有元数据表的情况下，针对非空Schema执行迁移时是否自动调用基线
+    enabled: true
+    sql-migration-prefix: V
+    sql-migration-suffixes: .sql

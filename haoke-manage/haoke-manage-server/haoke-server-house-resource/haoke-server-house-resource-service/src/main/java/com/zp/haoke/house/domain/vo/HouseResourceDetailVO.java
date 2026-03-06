@@ -13,7 +13,7 @@ public class HouseResourceDetailVO {
     private HouseResourceVO houseResources;
 
     @Schema(description = "关联的楼盘信息")
-    private EstateVO estate;
+    private HouseEstateVO estate;
 
     @Schema(description = "房源图片列表")
     private List<ImageVO> images;
