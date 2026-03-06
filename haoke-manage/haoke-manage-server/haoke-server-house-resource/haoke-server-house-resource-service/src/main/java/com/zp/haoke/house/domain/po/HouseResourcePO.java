@@ -3,6 +3,8 @@ package com.zp.haoke.house.domain.po;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -25,6 +27,7 @@ import lombok.Setter;
 @Schema(title = "HouseResource对象", description = "房源数据表")
 public class HouseResourcePO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     /**
      * 房源id
@@ -141,11 +144,11 @@ public class HouseResourcePO implements Serializable {
     /**
      *创建时间
      */
-    @TableField("created")
-    private LocalDateTime created;
+    @TableField("create_time")
+    private LocalDateTime createTime;
     /**
      *更新时间
      */
-    @TableField("updated")
-    private LocalDateTime updated;
+    @TableField("update_time")
+    private LocalDateTime update_time;
 }

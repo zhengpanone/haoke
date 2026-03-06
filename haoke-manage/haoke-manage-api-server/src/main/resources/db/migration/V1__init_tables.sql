@@ -1,5 +1,5 @@
 -- 楼盘数据表
-CREATE TABLE `house_estate`
+CREATE TABLE IF NOT EXISTS `house_estate`
 (
     id               varchar(32) PRIMARY KEY COMMENT '楼盘id',
     name             VARCHAR(10) COMMENT '楼盘名称',
@@ -12,12 +12,13 @@ CREATE TABLE `house_estate`
     property_cost    VARCHAR(10) COMMENT '物业费',
     property_company VARCHAR(20) COMMENT '物业公司',
     developers       VARCHAR(20) COMMENT '开发商',
-    created          DATETIME COMMENT '创建时间',
-    updated          DATETIME COMMENT '更新时间'
-) COMMENT ='楼盘数据表';
+    create_time      DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='楼盘数据表';
 
 -- 房源数据表
-CREATE TABLE `house_resources`
+CREATE TABLE IF NOT EXISTS `house_resource`
 (
     id                 varchar(32) PRIMARY KEY COMMENT '房源id',
     title              VARCHAR(20) COMMENT '房源标题，如：南北通透，两室朝南，主卧带阳台',
@@ -40,8 +41,9 @@ CREATE TABLE `house_resources`
     contact            varchar(10) COMMENT '联系人',
     mobile             varchar(11) comment '手机号',
     time               tinyint(1) comment '看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天',
-    property_cost varchar(10) comment '物业费',
-    created          DATETIME COMMENT '创建时间',
-    updated          DATETIME COMMENT '更新时间'
+    property_cost      varchar(10) comment '物业费',
+    create_time        DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time        DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 
-) COMMENT '房源数据表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT '房源数据表';

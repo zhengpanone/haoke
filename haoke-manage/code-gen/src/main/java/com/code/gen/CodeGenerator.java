@@ -18,7 +18,7 @@ public class CodeGenerator {
         String password = "root";
         String parentPackageName = "com.zp.haoke";
         String moduleName = "house";
-        List<String> tableList = new ArrayList<>(List.of("estate", "house_resources"));
+        List<String> tableList = new ArrayList<>(List.of("estate", "house_resource"));
 
         // 项目配置
         String projectPath = System.getProperty("user.dir");

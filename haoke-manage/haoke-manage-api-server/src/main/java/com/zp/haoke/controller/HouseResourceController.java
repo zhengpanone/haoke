@@ -1,7 +1,9 @@
 package com.zp.haoke.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zp.haoke.framework.core.domain.response.R;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
+import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
 import com.zp.haoke.house.domain.vo.HouseResourceDetailVO;
 import com.zp.haoke.house.domain.vo.HouseResourceVO;
 import com.zp.haoke.house.service.IHouseResourceService;
@@ -15,6 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author : zhengpanone
@@ -36,7 +40,7 @@ public class HouseResourceController {
             @Parameter(description = "房源创建请求参数", required = true)
             @Valid @RequestBody HouseResourceCreateDTO createDTO) {
         houseResourceService.saveHouseResource(createDTO);
-        return R.ok(null);
+        return R.ok();
     }
 
     @Operation(summary = "获取房源详情", description = "根据ID获取房源详细信息")
@@ -48,8 +52,23 @@ public class HouseResourceController {
     @GetMapping("/{id}")
     public R<HouseResourceDetailVO> getById(
             @Parameter(description = "房源ID", required = true, example = "1")
-            @PathVariable Long id) {
-        // 业务逻辑
-        return R.ok(null);
+            @PathVariable String id) {
+        return R.ok(houseResourceService.queryById(id));
+    }
+
+    @Operation(summary = "分页查看房源列表", description = "获取房源列表")
+    @GetMapping("/list")
+    public R<List<HouseResourceVO>> queryHouseResourceList(@RequestParam(name = "currentPage", defaultValue = "1") int pageNum,
+                                                           @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+        IPage<HouseResourceVO> pag = houseResourceService.queryPageList();
+        return R.ok(pag.getRecords());
+    }
+
+    @Operation(summary = "更新房源", description = "更新房源信息")
+    @PutMapping("/update")
+    public R<Void> updateHouseResource(@RequestBody HouseResourceUpdateDTO updateDTO) {
+        boolean res = houseResourceService.updateById(updateDTO);
+        return R.ok();
+
     }
 }

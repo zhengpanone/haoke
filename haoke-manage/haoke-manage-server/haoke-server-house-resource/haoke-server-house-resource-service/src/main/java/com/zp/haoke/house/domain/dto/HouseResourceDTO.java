@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@TableName("house_resources")
+@TableName("house_resource")
 @Schema(title = "HouseResources对象", description = "房源数据表")
 public class HouseResourceDTO implements Serializable {
 

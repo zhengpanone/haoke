@@ -3,6 +3,7 @@ package com.zp.haoke.house.domain.po;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -70,11 +71,14 @@ public class HouseEstatePO implements Serializable {
     @TableField("developers")
     private String developers;
 
-    @Schema(description = "创建时间")
-    @TableField("created")
-    private LocalDateTime created;
-
-    @Schema(description = "更新时间")
-    @TableField("updated")
-    private LocalDateTime updated;
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    @TableField("update_time")
+    private LocalDateTime update_time;
 }

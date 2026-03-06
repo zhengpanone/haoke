@@ -43,7 +43,7 @@
 //                    .pathInfo(getPathInfo(projectPath, moduleName));
 //        })
 //        .strategyConfig(builder -> {
-//            builder.addInclude("estate", "house_resources")
+//            builder.addInclude("estate", "house_resource")
 //                    .addTablePrefix("t_", "c_")
 //
 //                    // Entity配置 - DDD领域模型

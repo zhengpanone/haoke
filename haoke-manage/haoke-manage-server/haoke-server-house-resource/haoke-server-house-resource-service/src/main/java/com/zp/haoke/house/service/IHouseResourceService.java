@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
 import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
 import com.zp.haoke.house.domain.po.HouseResourcePO;
+import com.zp.haoke.house.domain.vo.HouseResourceDetailVO;
 import com.zp.haoke.house.domain.vo.HouseResourceVO;
 import jakarta.validation.Valid;
 
@@ -18,7 +19,7 @@ public interface IHouseResourceService extends IService<HouseResourcePO> {
      */
     int saveHouseResource(@Valid HouseResourceCreateDTO houseResourceCreateDTO);
 
-    HouseResourceVO queryById(String id);
+    HouseResourceDetailVO queryById(String id);
 
     IPage<HouseResourceVO> queryPageList();
 
