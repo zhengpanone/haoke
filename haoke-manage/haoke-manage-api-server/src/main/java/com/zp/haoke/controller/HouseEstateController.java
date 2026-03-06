@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2025-11-14
  */
 @RestController
-@RequestMapping("/house/estateEntity")
-public class EstateController {
+@RequestMapping("/house/estate")
+public class HouseEstateController {
 
 }

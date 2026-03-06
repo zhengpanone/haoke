@@ -1,0 +1,101 @@
+---
+# Namespace 用于隔离不同应用的资源
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spring-app # 当前应用所在命名空间
+
+---
+# Deployment 用于管理 Pod（副本、滚动更新、自动恢复）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haoke-manage-api-server
+  namespace: spring-app
+  labels:
+    app: haoke-manage-api-server
+spec:
+  replicas: 1 # Pod 副本数量
+  # Deployment 用该 selector 找到它管理的 Pod
+  selector:
+    matchLabels:
+      app: haoke-manage-api-server
+
+  template:
+    metadata:
+      labels:
+        app: haoke-manage-api-server # Pod 标签（Service 依赖这个标签）
+    spec:
+      containers:
+        - name: haoke-manage-api-server
+          # 镜像地址
+          image: localhost:32000/haoke-manage-api-server:v1.0.0
+          # 每次启动都检查是否有新镜像
+          imagePullPolicy: Always
+          # 容器内部端口
+          ports:
+            - containerPort: 8080
+          # 资源限制
+          resources:
+            requests:
+              cpu: "200m" # 最少需要 0.2 CPU
+              memory: "256Mi" # 最少 256MB
+            limits:
+              cpu: "1" # 最多 1 CPU
+              memory: "512Mi" # 最多 512MB
+          # 就绪检查（readiness）
+          # Pod 是否可以接收流量
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          # 存活检查（liveness）
+          # 如果失败 Kubernetes 会自动重启
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+---
+# Service Pod 的稳定访问入口（负载均衡）
+apiVersion: v1
+kind: Service
+metadata:
+  name: haoke-manage-api-server
+  namespace: spring-app
+  labels:
+    app: haoke-manage-api-server
+spec:
+  type: NodePort
+  # Service 通过 label 找到 Pod
+  selector:
+    app: haoke-manage-api-server
+  ports:
+    - name: http
+      port: 8080  # Service 对外端口
+      targetPort: 8080 # Pod 容器端口
+      nodePort: 30380
+
+---
+# 4. Ingress 集群外部访问入口（HTTP网关）
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: haoke-manage-api-server
+  namespace: spring-app
+spec:
+  rules:
+    - host: haoke.local # 访问域名
+      http:
+        paths:
+          - path: / # 路径匹配
+            pathType: Prefix
+            backend:
+              service:
+                name: haoke-manage-api-server
+                port:
+                  number: 8080 # Service 端口
