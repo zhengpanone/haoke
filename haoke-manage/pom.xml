@@ -70,6 +70,16 @@
                 <version>${haoke.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.zp.haoke</groupId>
+                <artifactId>haoke-server-auth-interface</artifactId>
+                <version>${haoke.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zp.haoke</groupId>
+                <artifactId>haoke-server-auth-service</artifactId>
+                <version>${haoke.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>

@@ -1,4 +1,4 @@
-package com.zp.haoke.controller;
+package com.zp.haoke.controller.house;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;

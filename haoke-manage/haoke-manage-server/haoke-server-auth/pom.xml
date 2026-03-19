@@ -8,32 +8,20 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>haoke-server-house-resource</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>haoke-server-auth</artifactId>
     <packaging>pom</packaging>
-    <name>haoke-server-house-resource</name>
-    <description>房源服务</description>
+    <name>${project.artifactId}</name>
 
     <modules>
-<!--        <module>haoke-server-house-resource-interface</module>-->
-        <module>haoke-server-house-resource-service</module>
+<!--        <module>haoke-server-auth-interface</module>-->
+        <module>haoke-server-auth-service</module>
     </modules>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <!-- 传递依赖-->
-            <optional>true</optional>
-        </dependency>
+
     </dependencies>
 
 </project>

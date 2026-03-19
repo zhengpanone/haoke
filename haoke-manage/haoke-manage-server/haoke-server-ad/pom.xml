@@ -9,12 +9,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>haoke-server-ad</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>haoke-server-ad</name>
 
     <modules>
-        <module>haoke-server-ad-interface</module>
+<!--        <module>haoke-server-ad-interface</module>-->
         <module>haoke-server-ad-service</module>
     </modules>
     <properties>

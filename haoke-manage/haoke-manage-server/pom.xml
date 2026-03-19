@@ -15,6 +15,7 @@
 
     <modules>
         <module>haoke-server-ad</module>
+        <module>haoke-server-auth</module>
         <module>haoke-server-commen</module>
         <module>haoke-server-house-resource</module>
     </modules>
