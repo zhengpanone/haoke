@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Description:
  */
 @SpringBootApplication
-@MapperScan("com.zp.haoke.house.mapper")
+@MapperScan("com.zp.haoke.*.mapper")
 public class HaokeApplication {
     public static void main(String[] args) {
         SpringApplication.run(HaokeApplication.class, args);

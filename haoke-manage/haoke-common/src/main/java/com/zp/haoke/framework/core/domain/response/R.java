@@ -1,8 +1,10 @@
 package com.zp.haoke.framework.core.domain.response;
 
+import com.zp.haoke.framework.core.enums.ErrorCode;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author : zhengpanone
@@ -39,6 +41,11 @@ public class R<T> implements Serializable {
      */
     private T data;
 
+    /**
+     * 时间戳
+     */
+    private long timestamp = System.currentTimeMillis();
+
     public static <T> R<T> ok() {
         return restResult(null, SUCCESS, "操作成功");
     }
@@ -63,6 +70,10 @@ public class R<T> implements Serializable {
         return restResult(null, FAIL, msg);
     }
 
+    public static <T> R<T> fail(int code, String msg, T errors) {
+        return restResult(errors,code,  msg);
+    }
+
     public static <T> R<T> fail(T data) {
         return restResult(data, FAIL, "操作失败");
     }
@@ -73,6 +84,10 @@ public class R<T> implements Serializable {
 
     public static <T> R<T> fail(int code, String msg) {
         return restResult(null, code, msg);
+    }
+
+    public static <T> R<T> fail(ErrorCode errorCode) {
+        return restResult(null, errorCode.code(), errorCode.message());
     }
 
     private static <T> R<T> restResult(T data, int code, String msg) {

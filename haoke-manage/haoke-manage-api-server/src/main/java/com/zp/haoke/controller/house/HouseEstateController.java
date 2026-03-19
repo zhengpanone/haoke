@@ -1,4 +1,4 @@
-package com.zp.haoke.controller;
+package com.zp.haoke.controller.house;
 
 import com.zp.haoke.framework.core.domain.response.R;
 import com.zp.haoke.house.domain.dto.HouseEstateCreateDTO;

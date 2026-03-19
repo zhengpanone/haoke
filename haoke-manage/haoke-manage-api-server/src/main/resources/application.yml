@@ -15,3 +15,9 @@ spring:
     clean-disabled: true # 生产环境必设true，禁止误删表
     validate-on-migrate: true # 迁移前校验脚本
     out-of-order: false # 禁止乱序执行脚本
+
+jwt:
+  secret: zp-haoke-jwt-secret-key-2026-very-secure
+  expiration: 3600000
+  header: Authorization
+  prefix: Bearer

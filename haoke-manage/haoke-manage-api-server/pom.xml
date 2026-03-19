@@ -21,6 +21,10 @@
             <artifactId>haoke-server-house-resource-service</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.zp.haoke</groupId>
+            <artifactId>haoke-server-auth-service</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

@@ -47,3 +47,17 @@ CREATE TABLE IF NOT EXISTS `house_resource`
 
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT '房源数据表';
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS `sys_user`
+(
+    id          varchar(32) PRIMARY KEY COMMENT '用户ID',
+    username    varchar(64) comment '用户名',
+    password    varchar(255)                       not null comment '密码',
+    email       varchar(255)                       null comment '邮箱',
+    phone       varchar(18)                        null comment '手机号',
+    avatar      varchar(255)                       null comment '图像URL',
+    create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
+    update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 comment '用户表';
