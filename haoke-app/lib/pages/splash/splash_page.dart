@@ -37,9 +37,9 @@ class _SplashPageState extends State<SplashPage> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: Colors.black.withOpacity(0.1),
                     blurRadius: 20,
-                    offset: Offset(0, 10),
+                    offset: const Offset(0, 10),
                   ),
                 ],
               ),
@@ -49,9 +49,9 @@ class _SplashPageState extends State<SplashPage> {
                 color: Theme.of(context).primaryColor,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // 应用名称
-            Text(
+            const Text(
               AppConfig.appName,
               style: TextStyle(
                 fontSize: 28,
@@ -59,16 +59,16 @@ class _SplashPageState extends State<SplashPage> {
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               '让租房变得简单',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white.withValues(alpha: 0.8),
+                color: Colors.white.withOpacity(0.8),
               ),
             ),
-            SizedBox(height: 50),
-            CircularProgressIndicator(
+            const SizedBox(height: 50),
+            const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ],

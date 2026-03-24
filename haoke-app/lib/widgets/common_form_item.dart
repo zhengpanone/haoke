@@ -25,7 +25,7 @@ class CommonFormItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       decoration: BoxDecoration(
         border: BorderDirectional(
           bottom: BorderSide(width: 1, color: Theme.of(context).dividerColor),
@@ -33,11 +33,10 @@ class CommonFormItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 100,
-            child: Text(label, style: TextStyle(fontSize: 16)),
+            child: Text(label, style: const TextStyle(fontSize: 16)),
           ),
-
           Expanded(
             child: contextBuilder != null
                 ? contextBuilder!(context) ?? const SizedBox.shrink()
@@ -53,7 +52,7 @@ class CommonFormItem extends StatelessWidget {
           ),
           if (suffix != null) ...[suffix!],
           if (suffixText != null) ...[
-            Text(suffixText!, style: TextStyle(fontSize: 16)),
+            Text(suffixText!, style: const TextStyle(fontSize: 16)),
           ],
         ],
       ),

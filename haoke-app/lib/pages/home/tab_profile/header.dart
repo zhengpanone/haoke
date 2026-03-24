@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-var loginTextStyle = TextStyle(color: Colors.white, fontSize: 20);
+var loginTextStyle = const TextStyle(color: Colors.white, fontSize: 20);
 
 class Header extends StatelessWidget {
   const Header({super.key});
 
   Widget _notLoginBuilder(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Colors.red),
+      decoration: const BoxDecoration(color: Colors.red),
       height: 95,
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 15, right: 15),
+            margin: const EdgeInsets.only(left: 15, right: 15),
             height: 65,
             width: 65,
-            child: CircleAvatar(
+            child: const CircleAvatar(
               backgroundImage: NetworkImage(
                 'https://images.pexels.com/photos/33412303/pexels-photo-33412303.jpeg',
               ),
@@ -24,7 +24,7 @@ class Header extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(padding: EdgeInsets.only(top: 25)),
+              const Padding(padding: EdgeInsets.only(top: 25)),
               Row(
                 children: [
                   GestureDetector(
@@ -39,7 +39,8 @@ class Header extends StatelessWidget {
                 ],
               ),
               GestureDetector(
-                child: Text('登录后可以体验更多', style: TextStyle(color: Colors.white)),
+                child: const Text('登录后可以体验更多',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -53,12 +54,12 @@ class Header extends StatelessWidget {
     String loginAvator =
         'https://images.pexels.com/photos/33412303/pexels-photo-33412303.jpeg';
     return Container(
-      decoration: BoxDecoration(color: Colors.red),
+      decoration: const BoxDecoration(color: Colors.red),
       height: 95,
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 15, right: 15),
+            margin: const EdgeInsets.only(left: 15, right: 15),
             height: 65,
             width: 65,
             child: CircleAvatar(backgroundImage: NetworkImage(loginAvator)),
@@ -66,10 +67,11 @@ class Header extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(padding: EdgeInsets.only(top: 25)),
+              const Padding(padding: EdgeInsets.only(top: 25)),
               Text(loginName, style: loginTextStyle),
               GestureDetector(
-                child: Text('查看编辑个人资料', style: TextStyle(color: Colors.white)),
+                child: const Text('查看编辑个人资料',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

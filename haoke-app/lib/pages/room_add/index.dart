@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:haoke_rent/widgets/common_float_action_button.dart';
 import 'package:haoke_rent/widgets/common_form_item.dart';
 import 'package:haoke_rent/widgets/common_image_picker.dart';
@@ -30,19 +29,19 @@ class _RoomAddState extends State<RoomAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('发布房源')),
+      appBar: AppBar(title: const Text('发布房源')),
       body: ListView(
         children: [
-          CommonTitle('房源信息'),
+          const CommonTitle('房源信息'),
           CommonFormItem(
             label: '小区',
             contextBuilder: (context) {
               return Container(
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  child: Container(
+                  child: SizedBox(
                     height: 40,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('请选择小区', style: TextStyle(fontSize: 16)),
@@ -70,10 +69,9 @@ class _RoomAddState extends State<RoomAdd> {
             suffixText: 'm²',
             controller: TextEditingController(),
           ),
-
           CommonRadioFormItem(
             label: '租赁方式',
-            options: ['合租', '整租'],
+            options: const ['合租', '整租'],
             value: rendType,
             onChange: (index) {
               setState(() {
@@ -81,11 +79,10 @@ class _RoomAddState extends State<RoomAdd> {
               });
             },
           ),
-
           CommonSelectFormItem(
             label: '户型',
             value: roomType,
-            options: ['一室', '二室', '三室', '四室'],
+            options: const ['一室', '二室', '三室', '四室'],
             onChange: (val) {
               setState(() {
                 roomType = val;
@@ -95,7 +92,7 @@ class _RoomAddState extends State<RoomAdd> {
           CommonSelectFormItem(
             label: '楼层',
             value: floor,
-            options: ['高楼层', '中楼层', '低楼层'],
+            options: const ['高楼层', '中楼层', '低楼层'],
             onChange: (val) {
               setState(() {
                 floor = val;
@@ -105,7 +102,7 @@ class _RoomAddState extends State<RoomAdd> {
           CommonSelectFormItem(
             label: '朝向',
             value: 0,
-            options: ['东', '南', '西', '北'],
+            options: const ['东', '南', '西', '北'],
             onChange: (val) {
               setState(() {
                 oriented = val;
@@ -114,7 +111,7 @@ class _RoomAddState extends State<RoomAdd> {
           ),
           CommonRadioFormItem(
             label: '装修',
-            options: ['精装', '简装'],
+            options: const ['精装', '简装'],
             value: decorationType,
             onChange: (index) {
               setState(() {
@@ -122,31 +119,30 @@ class _RoomAddState extends State<RoomAdd> {
               });
             },
           ),
-
-          CommonTitle('房屋照片'),
+          const CommonTitle('房屋照片'),
           CommonImagePicker(onChange: (List<File> files) {}),
-          CommonTitle('房屋标题'),
+          const CommonTitle('房屋标题'),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               controller: titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: '请输入标题（例如：整租、小区名 2室 2000元）',
               ),
             ),
           ),
-          CommonTitle('房屋配置'),
+          const CommonTitle('房屋配置'),
           RoomAppliance(onChange: (data) => {}),
-          CommonTitle('房屋描述'),
+          const CommonTitle('房屋描述'),
           Container(
-            margin: EdgeInsets.only(bottom: 100),
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.only(bottom: 100),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               controller: descController,
               maxLength: 2000,
               maxLines: 9,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: '请输入房屋描述',
               ),

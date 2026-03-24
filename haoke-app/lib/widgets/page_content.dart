@@ -22,19 +22,19 @@ class PageContent extends StatelessWidget {
             onPressed: () {
               Navigator.pushNamed(context, Routes.login);
             },
-            child: Text(Routes.login),
+            child: const Text(Routes.login),
           ),
           TextButton(
             onPressed: () {
               Navigator.pushNamed(context, Routes.home);
             },
-            child: Text(Routes.home),
+            child: const Text(Routes.home),
           ),
           TextButton(
             onPressed: () {
               Navigator.pushNamed(context, Routes.notFound);
             },
-            child: Text(Routes.notFound),
+            child: const Text(Routes.notFound),
           ),
           TextButton(
             onPressed: () {
@@ -44,7 +44,7 @@ class PageContent extends StatelessWidget {
                 Routes.roomDetail.replaceFirst(':roomId', '1001'),
               );
             },
-            child: Text(Routes.roomDetail),
+            child: const Text(Routes.roomDetail),
           ),
         ],
       ),

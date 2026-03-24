@@ -5,17 +5,17 @@ import 'package:haoke_rent/pages/home/tab_profile/index.dart';
 import 'package:haoke_rent/pages/home/tab_search/index.dart';
 
 List<Widget> tabViewList = [
-  TableIndex(),
-  TableSearch(),
-  TableInfo(),
-  TabProfile(),
+  const TableIndex(),
+  const TableSearch(),
+  const TableInfo(),
+  const TabProfile(),
 ];
 
 List<BottomNavigationBarItem> homeNavItems = [
-  BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
-  BottomNavigationBarItem(icon: Icon(Icons.search), label: '找房'),
-  BottomNavigationBarItem(icon: Icon(Icons.article), label: '资讯'),
-  BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
+  const BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
+  const BottomNavigationBarItem(icon: Icon(Icons.search), label: '找房'),
+  const BottomNavigationBarItem(icon: Icon(Icons.article), label: '资讯'),
+  const BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
 ];
 
 class HomePage extends StatefulWidget {

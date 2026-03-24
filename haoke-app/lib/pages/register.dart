@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/utils/common_toast.dart';
-import 'package:haoke_rent/utils/validators.dart';
+import 'package:haoke_rent/utils/string_util.dart';
 
 bool showPassword = false;
 bool showRePassword = false;
@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
       CommonToast.showToast('两次输入的密码不一致');
       return;
     }
-    if (stringIsNullOrEmpty(userName) || stringIsNullOrEmpty(password)) {
+    if (StringUtil.isBlank(userName) || StringUtil.isBlank(password)) {
       CommonToast.showToast('用户名或密码不能为空');
       return;
     }
@@ -36,16 +36,19 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('注册')),
+      appBar: AppBar(title: const Text('注册')),
       body: SafeArea(
-        minimum: EdgeInsets.all(30),
+        minimum: const EdgeInsets.all(30),
         child: Column(
           children: <Widget>[
             TextField(
               controller: userNameController,
-              decoration: InputDecoration(labelText: '用户名', hintText: '请输入用户名'),
+              decoration: const InputDecoration(
+                labelText: '用户名',
+                hintText: '请输入用户名',
+              ),
             ),
-            Padding(padding: EdgeInsets.all(10)),
+            const Padding(padding: EdgeInsets.all(10)),
             TextField(
               controller: passwordController,
               decoration: InputDecoration(
@@ -64,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               obscureText: !showPassword,
             ),
-            Padding(padding: EdgeInsets.all(10)),
+            const Padding(padding: EdgeInsets.all(10)),
             TextField(
               controller: rePasswordController,
               decoration: InputDecoration(
@@ -83,23 +86,23 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               obscureText: !showRePassword,
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 // 注册逻辑
                 _registerHandler();
               },
-              child: Text('注册'),
+              child: const Text('注册'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('已有账号？'),
+                const Text('已有账号？'),
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/login');
                   },
-                  child: Text('登录', style: TextStyle(color: Colors.blue)),
+                  child: const Text('登录', style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),

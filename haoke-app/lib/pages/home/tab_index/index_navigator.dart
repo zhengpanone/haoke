@@ -8,7 +8,7 @@ class IndexNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: indexNavigatorItemList
@@ -24,10 +24,10 @@ class IndexNavigator extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       fit: BoxFit.cover,
                     ),
-                    Padding(padding: EdgeInsets.all(5.0)),
+                    const Padding(padding: EdgeInsets.all(5.0)),
                     Text(
                       item.title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),

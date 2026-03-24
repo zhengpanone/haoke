@@ -11,25 +11,25 @@ import 'package:haoke_rent/pages/settings.dart';
 
 Handler homeHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return HomePage();
+    return const HomePage();
   },
 );
 
 Handler loginHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return LoginPage();
+    return const LoginPage();
   },
 );
 
 Handler registerHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return RegisterPage();
+    return const RegisterPage();
   },
 );
 
 Handler notFoundHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return NotFoundPage();
+    return const NotFoundPage();
   },
 );
 
@@ -43,18 +43,18 @@ Handler roomDetailHandler = Handler(
 // 设置
 Handler settingsHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return Settings();
+    return const Settings();
   },
 );
 
 Handler roomManageHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return RoomManage();
+    return const RoomManage();
   },
 );
 
 Handler roomAddHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return RoomAdd();
+    return const RoomAdd();
   },
 );

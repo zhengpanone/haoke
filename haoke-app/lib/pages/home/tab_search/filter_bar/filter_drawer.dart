@@ -12,7 +12,7 @@ class FilterDrawer extends StatelessWidget {
     final filterModel = context.watch<FilterModel>();
 
     // 构建每个筛选模块
-    Widget _buildSection(String title, List<GeneralType> list, String key) {
+    Widget buildSection(String title, List<GeneralType> list, String key) {
       final model = context.read<FilterModel>();
       final selectedIds = model.getFilter(key).ids;
 
@@ -37,11 +37,11 @@ class FilterDrawer extends StatelessWidget {
           children: [
             // ===== 顶部标题 + 已选数量 + 重置按钮 =====
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     '筛选条件',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
@@ -49,7 +49,8 @@ class FilterDrawer extends StatelessWidget {
                     onPressed: () {
                       filterModel.resetAll();
                     },
-                    child: Text('重置', style: TextStyle(color: Colors.red)),
+                    child:
+                        const Text('重置', style: TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
@@ -62,25 +63,25 @@ class FilterDrawer extends StatelessWidget {
                   vertical: 12,
                 ), // 设置左右和上下间距
                 children: [
-                  _buildSection('户型', roomTypeList, 'roomType'),
-                  _buildSection('楼层', floorList, 'floor'),
-                  _buildSection('朝向', orientedList, 'oriented'),
+                  buildSection('户型', roomTypeList, 'roomType'),
+                  buildSection('楼层', floorList, 'floor'),
+                  buildSection('朝向', orientedList, 'oriented'),
                 ],
               ),
             ),
 
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('取消'),
+                    child: const Text('取消'),
                   ),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('确定'),
+                    child: const Text('确定'),
                   ),
                 ],
               ),

@@ -10,16 +10,16 @@ class CommonFloatActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (null != onTap) onTap();
+        onTap();
       },
       child: Container(
         height: 40,
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(
+        child: const Center(
           child: Text(
             '发布房源',
             style: TextStyle(

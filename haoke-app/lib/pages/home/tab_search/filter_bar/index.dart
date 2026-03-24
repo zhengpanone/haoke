@@ -20,12 +20,12 @@ class FilterBar extends StatelessWidget {
     final filterModel = context.watch<FilterModel>();
 
     /// 通知 FilterBarResult 回调
-    void _notifyChange(FilterModel model) {
+    void notifyChange(FilterModel model) {
       onChange(FilterBarResult(model.filters));
     }
 
     /// 显示 Picker
-    void _showPicker(
+    void showPicker(
       BuildContext context,
       String key,
       List<GeneralType> options,
@@ -39,19 +39,19 @@ class FilterBar extends StatelessWidget {
       );
       if (index != null) {
         filterModel.setFilter(key, [options[index].id]);
-        _notifyChange(filterModel);
+        notifyChange(filterModel);
       }
     }
 
     /// 打开 Drawer
-    void _onFilterChange(context) {
+    void onFilterChange(context) {
       final filterModel = scaffoldKey.currentContext!.read<FilterModel>();
       scaffoldKey.currentState?.openEndDrawer();
     }
 
     return Container(
       height: 41,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.black12, width: 1)),
       ),
       child: Row(
@@ -61,7 +61,7 @@ class FilterBar extends StatelessWidget {
             builder: (context) => FilterBarItem(
               title: '区域',
               isActive: filterModel.filters['area']?.isActive ?? false,
-              onTap: (context) => _showPicker(context, 'area', areaList),
+              onTap: (context) => showPicker(context, 'area', areaList),
             ),
           ),
           Builder(
@@ -69,24 +69,23 @@ class FilterBar extends StatelessWidget {
               title: '出租方式',
               isActive: filterModel.filters['rentalType']?.isActive ?? false,
               onTap: (context) =>
-                  _showPicker(context, 'rentalType', rentTypeList),
+                  showPicker(context, 'rentalType', rentTypeList),
             ),
           ),
           Builder(
             builder: (context) => FilterBarItem(
               title: '租金',
               isActive: filterModel.filters['rental']?.isActive ?? false,
-              onTap: (context) => _showPicker(context, 'rental', priceList),
+              onTap: (context) => showPicker(context, 'rental', priceList),
             ),
           ),
           Builder(
             builder: (context) => FilterBarItem(
               title: '筛选',
-              isActive:
-                  filterModel.filters['roomType']!.isActive ||
+              isActive: filterModel.filters['roomType']!.isActive ||
                   filterModel.filters['floor']!.isActive ||
                   filterModel.filters['oriented']!.isActive,
-              onTap: _onFilterChange,
+              onTap: onFilterChange,
             ),
           ),
         ],

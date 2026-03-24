@@ -25,7 +25,7 @@ class _TableInfoState extends State<TableInfo> {
         backgroundColor: Colors.white,
       ),
       body: ListView(
-        children: [
+        children: const [
           Padding(padding: EdgeInsets.only(bottom: 10)),
           Info(),
           Info(),

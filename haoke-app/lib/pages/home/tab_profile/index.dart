@@ -11,18 +11,18 @@ class TabProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('我的', style: TextStyle(color: Colors.white)),
+        title: const Text('我的', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed('settings');
             },
-            icon: Icon(Icons.settings, color: Colors.white),
+            icon: const Icon(Icons.settings, color: Colors.white),
           ),
         ],
       ),
       body: ListView(
-        children: [
+        children: const [
           Header(),
           FunctionButton(),
           Advertisement(),

@@ -65,7 +65,7 @@ class _SearchBarState extends State<SearchBar> {
             padding: const EdgeInsets.only(right: 8.0),
             child: GestureDetector(
               onTap: () {},
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(Icons.room, color: Colors.red, size: 20),
                   Text(
@@ -81,7 +81,8 @@ class _SearchBarState extends State<SearchBar> {
             padding: const EdgeInsets.only(right: 8.0),
             child: GestureDetector(
               onTap: widget.goBackCallback as void Function()?,
-              child: Icon(Icons.arrow_back, color: Colors.black87, size: 20),
+              child:
+                  const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
             ),
           ),
         Expanded(
@@ -91,7 +92,7 @@ class _SearchBarState extends State<SearchBar> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(17),
             ),
-            margin: EdgeInsets.only(right: 8),
+            margin: const EdgeInsets.only(right: 8),
             child: TextField(
               focusNode: _focus,
               onChanged: (value) => {
@@ -112,11 +113,11 @@ class _SearchBarState extends State<SearchBar> {
               onSubmitted: widget.onSearchSubmit,
               textInputAction: TextInputAction.search,
               controller: _controller,
-              style: TextStyle(fontSize: 14, color: Colors.black87),
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                icon: Padding(
-                  padding: const EdgeInsets.only(left: 8),
+                icon: const Padding(
+                  padding: EdgeInsets.only(left: 8),
                   child: Icon(Icons.search, color: Colors.grey, size: 20),
                 ),
                 suffixIcon: GestureDetector(
@@ -128,8 +129,8 @@ class _SearchBarState extends State<SearchBar> {
                   ),
                 ),
                 hintText: '请输入搜索条件',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                contentPadding: EdgeInsets.only(top: 0, left: -12),
+                hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
+                contentPadding: const EdgeInsets.only(top: 0, left: -12),
               ),
             ),
           ),
@@ -139,7 +140,7 @@ class _SearchBarState extends State<SearchBar> {
             padding: const EdgeInsets.only(right: 8.0),
             child: GestureDetector(
               onTap: widget.onCancel as void Function()?,
-              child: Text(
+              child: const Text(
                 '取消',
                 style: TextStyle(color: Colors.black, fontSize: 14),
               ),
@@ -150,7 +151,7 @@ class _SearchBarState extends State<SearchBar> {
             padding: const EdgeInsets.only(right: 8.0),
             child: GestureDetector(
               onTap: () {},
-              child: Icon(Icons.map, color: Colors.red, size: 20),
+              child: const Icon(Icons.map, color: Colors.red, size: 20),
             ),
           ),
       ],

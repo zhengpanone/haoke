@@ -17,8 +17,8 @@ class RoomManage extends StatelessWidget {
           Navigator.of(context).pushNamed('roomAdd');
         }),
         appBar: AppBar(
-          title: Text('房屋管理', style: TextStyle(color: Colors.white)),
-          bottom: TabBar(
+          title: const Text('房屋管理', style: TextStyle(color: Colors.white)),
+          bottom: const TabBar(
             tabs: [
               Tab(
                 child: Text(
@@ -46,14 +46,12 @@ class RoomManage extends StatelessWidget {
         body: TabBarView(
           children: [
             ListView(
-              children: dataList
-                  .map((item) => RoomListItemWidget(item))
-                  .toList(),
+              children:
+                  dataList.map((item) => RoomListItemWidget(item)).toList(),
             ),
             ListView(
-              children: dataList
-                  .map((item) => RoomListItemWidget(item))
-                  .toList(),
+              children:
+                  dataList.map((item) => RoomListItemWidget(item)).toList(),
             ),
           ],
         ),

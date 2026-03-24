@@ -15,8 +15,8 @@ class Info extends StatelessWidget {
         if (showTitle)
           Container(
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.all(10),
-            child: Text(
+            padding: const EdgeInsets.all(10),
+            child: const Text(
               '最新资讯',
               style: TextStyle(
                 color: Colors.black,

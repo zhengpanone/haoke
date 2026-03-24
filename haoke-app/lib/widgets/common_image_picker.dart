@@ -37,7 +37,7 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
         color: Colors.grey,
         width: width,
         height: height,
-        child: Center(
+        child: const Center(
           child: Text(
             '+',
             style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
@@ -62,7 +62,7 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
                 });
                 widget.onChange(fileList); // 通知父组件
               },
-              icon: Icon(Icons.delete_forever, color: Colors.red),
+              icon: const Icon(Icons.delete_forever, color: Colors.red),
             ),
           ),
         ],
@@ -73,8 +73,8 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
       ..add(addButton);
 
     return Container(
-      padding: EdgeInsets.all(10),
-      child: Wrap(children: list, spacing: 10, runSpacing: 10),
+      padding: const EdgeInsets.all(10),
+      child: Wrap(spacing: 10, runSpacing: 10, children: list),
     );
   }
 }

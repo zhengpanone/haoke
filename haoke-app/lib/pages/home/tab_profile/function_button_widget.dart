@@ -16,7 +16,7 @@ class FunctionButtonWidget extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         child: Column(
           children: [
             CommonImage(imageUrl: data.imageUri, width: 45),

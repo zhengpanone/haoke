@@ -15,10 +15,10 @@ class TableSearch extends StatefulWidget {
 class _TableSearchState extends State<TableSearch> {
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: _scaffoldKey,
-      endDrawer: FilterDrawer(),
+      key: scaffoldKey,
+      endDrawer: const FilterDrawer(),
       appBar: AppBar(
         actions: [Container()],
         elevation: 0,
@@ -33,15 +33,14 @@ class _TableSearchState extends State<TableSearch> {
       ),
       body: Column(
         children: [
-          Container(
+          SizedBox(
             height: 41,
-            child: FilterBar(onChange: (data) {}, scaffoldKey: _scaffoldKey),
+            child: FilterBar(onChange: (data) {}, scaffoldKey: scaffoldKey),
           ),
           Expanded(
             child: ListView(
-              children: dataList
-                  .map((item) => RoomListItemWidget(item))
-                  .toList(),
+              children:
+                  dataList.map((item) => RoomListItemWidget(item)).toList(),
             ),
           ),
         ],

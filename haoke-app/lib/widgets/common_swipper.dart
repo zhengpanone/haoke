@@ -57,12 +57,12 @@ class _CommonSwipperState extends State<CommonSwipper> {
                     ),
                   )
                   .toList(),
-
               options: CarouselOptions(
                 height: height,
                 autoPlay: true, // 自动轮播
                 autoPlayInterval: const Duration(seconds: 3), // 轮播间隔
-                autoPlayAnimationDuration: Duration(milliseconds: 800), // 动画时间
+                autoPlayAnimationDuration:
+                    const Duration(milliseconds: 800), // 动画时间
                 autoPlayCurve: Curves.fastOutSlowIn, // 动画曲线
                 viewportFraction: 1.0, // 每页占满屏幕宽度
                 enlargeStrategy: CenterPageEnlargeStrategy.height,
@@ -75,7 +75,6 @@ class _CommonSwipperState extends State<CommonSwipper> {
                 },
               ),
             ),
-
             if (widget.indicatorInside)
               Positioned(
                 bottom: 12,

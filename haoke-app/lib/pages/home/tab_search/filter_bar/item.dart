@@ -17,7 +17,7 @@ class FilterBarItem extends StatelessWidget {
     var color = isActive ? Colors.green : Colors.black87;
     return GestureDetector(
       onTap: () {
-        if (onTap != null) onTap(context);
+        onTap(context);
       },
       child: Container(
         child: Row(

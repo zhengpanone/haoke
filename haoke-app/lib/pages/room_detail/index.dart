@@ -8,7 +8,7 @@ import 'package:haoke_rent/widgets/common_title.dart';
 import 'package:haoke_rent/widgets/room_appliance.dart';
 import 'package:share_plus/share_plus.dart';
 
-var buttonBottomTextStyle = TextStyle(fontSize: 18, color: Colors.white);
+var buttonBottomTextStyle = const TextStyle(fontSize: 18, color: Colors.white);
 
 class RoomDetailPage extends StatefulWidget {
   final String roomId;
@@ -36,7 +36,6 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   @override
   Widget build(BuildContext context) {
     var showTextTool = data.subTitle.length > 100;
-    if (data == null) return Container();
     return Scaffold(
       appBar: AppBar(
         title: Text('房源详情:${data.title}'),
@@ -45,7 +44,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
             onPressed: () {
               Share.share('http://www.baidu.com');
             },
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
           ),
         ],
       ),
@@ -56,14 +55,14 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
               CommonSwipper(images: data.houseImages),
               CommonTitle(data.title),
               Container(
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
                 child: CommonPriceText(
                   price: data.price.toString(),
                   unit: '元/月（押一付三）',
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 10,
                   right: 10,
                   bottom: 6,
@@ -76,9 +75,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                       .toList(),
                 ),
               ),
-              Divider(color: Colors.grey, indent: 10, endIndent: 10),
+              const Divider(color: Colors.grey, indent: 10, endIndent: 10),
               Container(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 10,
                   top: 10,
                   right: 10,
@@ -94,11 +93,11 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   ],
                 ),
               ),
-              CommonTitle("房屋配置"),
+              const CommonTitle("房屋配置"),
               RoomApplianceList(list: data.applicances),
-              CommonTitle("房屋概况"),
+              const CommonTitle("房屋概况"),
               Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
+                padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,14 +128,14 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 ),
                               )
                             : Container(),
-                        Text('举报'),
+                        const Text('举报'),
                       ],
                     ),
                   ],
                 ),
               ),
-              CommonTitle("猜你喜欢"),
-              Info(),
+              const CommonTitle("猜你喜欢"),
+              const Info(),
               Container(height: 100),
             ],
           ),
@@ -145,14 +144,13 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
             height: 100,
             bottom: 0,
             child: Container(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 20,
                 right: 20,
                 bottom: 20,
                 top: 10,
               ),
               color: Colors.grey[200],
-
               child: Row(
                 children: [
                   GestureDetector(
@@ -164,7 +162,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                     child: Container(
                       height: 50,
                       width: 40,
-                      margin: EdgeInsets.only(right: 10),
+                      margin: const EdgeInsets.only(right: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -175,7 +173,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           ),
                           Text(
                             isLike ? '已收藏' : '收藏',
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
@@ -185,7 +183,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                     child: GestureDetector(
                       child: Container(
                         height: 50,
-                        margin: EdgeInsets.only(right: 5),
+                        margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
                           color: Colors.cyan,
                           borderRadius: BorderRadius.circular(6),
@@ -226,9 +224,9 @@ class BaseInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(content, style: TextStyle(fontSize: 16)),
+    return SizedBox(
       width: (MediaQuery.of(context).size.width - 3 * 10) / 2,
+      child: Text(content, style: TextStyle(fontSize: 16)),
     );
   }
 }

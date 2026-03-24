@@ -27,8 +27,8 @@ class ImagePickerUtil {
   /// 返回空列表表示用户取消选择
   static Future<List<File>> pickMultiImage() async {
     try {
-      final List<XFile>? images = await picker.pickMultiImage();
-      if (images == null || images.isEmpty) return [];
+      final List<XFile> images = await picker.pickMultiImage();
+      if (images.isEmpty) return [];
       return images.map((xfile) => File(xfile.path)).toList();
     } catch (e) {
       print('pickMultiImage error: $e');

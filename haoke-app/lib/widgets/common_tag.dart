@@ -15,8 +15,8 @@ class CommonTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 4),
-      padding: EdgeInsets.only(left: 4, right: 4, top: 2, bottom: 2),
+      margin: const EdgeInsets.only(right: 4),
+      padding: const EdgeInsets.only(left: 4, right: 4, top: 2, bottom: 2),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(6.0),

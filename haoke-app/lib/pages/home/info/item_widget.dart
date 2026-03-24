@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:haoke_rent/pages/home/info/data.dart';
 import 'package:haoke_rent/widgets/common_image.dart';
 
-var textStyle = TextStyle(color: Colors.black54);
+var textStyle = const TextStyle(color: Colors.black54);
 
 class ItemWidget extends StatelessWidget {
   final InfoItem data;
@@ -13,18 +13,18 @@ class ItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 100,
-      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       child: Row(
         children: [
           CommonImage(imageUrl: data.imageUrl, width: 120, height: 90),
-          Padding(padding: EdgeInsets.only(left: 10)),
+          const Padding(padding: EdgeInsets.only(left: 10)),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   data.title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),

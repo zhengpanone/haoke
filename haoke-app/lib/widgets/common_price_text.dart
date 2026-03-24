@@ -33,7 +33,6 @@ class CommonPriceText extends StatelessWidget {
             fontWeight: priceWeight,
           ),
         ),
-
         Transform.translate(
           offset: Offset(3, unitOffsetY),
           child: Text(
@@ -43,6 +42,5 @@ class CommonPriceText extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }

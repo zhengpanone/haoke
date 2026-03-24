@@ -30,20 +30,18 @@ class CommonSelectFormItem extends StatelessWidget {
               value: value,
             );
             result.then((selectValue) {
-              if (value != selectValue &&
-                  selectValue != null &&
-                  onChange != null) {
+              if (value != selectValue && selectValue != null) {
                 onChange(selectValue);
               }
             });
           },
-          child: Container(
+          child: SizedBox(
             height: 40,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(options[value], style: TextStyle(fontSize: 16)),
-                Icon(Icons.keyboard_arrow_right),
+                Text(options[value], style: const TextStyle(fontSize: 16)),
+                const Icon(Icons.keyboard_arrow_right),
               ],
             ),
           ),

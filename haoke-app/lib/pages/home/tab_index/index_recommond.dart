@@ -8,18 +8,18 @@ class IndexRecommond extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(color: Color(0x08000000)),
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(color: Color(0x08000000)),
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('房屋推荐', style: TextStyle(color: Colors.black)),
               Text('更多', style: TextStyle(color: Colors.black54)),
             ],
           ),
-          Padding(padding: EdgeInsets.all(5.0)),
+          const Padding(padding: EdgeInsets.all(5.0)),
           Wrap(
             spacing: 10.0,
             runSpacing: 10.0,

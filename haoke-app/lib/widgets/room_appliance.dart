@@ -59,7 +59,7 @@ class _RoomApplianceState extends State<RoomAppliance> {
             (item) => GestureDetector(
               onTap: () => _toggleItem(item),
               behavior: HitTestBehavior.translucent,
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width / 5,
                 child: Column(
                   children: [
@@ -91,20 +91,19 @@ class RoomApplianceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var showList = _dataList
-        .where((item) => list.contains(item.title))
-        .toList();
+    var showList =
+        _dataList.where((item) => list.contains(item.title)).toList();
     if (showList.isEmpty) {
       return Container(
-        padding: EdgeInsets.only(left: 10),
-        child: Text('暂无房屋配置信息！'),
+        padding: const EdgeInsets.only(left: 10),
+        child: const Text('暂无房屋配置信息！'),
       );
     }
     return Wrap(
       runSpacing: 30,
       children: showList
           .map(
-            (item) => Container(
+            (item) => SizedBox(
               width: MediaQuery.of(context).size.width / 5,
               child: Column(
                 children: [
