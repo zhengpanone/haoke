@@ -1,7 +1,7 @@
 class LoginResponse {
   final String token;
   final String tokenType;
-  final int userId;
+  final String userId;
   final String username;
   final String? email;
   final String? phone;
@@ -31,7 +31,7 @@ class LoginResponse {
     return LoginResponse(
       token: json['token'] as String,
       tokenType: json['tokenType'] as String? ?? 'Bearer',
-      userId: json['userId'] as int,
+      userId: json['userId'] as String,
       username: json['username'] as String,
       email: json['email'] as String?,
       phone: json['phone'] as String?,

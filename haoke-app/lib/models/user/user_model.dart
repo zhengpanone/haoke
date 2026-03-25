@@ -2,7 +2,7 @@
 import 'package:haoke_rent/config/env.dart';
 
 class UserModel {
-  final int id;
+  final String id;
   final String username;
   final String? email;
   final String? phone;
@@ -34,7 +34,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as int,
+      id: json['id'].toString(),
       username: json['username'] as String,
       email: json['email'] as String?,
       phone: json['phone'] as String?,

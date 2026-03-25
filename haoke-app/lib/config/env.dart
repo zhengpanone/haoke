@@ -1,6 +1,6 @@
 class Env {
   // 开发环境
-  static const String devBaseUrl = 'http://127.0.0.1:8080';
+  static const String devBaseUrl = 'http://10.0.2.2:8080';
   static const String devWsUrl = 'ws://127.0.0.1:8080/ws';
 
   // 测试环境
@@ -37,4 +37,17 @@ class Env {
         return devWsUrl;
     }
   }
+}
+
+class ApiConfig {
+
+  // API端点
+  static const String login = '/auth/login';
+  static const String register = '/auth/register';
+  static const String logout = '/auth/logout';
+
+  // 请求头
+  static const String contentType = 'application/json';
+  static const String authorization = 'Authorization';
+  static const String bearerPrefix = 'Bearer ';
 }

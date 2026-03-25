@@ -1,1 +1,344 @@
 // 状态管理
+import 'package:flutter/material.dart';
+import 'package:haoke_rent/models/auth/login_request.dart';
+import 'package:haoke_rent/models/user/user_model.dart';
+import 'package:haoke_rent/services/api_service.dart';
+import 'package:haoke_rent/services/storage_service.dart';
+import 'package:haoke_rent/utils/logger.dart';
+
+class AuthProvider with ChangeNotifier {
+  UserModel? _currentUser;
+  bool _isLoading = false;
+  bool _isLoggedIn = false;
+  String? _errorMessage;
+
+  UserModel? get currentUser => _currentUser;
+
+  bool get isLoading => _isLoading;
+
+  bool get isLoggedIn => _isLoggedIn;
+
+  String? get errorMessage => _errorMessage;
+
+  final ApiService _apiService = ApiService();
+  final StorageService _storageService = StorageService.instance;
+
+  AuthProvider() {
+    _init();
+  }
+
+  // 初始化
+  Future<void> _init() async {
+    await _checkLoginStatus();
+  }
+
+  // 检查登录状态
+  Future<void> _checkLoginStatus() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final isLoggedIn = await _storageService.isLoggedIn();
+      if (isLoggedIn) {
+        final user = await _storageService.getUser();
+        if (user != null) {
+          _currentUser = user;
+          _isLoggedIn = true;
+        }
+      }
+    } catch (e) {
+      AppLogger.e("检查登录状态失败:$e");
+    } finally {
+      _isLoading = false;
+      _errorMessage = null;
+      notifyListeners();
+    }
+  }
+
+  // 登录
+  Future<bool> login(String username, String password) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    try {
+      final response = await _apiService
+          .login(LoginRequest(username: username, password: password));
+      if (response.isSuccess) {
+        _isLoggedIn = true;
+        await _syncUserInfo();
+        return true;
+      } else {
+        _errorMessage = response.message;
+        return false;
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // 同步用户信息
+  Future<void> _syncUserInfo() async {
+    try {
+      final response = await _apiService.getCurrentUser();
+      if (response.isSuccess && response.data != null) {
+        _currentUser = response.data;
+        await _storageService.saveUser(_currentUser!);
+      }
+    } catch (e) {
+      AppLogger.e('同步用户信息失败： $e');
+    }
+  }
+
+  /**
+   * 同步用户信息（增强版）
+   * 支持强制刷新和缓存策略
+   */
+  Future<bool> syncUserInfo({bool forceRefresh = false}) async {
+    // 检查是否需要同步
+    if (!forceRefresh && _shouldUseCache()) {
+      _currentUser = await _storageService.getUser();
+      if (_currentUser != null) {
+        AppLogger.i('使用缓存的用户信息');
+        return true;
+      }
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _apiService.getCurrentUser();
+
+      if (response.isSuccess && response.data != null) {
+        _currentUser = response.data;
+        await _storageService.saveUser(_currentUser!);
+
+        // 记录同步时间
+        final now = DateTime.now();
+        await _storageService.setString(
+            'last_sync_time', now.toIso8601String());
+
+        _isLoading = false;
+        _errorMessage = null;
+        notifyListeners();
+
+        AppLogger.i('用户信息同步成功: ${_currentUser!.username}');
+        return true;
+      } else {
+        _errorMessage = response.message;
+        _currentUser = await _storageService.getUser();
+
+        _isLoading = false;
+        notifyListeners();
+
+        AppLogger.w('用户信息同步失败: ${response.message}');
+        return false;
+      }
+    } catch (e, stackTrace) {
+      _errorMessage = '网络异常: $e';
+      _currentUser = await _storageService.getUser();
+
+      _isLoading = false;
+      notifyListeners();
+
+      AppLogger.e('用户信息同步异常', e, stackTrace);
+      return false;
+    }
+  }
+
+  /// 检查是否应该使用缓存
+  bool _shouldUseCache() {
+    final lastSyncTime = _storageService.getString('last_sync_time');
+    if (lastSyncTime == null) return false;
+
+    try {
+      final lastSync = DateTime.parse(lastSyncTime as String);
+      final now = DateTime.now();
+      final diff = now.difference(lastSync);
+
+      // 如果缓存时间在5分钟内，使用缓存
+      return diff.inMinutes < 5;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// 获取用户信息（智能获取）
+  Future<UserModel?> getUserInfo({bool forceRefresh = false}) async {
+    if (_currentUser != null && !forceRefresh) {
+      return _currentUser;
+    }
+
+    await syncUserInfo(forceRefresh: forceRefresh);
+    return _currentUser;
+  }
+
+  /**
+   * 更新用户信息
+   */
+  // Future<bool> updateUserInfo(Map<String, dynamic> data) async {
+  //   if (_currentUser == null) {
+  //     return false;
+  //   }
+  //
+  //   _isLoading = true;
+  //   _errorMessage = null;
+  //   notifyListeners();
+  //
+  //   try {
+  //     final response = await _apiService.updateCurrentUser(data);
+  //
+  //     if (response.isSuccess && response.data != null) {
+  //       _currentUser = response.data;
+  //       await _storageService.saveUser(_currentUser!);
+  //
+  //       _isLoading = false;
+  //       notifyListeners();
+  //
+  //       // 显示成功提示
+  //       _showSuccessMessage('用户信息更新成功');
+  //       return true;
+  //     } else {
+  //       _errorMessage = response.message;
+  //
+  //       _isLoading = false;
+  //       notifyListeners();
+  //
+  //       _showErrorMessage(_errorMessage ?? '更新失败');
+  //       return false;
+  //     }
+  //   } catch (e, stackTrace) {
+  //     _errorMessage = '更新失败: $e';
+  //
+  //     _isLoading = false;
+  //     notifyListeners();
+  //
+  //     _showErrorMessage(_errorMessage!);
+  //     AppLogger.e('更新用户信息异常', e, stackTrace);
+  //     return false;
+  //   }
+  // }
+
+  /**
+   * 更新头像
+   */
+  // Future<bool> updateAvatar(String avatarUrl) async {
+  //   if (_currentUser == null) {
+  //     return false;
+  //   }
+  //
+  //   _isLoading = true;
+  //   _errorMessage = null;
+  //   notifyListeners();
+  //
+  //   try {
+  //     final response = await _apiService.updateAvatar(avatarUrl);
+  //
+  //     if (response.isSuccess && response.data != null) {
+  //       _currentUser = response.data;
+  //       await _storageService.saveUser(_currentUser!);
+  //
+  //       _isLoading = false;
+  //       notifyListeners();
+  //
+  //       _showSuccessMessage('头像更新成功');
+  //       return true;
+  //     } else {
+  //       _errorMessage = response.message;
+  //
+  //       _isLoading = false;
+  //       notifyListeners();
+  //
+  //       _showErrorMessage(_errorMessage ?? '头像更新失败');
+  //       return false;
+  //     }
+  //   } catch (e, stackTrace) {
+  //     _errorMessage = '头像更新失败: $e';
+  //
+  //     _isLoading = false;
+  //     notifyListeners();
+  //
+  //     _showErrorMessage(_errorMessage!);
+  //     AppLogger.e('更新头像异常', e, stackTrace);
+  //     return false;
+  //   }
+  // }
+
+  /**
+   * 修改密码
+   */
+  // Future<bool> changePassword(String oldPassword, String newPassword) async {
+  //   if (_currentUser == null) {
+  //     return false;
+  //   }
+  //
+  //   _isLoading = true;
+  //   _errorMessage = null;
+  //   notifyListeners();
+  //
+  //   try {
+  //     final response = await _apiService.changePassword(
+  //       oldPassword: oldPassword,
+  //       newPassword: newPassword,
+  //     );
+  //
+  //     if (response.isSuccess) {
+  //       _isLoading = false;
+  //       notifyListeners();
+  //
+  //       _showSuccessMessage('密码修改成功');
+  //       return true;
+  //     } else {
+  //       _errorMessage = response.message;
+  //
+  //       _isLoading = false;
+  //       notifyListeners();
+  //
+  //       _showErrorMessage(_errorMessage ?? '密码修改失败');
+  //       return false;
+  //     }
+  //   } catch (e, stackTrace) {
+  //     _errorMessage = '密码修改失败: $e';
+  //
+  //     _isLoading = false;
+  //     notifyListeners();
+  //
+  //     _showErrorMessage(_errorMessage!);
+  //     AppLogger.e('修改密码异常', e, stackTrace);
+  //     return false;
+  //   }
+  // }
+
+  /**
+   * 显示成功消息
+   */
+  void _showSuccessMessage(String message) {
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  /**
+   * 显示错误消息
+   */
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  // 全局的navigatorKey
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+}

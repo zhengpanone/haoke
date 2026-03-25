@@ -88,9 +88,24 @@ class ApiService {
         await _storage.saveUser(user);
         await _storage.saveLoginState(true);
       }
+      AppLogger.i(apiResponse);
       return apiResponse;
     } catch (e) {
       AppLogger.e('用户登录失败: $e');
+      rethrow;
+    }
+  }
+
+  //获取当前用户信息
+  Future<ApiResponse<UserModel>> getCurrentUser() async {
+    try {
+      final response = await _dio.get("/api/user/me");
+      return ApiResponse<UserModel>.fromJson(
+        response.data,
+        (data) => UserModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('获取用户信息失败：$e');
       rethrow;
     }
   }

@@ -7,7 +7,7 @@ class Validators {
     if (value.length < 3 || value.length > 20) {
       return '用户名长度必须在3-20个字符之间';
     }
-    if (RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
       return '用户名只能包含字母、数字和下划线';
     }
     return null;
