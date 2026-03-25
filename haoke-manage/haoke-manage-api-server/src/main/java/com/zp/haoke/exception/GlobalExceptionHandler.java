@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         });
 
         return ResponseEntity.badRequest()
-                .body(R.fail(400, "参数验证失败", errors));
+                .body(R.fail(400, "参数验证失败: "+errors));
     }
 
     /**

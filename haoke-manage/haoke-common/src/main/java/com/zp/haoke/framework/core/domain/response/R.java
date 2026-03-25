@@ -36,6 +36,8 @@ public class R<T> implements Serializable {
      */
     private String msg;
 
+    private boolean success;
+
     /**
      * 数据对象
      */
@@ -47,54 +49,52 @@ public class R<T> implements Serializable {
     private long timestamp = System.currentTimeMillis();
 
     public static <T> R<T> ok() {
-        return restResult(null, SUCCESS, "操作成功");
+        return restResult(null, SUCCESS, "操作成功", true);
     }
 
     public static <T> R<T> ok(T data) {
-        return restResult(data, SUCCESS, "操作成功");
+        return restResult(data, SUCCESS, "操作成功", true);
     }
 
     public static <T> R<T> ok(String msg) {
-        return restResult(null, SUCCESS, msg);
+        return restResult(null, SUCCESS, msg, true);
     }
 
     public static <T> R<T> ok(String msg, T data) {
-        return restResult(data, SUCCESS, msg);
+        return restResult(data, SUCCESS, msg, true);
     }
 
     public static <T> R<T> fail() {
-        return restResult(null, FAIL, "操作失败");
+        return restResult(null, FAIL, "操作失败", false);
     }
 
     public static <T> R<T> fail(String msg) {
-        return restResult(null, FAIL, msg);
+        return restResult(null, FAIL, msg, false);
     }
 
-    public static <T> R<T> fail(int code, String msg, T errors) {
-        return restResult(errors,code,  msg);
-    }
 
     public static <T> R<T> fail(T data) {
-        return restResult(data, FAIL, "操作失败");
+        return restResult(data, FAIL, "操作失败", false);
     }
 
     public static <T> R<T> fail(String msg, T data) {
-        return restResult(data, FAIL, msg);
+        return restResult(data, FAIL, msg, false);
     }
 
     public static <T> R<T> fail(int code, String msg) {
-        return restResult(null, code, msg);
+        return restResult(null, code, msg, false);
     }
 
     public static <T> R<T> fail(ErrorCode errorCode) {
-        return restResult(null, errorCode.code(), errorCode.message());
+        return restResult(null, errorCode.code(), errorCode.message(), false);
     }
 
-    private static <T> R<T> restResult(T data, int code, String msg) {
+    private static <T> R<T> restResult(T data, int code, String msg, boolean success) {
         R<T> r = new R<>();
         r.setCode(code);
         r.setData(data);
         r.setMsg(msg);
+        r.setSuccess(success);
         return r;
     }
 

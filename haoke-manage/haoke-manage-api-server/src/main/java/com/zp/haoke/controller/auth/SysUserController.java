@@ -1,14 +1,23 @@
 package com.zp.haoke.controller.auth;
 
+import com.zp.haoke.auth.domain.convert.SysUserConvert;
 import com.zp.haoke.auth.domain.dto.CreateUserDTO;
 import com.zp.haoke.auth.domain.dto.UpdateUserDTO;
+import com.zp.haoke.auth.domain.po.SysUserPO;
 import com.zp.haoke.auth.domain.vo.UserVO;
 import com.zp.haoke.auth.service.ISysUserService;
+import com.zp.haoke.auth.util.JwtUtil;
 import com.zp.haoke.framework.core.domain.response.R;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +27,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 @Validated
+@Tag(name = "用户管理", description = "用户相关接口")
 public class SysUserController {
 
     private final ISysUserService sysUserService;
+    private final JwtUtil jwtUtil;
+
+    private final SysUserConvert sysUserConvert;
 
 
     @PostMapping("/create")
@@ -36,10 +49,54 @@ public class SysUserController {
      * 获取当前登录用户信息
      */
     @GetMapping("/me")
-    public R<UserVO> getCurrentUser() {
-        // 从SecurityContext中获取当前用户ID
-        // 这里简化处理，实际应该从token中获取
-        return R.ok("获取成功", null);
+    @Operation(summary = "获取当前登录用户信息")
+    public R<UserVO> getCurrentUser(HttpServletRequest request) {
+        try {
+            // 方式2: 从token中获取用户信息
+            String token = extractToken(request);
+            if (token != null) {
+                String userId = jwtUtil.getUserIdFromToken(token);
+                SysUserPO user = sysUserService.findById(userId);
+                return R.ok("获取成功", sysUserConvert.toVO(user));
+            }
+            // 如果Token不存在，从SecurityContext获取
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated() ||
+                    "anonymousUser".equals(authentication.getPrincipal())) {
+                return R.fail(401, "未登录");
+            }
+            Object principal = authentication.getPrincipal();
+            String username;
+            if (principal instanceof UserDetails) {
+                // 如果是UserDetails形式的用户名
+                username = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                // 如果是字符串形式的用户名
+                username = (String) principal;
+            } else {
+                return R.fail(401, "无法获取用户信息");
+            }
+            // 通过用户名查询用户
+            SysUserPO user = sysUserService.findByUsername(username);
+            return R.ok("获取成功", sysUserConvert.toVO(user));
+
+        } catch (RuntimeException e) {
+            return R.fail(404, e.getMessage());
+        } catch (Exception e) {
+            return R.fail(500, "获取用户信息失败: " + e.getMessage());
+        }
+
+    }
+
+    /**
+     * 从请求中提取Token
+     */
+    private String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     /**
