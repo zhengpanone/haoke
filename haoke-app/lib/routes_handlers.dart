@@ -7,7 +7,7 @@ import 'package:haoke_rent/pages/register.dart';
 import 'package:haoke_rent/pages/room_add/index.dart';
 import 'package:haoke_rent/pages/room_detail/index.dart';
 import 'package:haoke_rent/pages/room_manage/index.dart';
-import 'package:haoke_rent/pages/settings.dart';
+import 'package:haoke_rent/pages/settings/index.dart';
 
 Handler homeHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -43,7 +43,7 @@ Handler roomDetailHandler = Handler(
 // 设置
 Handler settingsHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-    return const Settings();
+    return const SettingsPage();
   },
 );
 

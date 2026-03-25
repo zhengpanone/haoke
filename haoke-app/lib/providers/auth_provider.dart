@@ -79,7 +79,43 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // 同步用户信息
+  Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _apiService.logout();
+      await _clearUserData();
+    } catch (e) {
+      AppLogger.e('退出登录失败： $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> unbindPhone() async {
+    _isLoading = true;
+    _errorMessage = null;
+    try {
+      final response = await _apiService.unbindPhone();
+      if (response.isSuccess) {
+        _isLoggedIn = true;
+        await _syncUserInfo();
+        return true;
+      } else {
+        _errorMessage = response.message;
+        return false;
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// 同步用户信息
   Future<void> _syncUserInfo() async {
     try {
       final response = await _apiService.getCurrentUser();
@@ -92,10 +128,15 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /**
-   * 同步用户信息（增强版）
-   * 支持强制刷新和缓存策略
-   */
+  /// 清除用户数据
+  Future<void> _clearUserData() async {
+    _currentUser = null;
+    _isLoggedIn = false;
+    await _storageService.clearAll();
+  }
+
+  /// 同步用户信息（增强版）
+  /// 支持强制刷新和缓存策略
   Future<bool> syncUserInfo({bool forceRefresh = false}) async {
     // 检查是否需要同步
     if (!forceRefresh && _shouldUseCache()) {
@@ -341,4 +382,6 @@ class AuthProvider with ChangeNotifier {
   // 全局的navigatorKey
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
+
+  changePassword(String text, String text2) {}
 }

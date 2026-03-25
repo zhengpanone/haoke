@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class ApiResponse<T> {
   final int code;
   final String message;
@@ -7,7 +9,7 @@ class ApiResponse<T> {
 
   final int timestamp;
 
-  ApiResponse({
+  const ApiResponse({
     this.data,
     this.errors,
     required this.success,
@@ -25,6 +27,17 @@ class ApiResponse<T> {
       data: fromJsonT != null && json['data'] != null
           ? fromJsonT(json['data'])
           : json['data'],
+      message: json['message'] ?? '',
+      code: json['code'] ?? 200,
+      timestamp: json['timestamp'] as int,
+    );
+  }
+
+// 添加一个静态方法处理无数据响应
+  static ApiResponse<void> emptyFromJson(Map<String, dynamic> json) {
+    return ApiResponse<void>(
+      success: json['success'] ?? false,
+      data: null,
       message: json['message'] ?? '',
       code: json['code'] ?? 200,
       timestamp: json['timestamp'] as int,
