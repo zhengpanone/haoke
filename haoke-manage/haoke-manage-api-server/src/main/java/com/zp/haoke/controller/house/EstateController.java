@@ -24,8 +24,8 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "楼盘管理")
-@RequestMapping("/house/estate")
-public class HouseEstateController {
+@RequestMapping("/estate")
+public class EstateController {
 
     @Resource
     private IHouseEstateService houseEstateService;

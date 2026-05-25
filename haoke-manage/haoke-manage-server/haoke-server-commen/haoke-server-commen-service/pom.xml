@@ -9,7 +9,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>haoke-server-commen-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>haoke-server-commen-service</name>
     <properties>

@@ -61,3 +61,23 @@ CREATE TABLE IF NOT EXISTS `sys_user`
     update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '用户表';
+
+
+-- sys_user
+-- sys_role
+-- sys_menu
+-- sys_user_role
+-- house
+-- house_image
+-- house_tag
+-- community
+-- city
+-- contract
+-- repair_order
+-- favorite
+-- browse_history
+-- pay_order
+-- banner
+-- message
+-- operation_log
+-- login_log

@@ -30,8 +30,8 @@ import java.util.List;
 
 @RestController
 @Tag(name = "房源管理")
-@RequestMapping("/api/house/resource")
-public class HouseResourceController {
+@RequestMapping("/resource")
+public class ResourceController {
     @Resource
     private IHouseResourceService houseResourceService;
 
@@ -70,6 +70,27 @@ public class HouseResourceController {
     public R<Void> updateHouseResource(@RequestBody HouseResourceUpdateDTO updateDTO) {
         boolean res = houseResourceService.updateById(updateDTO);
         return R.ok();
-
     }
+
+    @Operation(summary = "获取热门房源", description = "获取热门房源信息")
+    @PutMapping("/hot")
+    public R<Void> hot(@RequestBody HouseResourceUpdateDTO updateDTO) {
+        boolean res = houseResourceService.updateById(updateDTO);
+        return R.ok();
+    }
+
+    @Operation(summary = "获取附近房源", description = "获取附近房源信息")
+    @PutMapping("/nearby")
+    public R<Void> nearby(@RequestBody HouseResourceUpdateDTO updateDTO) {
+        boolean res = houseResourceService.updateById(updateDTO);
+        return R.ok();
+    }
+
+    @Operation(summary = "获取推荐房源", description = "获取推荐房源信息")
+    @PutMapping("/recommend")
+    public R<Void> recommend(@RequestBody HouseResourceUpdateDTO updateDTO) {
+        boolean res = houseResourceService.updateById(updateDTO);
+        return R.ok();
+    }
+
 }

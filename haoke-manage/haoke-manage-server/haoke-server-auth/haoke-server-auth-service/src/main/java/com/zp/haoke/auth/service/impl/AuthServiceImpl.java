@@ -3,6 +3,7 @@ package com.zp.haoke.auth.service.impl;
 import com.zp.haoke.auth.domain.dto.LoginDTO;
 import com.zp.haoke.auth.domain.po.SysUserPO;
 import com.zp.haoke.auth.domain.vo.LoginVO;
+import com.zp.haoke.auth.domain.vo.UserInfoVO;
 import com.zp.haoke.auth.service.IAuthService;
 import com.zp.haoke.auth.service.ISysUserService;
 import com.zp.haoke.auth.util.JwtUtil;
@@ -73,5 +74,10 @@ public class AuthServiceImpl implements IAuthService {
                 .avatar(user.getAvatar())
                 .phone(user.getPhone())
                 .build();
+    }
+
+    @Override
+    public UserInfoVO userInfo(String token) {
+        return null;
     }
 }

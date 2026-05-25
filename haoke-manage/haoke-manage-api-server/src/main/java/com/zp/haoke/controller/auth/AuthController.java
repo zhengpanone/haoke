@@ -2,6 +2,7 @@ package com.zp.haoke.controller.auth;
 
 import com.zp.haoke.auth.domain.dto.LoginDTO;
 import com.zp.haoke.auth.domain.vo.LoginVO;
+import com.zp.haoke.auth.domain.vo.UserInfoVO;
 import com.zp.haoke.auth.service.IAuthService;
 import com.zp.haoke.framework.core.domain.response.R;
 import jakarta.validation.Valid;
@@ -20,6 +21,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<R<LoginVO>> login(
+            @Valid @RequestBody LoginDTO request) {
+        LoginVO response = authService.login(request);
+        return ResponseEntity.ok(R.ok(response));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<R<LoginVO>> register(
             @Valid @RequestBody LoginDTO request) {
         LoginVO response = authService.login(request);
         return ResponseEntity.ok(R.ok(response));
