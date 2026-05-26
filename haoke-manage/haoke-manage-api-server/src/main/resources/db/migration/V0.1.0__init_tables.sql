@@ -1,3 +1,4 @@
+# CREATE DATABASE IF NOT EXISTS haoke CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- 楼盘数据表
 CREATE TABLE IF NOT EXISTS `house_estate`
 (

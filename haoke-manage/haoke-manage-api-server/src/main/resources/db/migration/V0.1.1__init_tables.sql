@@ -1,0 +1,1 @@
+INSERT INTO sys_user (id, username, password, email, phone, avatar, create_time, update_time) VALUES ('2034514861085626370', 'admin', '$2a$10$OaOH.DtI2VaumV3h.O9ym.vMB4m8Visz97jvyMhelRT2cSIUGO.Im', 'test@example.com', '13800138000', null, '2026-03-19 14:18:37', '2026-03-19 14:18:37');

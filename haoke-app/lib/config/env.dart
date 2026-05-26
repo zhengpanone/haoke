@@ -1,7 +1,13 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
+
 class Env {
   // 开发环境
-  static const String devBaseUrl = 'http://10.0.2.2:8080';
+  static const String devBaseUrl = 'http://127.0.0.1:8080';
   static const String devWsUrl = 'ws://127.0.0.1:8080/ws';
+  static const String androidEmulatorBaseUrl = 'http://10.0.2.2:8080';
+  static const String androidEmulatorWsUrl = 'ws://10.0.2.2:8080/ws';
 
   // 测试环境
   static const String testBaseUrl = 'http://test.example.com';
@@ -21,7 +27,7 @@ class Env {
       case 'test':
         return testBaseUrl;
       default:
-        return devBaseUrl;
+        return _isAndroid ? androidEmulatorBaseUrl : devBaseUrl;
     }
   }
 
@@ -34,13 +40,14 @@ class Env {
       case 'test':
         return testWsUrl;
       default:
-        return devWsUrl;
+        return _isAndroid ? androidEmulatorWsUrl : devWsUrl;
     }
   }
+
+  static bool get _isAndroid => !kIsWeb && Platform.isAndroid;
 }
 
 class ApiConfig {
-
   // API端点
   static const String login = '/auth/login';
   static const String register = '/auth/register';
