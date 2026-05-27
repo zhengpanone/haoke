@@ -15,12 +15,13 @@ class Info extends StatelessWidget {
         if (showTitle)
           Container(
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
             child: const Text(
-              '最新资讯',
+              'Latest News',
               style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
+                color: Color(0xFF1F2B2A),
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
               ),
             ),
           ),

@@ -7,11 +7,12 @@ class Advertisement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 20, bottom: 20, left: 10, right: 10),
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: const CommonImage(
         imageUrl:
-            "https://images.pexels.com/photos/33564839/pexels-photo-33564839.jpeg",
-        height: 50,
+            'https://images.pexels.com/photos/33564839/pexels-photo-33564839.jpeg',
+        height: 70,
+        borderRadius: BorderRadius.all(Radius.circular(14)),
       ),
     );
   }

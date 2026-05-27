@@ -12,7 +12,7 @@ const double defaultWidth = 750;
 
 class CommonSwipper extends StatefulWidget {
   final List<String> images;
-  final bool indicatorInside; // 是否在图片上叠加指示器
+  final bool indicatorInside;
 
   const CommonSwipper({
     super.key,
@@ -25,105 +25,126 @@ class CommonSwipper extends StatefulWidget {
 }
 
 class _CommonSwipperState extends State<CommonSwipper> {
-  int _current = 0; // 当前轮播索引
-
+  int _current = 0;
   final CarouselSliderController _controller = CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
-    var height =
+    final height =
         MediaQuery.of(context).size.width / defaultWidth * defaultHeight;
     if (widget.images.isEmpty) {
       return SizedBox(
         height: height,
-        child: const Center(child: Text("暂无图片")),
+        child: const Center(child: Text('No images yet')),
       );
     }
 
-    return Column(
-      children: [
-        Stack(
-          children: [
-            CarouselSlider(
-              carouselController: _controller,
-              items: widget.images
-                  .map(
-                    (item) => ClipRRect(
-                      // borderRadius: BorderRadius.circular(12), // 圆角
-                      child: SizedBox.expand(
-                        // child: Image.network(item, fit: BoxFit.cover),
-                        child: CommonImage(imageUrl: item, fit: BoxFit.cover),
-                      ),
-                    ),
-                  )
-                  .toList(),
-              options: CarouselOptions(
-                height: height,
-                autoPlay: true, // 自动轮播
-                autoPlayInterval: const Duration(seconds: 3), // 轮播间隔
-                autoPlayAnimationDuration:
-                    const Duration(milliseconds: 800), // 动画时间
-                autoPlayCurve: Curves.fastOutSlowIn, // 动画曲线
-                viewportFraction: 1.0, // 每页占满屏幕宽度
-                enlargeStrategy: CenterPageEnlargeStrategy.height,
-                aspectRatio: 2.0, // 高宽比，可按需调整
-                enlargeCenterPage: true,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
-              ),
-            ),
-            if (widget.indicatorInside)
-              Positioned(
-                bottom: 12,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(widget.images.length, (index) {
-                    return GestureDetector(
-                      onTap: () => _controller.animateToPage(index),
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _current == index
-                              ? Colors.red
-                              : Colors.white.withOpacity(0.6),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: CarouselSlider(
+                  carouselController: _controller,
+                  items: widget.images
+                      .map(
+                        (item) => SizedBox.expand(
+                          child: CommonImage(imageUrl: item, fit: BoxFit.cover),
                         ),
-                      ),
-                    );
-                  }),
+                      )
+                      .toList(),
+                  options: CarouselOptions(
+                    height: height,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 4),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 700),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    viewportFraction: 1.0,
+                    enlargeStrategy: CenterPageEnlargeStrategy.height,
+                    aspectRatio: 2.0,
+                    enlargeCenterPage: true,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
                 ),
               ),
-          ],
-        ),
-        if (!widget.indicatorInside) // 在图片下方显示指示器
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.images.length, (index) {
-                return GestureDetector(
-                  onTap: () => _controller.animateToPage(index),
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _current == index ? Colors.red : Colors.grey[300],
-                    ),
+              Positioned(
+                left: 14,
+                bottom: 14,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.28),
+                    borderRadius: BorderRadius.circular(999),
                   ),
-                );
-              }),
-            ),
+                  child: Text(
+                    '${_current + 1}/${widget.images.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+              ),
+              if (widget.indicatorInside)
+                Positioned(
+                  bottom: 12,
+                  right: 0,
+                  left: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(widget.images.length, (index) {
+                      return GestureDetector(
+                        onTap: () => _controller.animateToPage(index),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          width: _current == index ? 18 : 8,
+                          height: 8,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(99),
+                            color: _current == index
+                                ? const Color(0xFF0F8F7A)
+                                : Colors.white.withValues(alpha: 0.55),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+            ],
           ),
-      ],
+          if (!widget.indicatorInside)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(widget.images.length, (index) {
+                  return GestureDetector(
+                    onTap: () => _controller.animateToPage(index),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      width: _current == index ? 18 : 8,
+                      height: 8,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(99),
+                        color: _current == index
+                            ? const Color(0xFF0F8F7A)
+                            : const Color(0xFFDAE7E3),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

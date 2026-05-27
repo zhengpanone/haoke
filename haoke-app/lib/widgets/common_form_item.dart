@@ -25,17 +25,25 @@ class CommonFormItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        border: BorderDirectional(
-          bottom: BorderSide(width: 1, color: Theme.of(context).dividerColor),
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE5EEEB)),
       ),
       child: Row(
         children: [
           SizedBox(
-            width: 100,
-            child: Text(label, style: const TextStyle(fontSize: 16)),
+            width: 92,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Color(0xFF4D5F5C),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           Expanded(
             child: contextBuilder != null
@@ -45,14 +53,17 @@ class CommonFormItem extends StatelessWidget {
                     onChanged: onChanged,
                     decoration: InputDecoration(
                       hintText: hintText,
-                      border: InputBorder.none, // 移除下划线
+                      border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
           ),
           if (suffix != null) ...[suffix!],
           if (suffixText != null) ...[
-            Text(suffixText!, style: const TextStyle(fontSize: 16)),
+            Text(
+              suffixText!,
+              style: const TextStyle(fontSize: 14, color: Color(0xFF6F7E7B)),
+            ),
           ],
         ],
       ),

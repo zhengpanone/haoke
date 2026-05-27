@@ -8,31 +8,48 @@ class IndexNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: indexNavigatorItemList
             .map(
               (item) => InkWell(
-                onTap: () => {item.onTap(context)},
-                child: Column(
-                  children: [
-                    // Image.asset(item.imageUrl, width: 47.5),
-                    CommonImage(
-                      imageUrl: item.imageUrl,
-                      width: 47.5,
-                      borderRadius: BorderRadius.circular(8),
-                      fit: BoxFit.cover,
-                    ),
-                    const Padding(padding: EdgeInsets.all(5.0)),
-                    Text(
-                      item.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                onTap: () => item.onTap(context),
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Column(
+                    children: [
+                      CommonImage(
+                        imageUrl: item.imageUrl,
+                        width: 46,
+                        height: 46,
+                        borderRadius: BorderRadius.circular(12),
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 7),
+                      Text(
+                        item.title,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF304744),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )

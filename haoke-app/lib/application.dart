@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
 import 'package:haoke_rent/config/app_config.dart';
+import 'package:haoke_rent/config/app_theme.dart';
 import 'package:haoke_rent/pages/splash/splash_page.dart';
 import 'package:haoke_rent/routes.dart';
 
@@ -12,16 +13,14 @@ class Application extends StatelessWidget {
     final FluroRouter router = FluroRouter();
     Routes.configureRoutes(router);
 
-    final app = MaterialApp(
+    return MaterialApp(
       title: AppConfig.appName,
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.red),
-      ),
-      // 应用启动时进入 SplashPage
+      theme: AppTheme.lightTheme,
+      scrollBehavior:
+          const MaterialScrollBehavior().copyWith(overscroll: false),
       home: const SplashPage(),
       onGenerateRoute: router.generator,
+      debugShowCheckedModeBanner: false,
     );
-    return app;
   }
 }

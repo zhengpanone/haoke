@@ -20,8 +20,9 @@ class _TableSearchState extends State<TableSearch> {
       key: scaffoldKey,
       endDrawer: const FilterDrawer(),
       appBar: AppBar(
+        toolbarHeight: 68,
+        titleSpacing: 12,
         actions: [Container()],
-        elevation: 0,
         title: SearchBar(
           showLocation: true,
           showMap: true,
@@ -29,12 +30,18 @@ class _TableSearchState extends State<TableSearch> {
             Navigator.of(context).pushNamed('search');
           },
         ),
-        backgroundColor: Colors.white,
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 41,
+          Container(
+            margin: const EdgeInsets.fromLTRB(12, 6, 12, 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE4EEEB)),
+            ),
+            height: 42,
             child: FilterBar(onChange: (data) {}, scaffoldKey: scaffoldKey),
           ),
           Expanded(

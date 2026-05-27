@@ -193,7 +193,6 @@ class AuthProvider with ChangeNotifier {
   /// 检查是否应该使用缓存
   bool _shouldUseCache() {
     final lastSyncTime = _storageService.getString('last_sync_time');
-    if (lastSyncTime == null) return false;
 
     try {
       final lastSync = DateTime.parse(lastSyncTime as String);
@@ -353,9 +352,7 @@ class AuthProvider with ChangeNotifier {
   //   }
   // }
 
-  /**
-   * 显示成功消息
-   */
+  /// 显示成功消息
   void _showSuccessMessage(String message) {
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
       SnackBar(
@@ -366,9 +363,7 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  /**
-   * 显示错误消息
-   */
+  /// 显示错误消息
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
       SnackBar(

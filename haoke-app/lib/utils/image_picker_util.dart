@@ -1,48 +1,44 @@
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
 
 class ImagePickerUtil {
-  // 支持传入 picker，默认使用 ImagePicker()
-  static ImagePicker picker = ImagePicker();
+  static const MethodChannel _channel =
+      MethodChannel('com.example.haoke_rent/image_picker');
 
   /// 选择单张图片
-  /// [source] 默认相册，可传 ImageSource.camera
-  /// 返回 null 表示用户取消选择
-  static Future<File?> pickImage({
-    ImageSource source = ImageSource.gallery,
-  }) async {
+  static Future<File?> pickImage() async {
+    if (!Platform.isAndroid) {
+      return null;
+    }
+
     try {
-      final XFile? image = await picker.pickImage(source: source);
-      if (image == null) return null;
-      return File(image.path);
-    } catch (e) {
-      // 处理异常，比如权限不足
-      print('pickImage error: $e');
+      final String? path = await _channel.invokeMethod<String>('pickImage');
+      if (path == null || path.isEmpty) return null;
+      return File(path);
+    } catch (_) {
       return null;
     }
   }
 
   /// 选择多张图片
-  /// 返回空列表表示用户取消选择
   static Future<List<File>> pickMultiImage() async {
+    if (!Platform.isAndroid) {
+      return [];
+    }
+
     try {
-      final List<XFile> images = await picker.pickMultiImage();
-      if (images.isEmpty) return [];
-      return images.map((xfile) => File(xfile.path)).toList();
-    } catch (e) {
-      print('pickMultiImage error: $e');
+      final List<dynamic>? paths =
+          await _channel.invokeMethod<List<dynamic>>('pickMultiImage');
+      if (paths == null || paths.isEmpty) return [];
+
+      return paths
+          .whereType<String>()
+          .where((path) => path.isNotEmpty)
+          .map(File.new)
+          .toList();
+    } catch (_) {
       return [];
     }
   }
 }
-
-// // 单张图片
-// File? file = await ImagePickerUtil.pickImage();
-// if (file != null) {
-//   print('选择了图片: ${file.path}');
-// }
-
-// // 多张图片
-// List<File> files = await ImagePickerUtil.pickMultiImage();
-// print('选择了 ${files.length} 张图片');

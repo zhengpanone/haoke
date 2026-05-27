@@ -13,43 +13,28 @@ class RoomManage extends StatelessWidget {
       initialIndex: 0,
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: CommonFloatActionButton('发布房源', () {
+        floatingActionButton:
+            CommonFloatActionButton('Publish New Listing', () {
           Navigator.of(context).pushNamed('roomAdd');
         }),
         appBar: AppBar(
-          title: const Text('房屋管理', style: TextStyle(color: Colors.white)),
+          title: const Text('Room Management'),
           bottom: const TabBar(
             tabs: [
-              Tab(
-                child: Text(
-                  '空置',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  '已出租',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              Tab(text: 'Vacant'),
+              Tab(text: 'Rented'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
             ListView(
+              padding: const EdgeInsets.only(bottom: 90, top: 6),
               children:
                   dataList.map((item) => RoomListItemWidget(item)).toList(),
             ),
             ListView(
+              padding: const EdgeInsets.only(bottom: 90, top: 6),
               children:
                   dataList.map((item) => RoomListItemWidget(item)).toList(),
             ),

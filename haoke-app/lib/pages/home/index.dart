@@ -4,18 +4,19 @@ import 'package:haoke_rent/pages/home/tab_info/index.dart';
 import 'package:haoke_rent/pages/home/tab_profile/index.dart';
 import 'package:haoke_rent/pages/home/tab_search/index.dart';
 
-List<Widget> tabViewList = [
-  const TableIndex(),
-  const TableSearch(),
-  const TableInfo(),
-  const TabProfile(),
+const List<Widget> tabViewList = [
+  TableIndex(),
+  TableSearch(),
+  TableInfo(),
+  TabProfile(),
 ];
 
-List<BottomNavigationBarItem> homeNavItems = [
-  const BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
-  const BottomNavigationBarItem(icon: Icon(Icons.search), label: '找房'),
-  const BottomNavigationBarItem(icon: Icon(Icons.article), label: '资讯'),
-  const BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
+const List<BottomNavigationBarItem> homeNavItems = [
+  BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: '首页'),
+  BottomNavigationBarItem(
+      icon: Icon(Icons.travel_explore_rounded), label: '找房'),
+  BottomNavigationBarItem(icon: Icon(Icons.newspaper_rounded), label: '资讯'),
+  BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: '我的'),
 ];
 
 class HomePage extends StatefulWidget {
@@ -27,6 +28,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+
   void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
@@ -37,12 +39,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: tabViewList[selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: homeNavItems,
-        currentIndex: selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: onItemTapped,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 20,
+              offset: const Offset(0, -6),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          items: homeNavItems,
+          currentIndex: selectedIndex,
+          onTap: onItemTapped,
+        ),
       ),
     );
   }

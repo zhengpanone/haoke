@@ -23,55 +23,60 @@ class _RoomAddState extends State<RoomAdd> {
   int floor = 0;
   int oriented = 0;
 
-  var titleController = TextEditingController();
-  var descController = TextEditingController();
+  final titleController = TextEditingController();
+  final descController = TextEditingController();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('发布房源')),
+      appBar: AppBar(title: const Text('Publish Listing')),
       body: ListView(
         children: [
-          const CommonTitle('房源信息'),
+          const CommonTitle('Property Details'),
           CommonFormItem(
-            label: '小区',
+            label: 'Community',
             contextBuilder: (context) {
-              return Container(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: SizedBox(
-                    height: 40,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('请选择小区', style: TextStyle(fontSize: 16)),
-                        Icon(Icons.keyboard_arrow_right),
-                      ],
-                    ),
+              return GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: const SizedBox(
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Choose community', style: TextStyle(fontSize: 15)),
+                      Icon(Icons.keyboard_arrow_right_rounded),
+                    ],
                   ),
-                  onTap: () {
-                    Navigator.of(context).pushNamed('');
-                  },
                 ),
+                onTap: () {
+                  Navigator.of(context).pushNamed('');
+                },
               );
             },
             controller: TextEditingController(),
           ),
           CommonFormItem(
-            label: '租金',
-            hintText: '请输入租金',
-            suffixText: '元/月',
+            label: 'Rent',
+            hintText: 'Input rent amount',
+            suffixText: '/month',
             controller: TextEditingController(),
           ),
           CommonFormItem(
-            label: '大小',
-            hintText: '请输入房屋大小',
-            suffixText: 'm²',
+            label: 'Area',
+            hintText: 'Input area size',
+            suffixText: 'sqm',
             controller: TextEditingController(),
           ),
           CommonRadioFormItem(
-            label: '租赁方式',
-            options: const ['合租', '整租'],
+            label: 'Rent Type',
+            options: const ['Shared', 'Whole'],
             value: rendType,
             onChange: (index) {
               setState(() {
@@ -80,9 +85,9 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonSelectFormItem(
-            label: '户型',
+            label: 'Room Type',
             value: roomType,
-            options: const ['一室', '二室', '三室', '四室'],
+            options: const ['1 Bedroom', '2 Bedroom', '3 Bedroom', '4 Bedroom'],
             onChange: (val) {
               setState(() {
                 roomType = val;
@@ -90,9 +95,9 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonSelectFormItem(
-            label: '楼层',
+            label: 'Floor',
             value: floor,
-            options: const ['高楼层', '中楼层', '低楼层'],
+            options: const ['High', 'Middle', 'Low'],
             onChange: (val) {
               setState(() {
                 floor = val;
@@ -100,9 +105,9 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonSelectFormItem(
-            label: '朝向',
-            value: 0,
-            options: const ['东', '南', '西', '北'],
+            label: 'Orientation',
+            value: oriented,
+            options: const ['East', 'South', 'West', 'North'],
             onChange: (val) {
               setState(() {
                 oriented = val;
@@ -110,8 +115,8 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonRadioFormItem(
-            label: '装修',
-            options: const ['精装', '简装'],
+            label: 'Decoration',
+            options: const ['Fine', 'Simple'],
             value: decorationType,
             onChange: (index) {
               setState(() {
@@ -119,39 +124,59 @@ class _RoomAddState extends State<RoomAdd> {
               });
             },
           ),
-          const CommonTitle('房屋照片'),
+          const CommonTitle('Property Photos'),
           CommonImagePicker(onChange: (List<File> files) {}),
-          const CommonTitle('房屋标题'),
+          const CommonTitle('Listing Title'),
           Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12),
             padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE5EEEB)),
+            ),
             child: TextField(
               controller: titleController,
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: '请输入标题（例如：整租、小区名 2室 2000元）',
+                hintText: 'For example: 2B1B near metro, great light',
               ),
             ),
           ),
-          const CommonTitle('房屋配置'),
-          RoomAppliance(onChange: (data) => {}),
-          const CommonTitle('房屋描述'),
+          const CommonTitle('Facilities'),
           Container(
-            margin: const EdgeInsets.only(bottom: 100),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE5EEEB)),
+            ),
+            child: RoomAppliance(onChange: (data) => {}),
+          ),
+          const CommonTitle('Description'),
+          Container(
+            margin: const EdgeInsets.fromLTRB(12, 0, 12, 100),
             padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE5EEEB)),
+            ),
             child: TextField(
               controller: descController,
               maxLength: 2000,
               maxLines: 9,
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: '请输入房屋描述',
+                hintText: 'Describe highlights, transport and nearby services',
               ),
             ),
           ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: CommonFloatActionButton('发布', () {}),
+      floatingActionButton: CommonFloatActionButton('Publish', () {}),
     );
   }
 }

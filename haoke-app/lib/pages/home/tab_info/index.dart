@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide SearchBar;
 import 'package:haoke_rent/pages/home/info/info.dart';
 import 'package:haoke_rent/widgets/search_bar/index.dart' show SearchBar;
 
-// 资讯页
 class TableInfo extends StatefulWidget {
   const TableInfo({super.key});
 
@@ -15,6 +14,8 @@ class _TableInfoState extends State<TableInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 68,
+        titleSpacing: 12,
         title: SearchBar(
           showLocation: false,
           showMap: false,
@@ -22,15 +23,12 @@ class _TableInfoState extends State<TableInfo> {
             Navigator.of(context).pushNamed('search');
           },
         ),
-        backgroundColor: Colors.white,
       ),
       body: ListView(
         children: const [
-          Padding(padding: EdgeInsets.only(bottom: 10)),
-          Info(),
-          Info(),
-          Info(),
-          Info(),
+          SizedBox(height: 6),
+          Info(showTitle: true),
+          SizedBox(height: 20),
         ],
       ),
     );

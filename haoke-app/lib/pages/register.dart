@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/utils/common_toast.dart';
-import 'package:haoke_rent/utils/string_util.dart';
-
-bool showPassword = false;
-bool showRePassword = false;
+import 'package:haoke_rent/models/auth/login_request.dart';
+import 'package:haoke_rent/services/api_service.dart';
+import 'package:haoke_rent/utils/validators.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -13,100 +11,276 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  var userNameController = TextEditingController();
-  var passwordController = TextEditingController();
-  var rePasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  _registerHandler() async {
-    var userName = userNameController.text;
-    var password = passwordController.text;
-    var rePassword = rePasswordController.text;
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
+  bool _isLoading = false;
 
-    if (password != rePassword) {
-      CommonToast.showToast('两次输入的密码不一致');
-      return;
+  Future<void> _registerHandler() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await ApiService().register(
+        RegisterRequest(
+          username: _usernameController.text.trim(),
+          password: _passwordController.text.trim(),
+          confirmPassword: _confirmPasswordController.text.trim(),
+        ),
+      );
+
+      if (!mounted) return;
+
+      if (response.isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('注册成功'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacementNamed(context, '/');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('注册失败：$e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
-    if (StringUtil.isBlank(userName) || StringUtil.isBlank(password)) {
-      CommonToast.showToast('用户名或密码不能为空');
-      return;
-    }
-    var params = {'username': userName, 'password': password};
+  }
+
+  InputDecoration _buildInputDecoration({
+    required String labelText,
+    required String hintText,
+    required IconData icon,
+    Widget? suffixIcon,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      prefixIcon: Icon(icon),
+      suffixIcon: suffixIcon,
+      filled: true,
+      fillColor: const Color(0xFFF7F9FC),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: Color(0xFF07A786), width: 1.4),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('注册')),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(30),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: userNameController,
-              decoration: const InputDecoration(
-                labelText: '用户名',
-                hintText: '请输入用户名',
-              ),
-            ),
-            const Padding(padding: EdgeInsets.all(10)),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                labelText: '密码',
-                hintText: '请输入密码',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    showPassword ? Icons.visibility_off : Icons.visibility,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      showPassword = !showPassword;
-                    });
-                  },
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE9FFF7), Color(0xFFF7FFFC), Color(0xFFFFFFFF)],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 480),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Icon(
+                      Icons.how_to_reg_rounded,
+                      size: 56,
+                      color: Color(0xFF07A786),
+                    ),
+                    const SizedBox(height: 14),
+                    const Text(
+                      '创建账号',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 29,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1E2F2C),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '开启你的租房旅程',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: Color(0xFF6A7C79)),
+                    ),
+                    const SizedBox(height: 24),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.06),
+                            blurRadius: 24,
+                            offset: const Offset(0, 12),
+                          ),
+                        ],
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _usernameController,
+                              textInputAction: TextInputAction.next,
+                              decoration: _buildInputDecoration(
+                                labelText: '用户名',
+                                hintText: '3-20位字母、数字或下划线',
+                                icon: Icons.person_outline_rounded,
+                              ),
+                              validator: Validators.validateUsername,
+                            ),
+                            const SizedBox(height: 14),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: !_showPassword,
+                              textInputAction: TextInputAction.next,
+                              decoration: _buildInputDecoration(
+                                labelText: '密码',
+                                hintText: '至少6位字符',
+                                icon: Icons.lock_outline_rounded,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _showPassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _showPassword = !_showPassword;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: Validators.validatePassword,
+                            ),
+                            const SizedBox(height: 14),
+                            TextFormField(
+                              controller: _confirmPasswordController,
+                              obscureText: !_showConfirmPassword,
+                              onFieldSubmitted: (_) =>
+                                  _isLoading ? null : _registerHandler(),
+                              decoration: _buildInputDecoration(
+                                labelText: '确认密码',
+                                hintText: '请再次输入密码',
+                                icon: Icons.shield_outlined,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _showConfirmPassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _showConfirmPassword =
+                                          !_showConfirmPassword;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) =>
+                                  Validators.validateConfirmPassword(
+                                value,
+                                _passwordController.text.trim(),
+                              ),
+                            ),
+                            const SizedBox(height: 22),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: _isLoading ? null : _registerHandler,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF07A786),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    : const Text(
+                                        '注册',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            TextButton(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () => Navigator.pushReplacementNamed(
+                                        context,
+                                        '/login',
+                                      ),
+                              child: const Text('已有账号？去登录'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              obscureText: !showPassword,
             ),
-            const Padding(padding: EdgeInsets.all(10)),
-            TextField(
-              controller: rePasswordController,
-              decoration: InputDecoration(
-                labelText: '确认密码',
-                hintText: '请再次输入密码',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    showRePassword ? Icons.visibility_off : Icons.visibility,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      showRePassword = !showRePassword;
-                    });
-                  },
-                ),
-              ),
-              obscureText: !showRePassword,
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                // 注册逻辑
-                _registerHandler();
-              },
-              child: const Text('注册'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('已有账号？'),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                  child: const Text('登录', style: TextStyle(color: Colors.blue)),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );

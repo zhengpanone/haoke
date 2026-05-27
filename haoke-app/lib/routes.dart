@@ -13,8 +13,6 @@ class Routes {
   static const String roomManage = '/roomManage';
   static const String roomAdd = '/roomAdd';
 
-
-
   // 2. 配置路由
   static void configureRoutes(FluroRouter router) {
     // 2.1. 配置未找到路由页面

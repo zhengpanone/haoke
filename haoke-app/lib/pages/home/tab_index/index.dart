@@ -2,11 +2,9 @@ import 'package:flutter/material.dart' hide SearchBar;
 import 'package:haoke_rent/pages/home/info/info.dart';
 import 'package:haoke_rent/pages/home/tab_index/index_navigator.dart';
 import 'package:haoke_rent/pages/home/tab_index/index_recommond.dart';
-
 import 'package:haoke_rent/widgets/common_swipper.dart';
 import 'package:haoke_rent/widgets/search_bar/index.dart';
 
-// 首页
 class TableIndex extends StatelessWidget {
   const TableIndex({super.key});
 
@@ -14,6 +12,8 @@ class TableIndex extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 68,
+        titleSpacing: 12,
         title: SearchBar(
           showLocation: true,
           showMap: true,
@@ -21,15 +21,18 @@ class TableIndex extends StatelessWidget {
             Navigator.of(context).pushNamed('search');
           },
         ),
-        backgroundColor: Colors.white,
       ),
       body: ListView(
         children: const [
-          ListTile(title: Text('顶部')),
+          SizedBox(height: 8),
           CommonSwipper(indicatorInside: true),
+          SizedBox(height: 6),
           IndexNavigator(),
+          SizedBox(height: 4),
           IndexRecommond(),
+          SizedBox(height: 8),
           Info(showTitle: true),
+          SizedBox(height: 20),
         ],
       ),
     );

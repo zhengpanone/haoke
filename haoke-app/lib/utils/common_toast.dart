@@ -1,7 +1,13 @@
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/material.dart';
 
 class CommonToast {
-  static showToast(String message) {
-    Fluttertoast.showToast(msg: message, gravity: ToastGravity.CENTER);
+  static void showToast(String message, {BuildContext? context}) {
+    if (context != null && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+      return;
+    }
+    debugPrint('Toast: $message');
   }
 }

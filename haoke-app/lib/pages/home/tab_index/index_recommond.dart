@@ -8,32 +8,38 @@ class IndexRecommond extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(color: Color(0x08000000)),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF7F4),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         children: [
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('房屋推荐', style: TextStyle(color: Colors.black)),
-              Text('更多', style: TextStyle(color: Colors.black54)),
+              Text(
+                'Recommended Homes',
+                style: TextStyle(
+                  color: Color(0xFF1F2B2A),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                'More',
+                style: TextStyle(color: Color(0xFF6D7B78), fontSize: 13),
+              ),
             ],
           ),
-          const Padding(padding: EdgeInsets.all(5.0)),
+          const SizedBox(height: 10),
           Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
+            spacing: 10,
+            runSpacing: 10,
             children: indexRecommandItemList
                 .map((item) => IndexRecommondItemWidget(data: item))
                 .toList(),
-            // List.generate(
-            //   4,
-            //   (index) => Container(
-            //     height: 100,
-            //     color: Colors.white,
-            //     child: Center(child: Text('推荐房屋$index')),
-            //   ),
-            // ),
           ),
         ],
       ),

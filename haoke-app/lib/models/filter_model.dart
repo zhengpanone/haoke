@@ -24,7 +24,6 @@ class FilterModel extends ChangeNotifier {
     'area': FilterItem(itemCode: 'area', itemName: '区域'),
     'rentalType': FilterItem(itemCode: 'rentalType', itemName: '方式'),
     'rental': FilterItem(itemCode: 'rental', itemName: '租金'),
-
     'roomType': FilterItem(itemCode: 'roomType', itemName: '户型', isMulti: true),
     'floor': FilterItem(itemCode: 'floor', itemName: '楼层', isMulti: true),
     'oriented': FilterItem(itemCode: 'oriented', itemName: '朝向', isMulti: true),

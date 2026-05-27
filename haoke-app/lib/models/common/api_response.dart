@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ApiResponse<T> {
   final int code;
   final String message;
@@ -104,7 +102,8 @@ class PaginatedResponse<T> {
     required this.hasPrev,
   });
 
-  factory PaginatedResponse.fromJson(Map<String, dynamic> json, T Function(dynamic) fromJson) {
+  factory PaginatedResponse.fromJson(
+      Map<String, dynamic> json, T Function(dynamic) fromJson) {
     return PaginatedResponse<T>(
       items: List<T>.from((json['items'] ?? []).map(fromJson)),
       currentPage: json['currentPage'] ?? 1,

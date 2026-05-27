@@ -7,12 +7,27 @@ class FunctionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 3, // 每行 3 个
-      shrinkWrap: true, // 不占满整个屏幕
-      physics: const NeverScrollableScrollPhysics(), // 禁用滚动，让外层能滚动
-      childAspectRatio: 1.5,
-      children: list.map((item) => FunctionButtonWidget(item)).toList(),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: GridView.count(
+        crossAxisCount: 3,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        childAspectRatio: 1.5,
+        children: list.map((item) => FunctionButtonWidget(item)).toList(),
+      ),
     );
   }
 }

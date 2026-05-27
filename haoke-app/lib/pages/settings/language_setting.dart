@@ -8,34 +8,19 @@ class LanguageSettingsPage extends StatefulWidget {
 }
 
 class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
-  // 支持的语言列表
   final List<Language> _languages = [
     Language(
-      code: 'zh',
-      name: '简体中文',
-      nativeName: '简体中文',
-      isDefault: true,
-    ),
+        code: 'zh',
+        name: 'Simplified Chinese',
+        nativeName: 'Chinese',
+        isDefault: true),
     Language(
-      code: 'zh_TW',
-      name: '繁体中文',
-      nativeName: '繁體中文',
-    ),
-    Language(
-      code: 'en',
-      name: 'English',
-      nativeName: 'English',
-    ),
-    Language(
-      code: 'ja',
-      name: '日本語',
-      nativeName: '日本語',
-    ),
-    Language(
-      code: 'ko',
-      name: '한국어',
-      nativeName: '한국어',
-    ),
+        code: 'zh_TW',
+        name: 'Traditional Chinese',
+        nativeName: 'Chinese Traditional'),
+    Language(code: 'en', name: 'English', nativeName: 'English'),
+    Language(code: 'ja', name: 'Japanese', nativeName: 'Japanese'),
+    Language(code: 'ko', name: 'Korean', nativeName: 'Korean'),
   ];
 
   String _selectedLanguageCode = 'zh';
@@ -44,146 +29,107 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('语言设置'),
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
+        title: const Text('Language'),
         actions: [
-          TextButton(
-            onPressed: _saveSettings,
-            child: const Text(
-              '保存',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          TextButton(onPressed: _saveSettings, child: const Text('Save'))
         ],
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.all(14),
         children: [
-          // 当前语言提示
           Container(
-            padding: const EdgeInsets.all(16.0),
-            color: Colors.red.withOpacity(0.1),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F6F2),
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Row(
               children: [
-                const Icon(Icons.info, color: Colors.red, size: 20),
+                const Icon(Icons.info_outline_rounded),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    '当前语言: ${_getCurrentLanguage().nativeName}',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
+                    child:
+                        Text('Current: ${_getCurrentLanguage().nativeName}')),
               ],
             ),
           ),
-
-          // 语言列表
-          Expanded(
-            child: ListView.builder(
-              itemCount: _languages.length,
-              itemBuilder: (context, index) {
-                final language = _languages[index];
-                return _buildLanguageItem(language);
-              },
-            ),
-          ),
+          const SizedBox(height: 10),
+          ..._languages.map(_buildLanguageItem),
         ],
       ),
     );
   }
 
   Widget _buildLanguageItem(Language language) {
-    return RadioListTile<String>(
-      value: language.code,
-      groupValue: _selectedLanguageCode,
-      onChanged: (value) {
-        setState(() {
-          _selectedLanguageCode = value!;
-        });
-      },
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            language.name,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            language.nativeName,
-            style: const TextStyle(color: Colors.grey, fontSize: 12),
-          ),
-        ],
+    final isSelected = _selectedLanguageCode == language.code;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
       ),
-      secondary: language.isDefault
-          ? Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 2.0,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => setState(() => _selectedLanguageCode = language.code),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            children: [
+              if (language.isDefault)
+                Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F8F7A),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text('Default',
+                      style: TextStyle(color: Colors.white, fontSize: 10)),
+                ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(language.name,
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                    Text(
+                      language.nativeName,
+                      style: const TextStyle(
+                          fontSize: 12, color: Color(0xFF81908D)),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                isSelected
+                    ? Icons.check_circle_rounded
+                    : Icons.radio_button_unchecked_rounded,
+                color: isSelected
+                    ? const Color(0xFF0F8F7A)
+                    : const Color(0xFFB0BCBA),
+              ),
+            ],
+          ),
         ),
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: const Text(
-          '默认',
-          style: TextStyle(color: Colors.white, fontSize: 10),
-        ),
-      )
-          : null,
-      activeColor: Colors.red,
+      ),
     );
   }
 
   Language _getCurrentLanguage() {
     return _languages.firstWhere(
-          (lang) => lang.code == _selectedLanguageCode,
+      (lang) => lang.code == _selectedLanguageCode,
       orElse: () => _languages.first,
     );
   }
 
   void _saveSettings() {
     final selectedLanguage = _getCurrentLanguage();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('提示'),
-        content: Text('是否将应用语言切换为 ${selectedLanguage.nativeName}？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _applyLanguageChange(selectedLanguage);
-            },
-            child: const Text('确定', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _applyLanguageChange(Language language) {
-    // TODO: 实现语言切换逻辑
-    // 1. 保存到本地存储
-    // 2. 重启应用或重新加载语言资源
-    // 3. 显示成功消息
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('语言已切换为 ${language.nativeName}'),
-        backgroundColor: Colors.green,
-      ),
+          content: Text('Language switched to ${selectedLanguage.nativeName}')),
     );
-
-    // 延迟返回
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.pop(context);
-    });
+    Navigator.pop(context);
   }
 }
 

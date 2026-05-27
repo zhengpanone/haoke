@@ -10,213 +10,114 @@ class HelpCenterPage extends StatefulWidget {
 class _HelpCenterPageState extends State<HelpCenterPage> {
   final List<FAQItem> _faqList = [
     FAQItem(
-      question: '如何发布房源？',
-      answer: '1. 登录账号后，点击底部导航栏的"发布"按钮\n'
-          '2. 填写房源基本信息（标题、描述、价格等）\n'
-          '3. 上传房源图片（最多9张）\n'
-          '4. 设置租赁方式和租期要求\n'
-          '5. 提交审核，等待管理员审核通过',
-    ),
+        question: 'How do I publish a listing?',
+        answer:
+            'Go to Home > Me > Room Management > Publish New Listing. Complete details and submit.'),
     FAQItem(
-      question: '如何联系房东？',
-      answer: '1. 在房源详情页点击"联系房东"按钮\n'
-          '2. 可以通过在线聊天、电话或留言功能联系\n'
-          '3. 建议在平台内沟通，平台会记录聊天记录\n'
-          '4. 为了保护双方隐私，请勿在平台外联系',
-    ),
+        question: 'How can I contact landlord?',
+        answer:
+            'Open any listing detail page and tap Contact Owner or Book Viewing.'),
     FAQItem(
-      question: '房源审核需要多久？',
-      answer: '正常审核时间为1-3个工作日。我们会尽快处理您的房源申请，请耐心等待。',
-    ),
+        question: 'How long does listing review take?',
+        answer: 'Usually 1-3 business days depending on listing completeness.'),
     FAQItem(
-      question: '如何修改已发布的房源？',
-      answer: '1. 进入"我的"-"我的发布"\n'
-          '2. 找到需要修改的房源\n'
-          '3. 点击"编辑"按钮进行修改\n'
-          '4. 修改后需要重新审核',
-    ),
-    FAQItem(
-      question: '如何申请退租？',
-      answer: '1. 在"我的订单"中找到需要退租的订单\n'
-          '2. 点击"申请退租"并填写退租原因\n'
-          '3. 等待房东确认\n'
-          '4. 确认后按照约定办理退租手续',
-    ),
-    FAQItem(
-      question: '如何设置消息通知？',
-      answer: '1. 进入"设置"-"通知设置"\n'
-          '2. 开启或关闭相应的通知开关\n'
-          '3. 可以设置免打扰时间',
-    ),
+        question: 'How can I edit my listing?',
+        answer: 'Open Room Management and edit your target listing card.'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('帮助中心'),
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(title: const Text('Help Center')),
       body: ListView(
+        padding: const EdgeInsets.all(14),
         children: [
-          // 搜索栏
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: '搜索问题...',
-                prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 0.0,
-                ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Search questions',
+              prefixIcon: const Icon(Icons.search_rounded),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide.none,
               ),
             ),
           ),
-
-          // 热门问题
-          _buildSectionTitle('热门问题'),
-          ..._faqList.take(3).map((faq) => _buildFAQItem(faq)),
-
-          // 所有问题
-          _buildSectionTitle('常见问题'),
-          ..._faqList.map((faq) => _buildFAQItem(faq)),
-
-          // 联系我们
-          _buildSectionTitle('联系我们'),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildContactItem(
-                  icon: Icons.phone,
-                  title: '客服热线',
-                  subtitle: '400-888-9999',
-                  action: '拨打',
-                  onTap: () {
-                    // 拨打客服电话
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildContactItem(
-                  icon: Icons.email,
-                  title: '客服邮箱',
-                  subtitle: 'support@haoke.com',
-                  action: '发送邮件',
-                  onTap: () {
-                    // 发送邮件
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildContactItem(
-                  icon: Icons.access_time,
-                  title: '服务时间',
-                  subtitle: '周一至周日 9:00-18:00',
-                  action: '在线咨询',
-                  onTap: () {
-                    // 在线咨询
-                  },
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 14),
+          const Text('Popular Questions',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+          const SizedBox(height: 8),
+          ..._faqList.map(_buildFAQItem),
+          const SizedBox(height: 14),
+          const Text('Contact Support',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+          const SizedBox(height: 8),
+          _buildContactItem(
+              icon: Icons.phone_rounded,
+              title: 'Support Hotline',
+              subtitle: '400-888-9999',
+              action: 'Call'),
+          const SizedBox(height: 10),
+          _buildContactItem(
+              icon: Icons.email_outlined,
+              title: 'Support Email',
+              subtitle: 'support@haoke.com',
+              action: 'Email'),
         ],
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 16.0,
-        top: 16.0,
-        bottom: 8.0,
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
-        ),
-      ),
-    );
-  }
-
   Widget _buildFAQItem(FAQItem faq) {
-    return ExpansionTile(
-      title: Text(faq.question),
-      childrenPadding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 8.0,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
       ),
-      children: [
-        Text(
-          faq.answer,
-          style: const TextStyle(color: Colors.grey),
-        ),
-      ],
+      child: ExpansionTile(
+        title: Text(faq.question),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        children: [
+          Text(faq.answer,
+              style: const TextStyle(color: Color(0xFF5D6B68), height: 1.45))
+        ],
+      ),
     );
   }
 
-  Widget _buildContactItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required String action,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.red, size: 24),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                ],
-              ),
+  Widget _buildContactItem(
+      {required IconData icon,
+      required String title,
+      required String subtitle,
+      required String action}) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          Icon(icon),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(subtitle,
+                    style: const TextStyle(
+                        color: Color(0xFF7D8B88), fontSize: 12)),
+              ],
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 4.0,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: Text(
-                action,
-                style: const TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-          ],
-        ),
+          ),
+          Text(action,
+              style: const TextStyle(
+                  color: Color(0xFF0F8F7A), fontWeight: FontWeight.w600)),
+        ],
       ),
     );
   }

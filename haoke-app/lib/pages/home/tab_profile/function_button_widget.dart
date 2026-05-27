@@ -11,16 +11,29 @@ class FunctionButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (null != data.onTapHandle) {
+        if (data.onTapHandle != null) {
           data.onTapHandle!(context);
         }
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
-            CommonImage(imageUrl: data.imageUri, width: 45),
-            Text(data.title),
+            CommonImage(
+              imageUrl: data.imageUri,
+              width: 44,
+              height: 44,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              data.title,
+              style: const TextStyle(
+                color: Color(0xFF334845),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),

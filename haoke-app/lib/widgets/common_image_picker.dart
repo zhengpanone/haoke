@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/utils/image_picker_util.dart';
 
@@ -16,10 +17,12 @@ class CommonImagePicker extends StatefulWidget {
 
 class _CommonImagePickerState extends State<CommonImagePicker> {
   List<File> fileList = [];
+
   @override
   Widget build(BuildContext context) {
     var width = (MediaQuery.of(context).size.width - 10 * 4) / 3;
     var height = width / imageWidthHeightRatio;
+
     Widget addButton = GestureDetector(
       onTap: () async {
         List<File> images = await ImagePickerUtil.pickMultiImage();
@@ -27,8 +30,6 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
           setState(() {
             fileList.addAll(images);
           });
-          // 通知外部
-          // 回调给父组件
           widget.onChange(fileList);
         }
       },
@@ -45,7 +46,7 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
         ),
       ),
     );
-    // 图片包装
+
     Widget wrapper(File imagFile) {
       return Stack(
         clipBehavior: Clip.none,
@@ -56,11 +57,10 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
             top: -20,
             child: IconButton(
               onPressed: () {
-                // 删除逻辑
                 setState(() {
                   fileList.remove(imagFile);
                 });
-                widget.onChange(fileList); // 通知父组件
+                widget.onChange(fileList);
               },
               icon: const Icon(Icons.delete_forever, color: Colors.red),
             ),

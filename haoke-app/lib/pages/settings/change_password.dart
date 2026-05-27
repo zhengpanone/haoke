@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
-/// 修改密码页面
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
 
@@ -28,99 +27,72 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('修改密码'),
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(title: const Text('Change Password')),
       body: Form(
         key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _oldPasswordController,
-                decoration: const InputDecoration(
-                  labelText: '原密码',
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: Colors.red,
-                  ),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '请输入原密码';
-                  }
-                  return null;
-                },
+        child: ListView(
+          padding: const EdgeInsets.all(14),
+          children: [
+            TextFormField(
+              controller: _oldPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: 'Current password',
+                  prefixIcon: Icon(Icons.lock_outline_rounded)),
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Please input current password'
+                  : null,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _newPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: 'New password',
+                  prefixIcon: Icon(Icons.key_rounded)),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please input new password';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 chars';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _confirmPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: 'Confirm new password',
+                  prefixIcon: Icon(Icons.verified_user_outlined)),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please confirm password';
+                }
+                if (value != _newPasswordController.text) {
+                  return 'Passwords do not match';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _isLoading ? null : _submitForm,
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Update Password'),
               ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                controller: _newPasswordController,
-                decoration: const InputDecoration(
-                  labelText: '新密码',
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: Colors.red,
-                  ),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '请输入新密码';
-                  }
-                  if (value.length < 6) {
-                    return '密码长度不能少于6位';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                controller: _confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: '确认新密码',
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: Colors.red,
-                  ),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '请确认新密码';
-                  }
-                  if (value != _newPasswordController.text) {
-                    return '两次输入的密码不一致';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('确认修改', style: TextStyle(fontSize: 16)),
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -138,25 +110,27 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         _newPasswordController.text,
       );
 
+      if (!mounted) return;
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('密码修改成功')),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Password updated')));
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(Provider.of<AuthProvider>(context, listen: false)
                       .errorMessage ??
-                  '修改失败')),
+                  'Update failed')),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('发生错误: $e')),
-      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 }

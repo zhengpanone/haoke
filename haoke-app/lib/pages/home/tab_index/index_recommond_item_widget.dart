@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:haoke_rent/pages/home/tab_index/index_recommand_date.dart';
 import 'package:haoke_rent/widgets/common_image.dart';
 
-var textStyle = const TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
-  color: Colors.black,
-);
-
 class IndexRecommondItemWidget extends StatelessWidget {
   final IndexRecommandItem data;
 
@@ -15,22 +9,56 @@ class IndexRecommondItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width =
+        (MediaQuery.of(context).size.width - 12 * 2 - 12 * 2 - 10) / 2;
+
     return GestureDetector(
-      onTap: () => {Navigator.of(context).pushNamed(data.navigateUrl)},
+      onTap: () => Navigator.of(context).pushNamed(data.navigateUrl),
       child: Container(
-        decoration: const BoxDecoration(color: Colors.white),
-        width: (MediaQuery.of(context).size.width - 10 * 3) / 2,
+        width: width,
         padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFE4EEEB)),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Text(data.title, style: textStyle),
-                Text(data.subTitle, style: textStyle),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF1F2B2A),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    data.subTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6B7C78),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            CommonImage(imageUrl: data.imageUrl, width: 60, height: 80),
+            const SizedBox(width: 6),
+            CommonImage(
+              imageUrl: data.imageUrl,
+              width: 54,
+              height: 54,
+              borderRadius: BorderRadius.circular(10),
+            ),
           ],
         ),
       ),

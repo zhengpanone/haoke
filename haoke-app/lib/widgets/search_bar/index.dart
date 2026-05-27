@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
-  final bool showLocation; // 展示位置按钮
-  final Function? goBackCallback; // 回退按钮回调
-  final String inputValue; // 输入框值
-  final String defaultInputValue; // 输入框默认值
-  final Function? onCancel; // 取消按钮回调
-  final bool showMap; // 展示地图按钮
-  final Function? onSearch; // 搜索按钮回调
+  final bool showLocation;
+  final Function? goBackCallback;
+  final String inputValue;
+  final String defaultInputValue;
+  final Function? onCancel;
+  final bool showMap;
+  final Function? onSearch;
   final ValueChanged<String>? onSearchSubmit;
 
   const SearchBar({
@@ -15,12 +15,12 @@ class SearchBar extends StatefulWidget {
     this.showLocation = false,
     this.showMap = false,
     this.inputValue = '',
-    this.defaultInputValue = '请输入搜索条件',
+    this.defaultInputValue = 'Search community, area, subway...',
     this.goBackCallback,
     this.onCancel,
     this.onSearch,
     this.onSearchSubmit,
-  }); // 输入框内容变化回调
+  });
 
   @override
   State<SearchBar> createState() => _SearchBarState();
@@ -28,19 +28,8 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   String _searchText = '';
-
   late TextEditingController _controller;
-
   late FocusNode _focus;
-
-  void _onClean() {
-    _controller.clear();
-    setState(() {
-      _searchText = '';
-    });
-    // 失焦（清空后也不要自动弹键盘）
-    FocusScope.of(context).unfocus();
-  }
 
   @override
   void initState() {
@@ -51,9 +40,17 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   void dispose() {
-    _focus.dispose(); // 释放资源
-    _controller.dispose(); // 避免内存泄漏
+    _focus.dispose();
+    _controller.dispose();
     super.dispose();
+  }
+
+  void _onClean() {
+    _controller.clear();
+    setState(() {
+      _searchText = '';
+    });
+    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -61,49 +58,63 @@ class _SearchBarState extends State<SearchBar> {
     return Row(
       children: [
         if (widget.showLocation)
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: GestureDetector(
-              onTap: () {},
-              child: const Row(
-                children: [
-                  Icon(Icons.room, color: Colors.red, size: 20),
-                  Text(
-                    '北京',
-                    style: TextStyle(color: Colors.black, fontSize: 14),
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F6F2),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.location_on_rounded,
+                    color: Color(0xFF0F8F7A), size: 16),
+                SizedBox(width: 4),
+                Text(
+                  'Beijing',
+                  style: TextStyle(
+                    color: Color(0xFF0F8F7A),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         if (widget.goBackCallback != null)
           Padding(
-            padding: const EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: widget.goBackCallback as void Function()?,
-              child:
-                  const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
+              child: const Icon(Icons.arrow_back_rounded,
+                  color: Color(0xFF374544), size: 20),
             ),
           ),
         Expanded(
           child: Container(
-            height: 34,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(17),
-            ),
+            height: 40,
             margin: const EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: const Color(0xFFDBE9E5)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
             child: TextField(
               focusNode: _focus,
-              onChanged: (value) => {
+              onChanged: (value) {
                 setState(() {
                   _searchText = value;
-                }),
+                });
               },
               onTap: () {
-                // 如果不是搜索页，立刻失焦
                 if (widget.onSearchSubmit == null) {
-                  // 焦点切换到一个新的临时节点，避免原节点状态残留。
                   FocusScope.of(context).requestFocus(FocusNode());
                 }
                 if (widget.onSearch != null) {
@@ -113,46 +124,54 @@ class _SearchBarState extends State<SearchBar> {
               onSubmitted: widget.onSearchSubmit,
               textInputAction: TextInputAction.search,
               controller: _controller,
-              style: const TextStyle(fontSize: 14, color: Colors.black87),
+              style: const TextStyle(fontSize: 14, color: Color(0xFF1F2B2A)),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                icon: const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Icon(Icons.search, color: Colors.grey, size: 20),
-                ),
+                prefixIcon: const Icon(Icons.search_rounded,
+                    color: Color(0xFF9AA8A5), size: 20),
                 suffixIcon: GestureDetector(
                   onTap: _onClean,
                   child: Icon(
-                    Icons.clear,
-                    color: _searchText == '' ? Colors.grey[200] : Colors.grey,
-                    size: 20,
+                    Icons.cancel_rounded,
+                    color: _searchText.isEmpty
+                        ? Colors.transparent
+                        : const Color(0xFFB4C0BE),
+                    size: 18,
                   ),
                 ),
-                hintText: '请输入搜索条件',
-                hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
-                contentPadding: const EdgeInsets.only(top: 0, left: -12),
+                hintText: widget.defaultInputValue,
+                hintStyle:
+                    const TextStyle(fontSize: 13, color: Color(0xFF9AA8A5)),
+                contentPadding: const EdgeInsets.only(top: 1),
               ),
             ),
           ),
         ),
         if (widget.onCancel != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: GestureDetector(
-              onTap: widget.onCancel as void Function()?,
-              child: const Text(
-                '取消',
-                style: TextStyle(color: Colors.black, fontSize: 14),
+          GestureDetector(
+            onTap: widget.onCancel as void Function()?,
+            child: const Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Color(0xFF4A5B58),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
         if (widget.showMap)
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: GestureDetector(
-              onTap: () {},
-              child: const Icon(Icons.map, color: Colors.red, size: 20),
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F6F2),
+              borderRadius: BorderRadius.circular(12),
             ),
+            child: const Icon(Icons.map_rounded,
+                color: Color(0xFF0F8F7A), size: 20),
           ),
       ],
     );

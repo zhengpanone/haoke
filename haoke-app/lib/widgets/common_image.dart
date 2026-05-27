@@ -79,11 +79,11 @@ class MyCacheManager extends CacheManager {
   static const key = "myCustomCache";
 
   MyCacheManager()
-    : super(
-        Config(
-          key,
-          stalePeriod: const Duration(days: 7),
-          maxNrOfCacheObjects: 200,
-        ),
-      );
+      : super(
+          Config(
+            key,
+            stalePeriod: const Duration(days: 7),
+            maxNrOfCacheObjects: 200,
+          ),
+        );
 }

@@ -12,7 +12,6 @@ class CommonRadioFormItem extends StatelessWidget {
     required this.label,
     required this.options,
     required this.value,
-
     required this.onChange,
   });
 
