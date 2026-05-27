@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:haoke_rent/l10n/app_localizations.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -57,11 +58,14 @@ class AboutUsPage extends StatelessWidget {
             context.tr('contact'),
             Column(
               children: [
-                _item(context, Icons.language_rounded, context.tr('website'),
+                _item(context, Icons.public_rounded, context.tr('website'),
                     () => _launchUrl(context, 'https://www.haoke.com')),
-                _item(context, Icons.email_outlined, context.tr('business'),
+                _item(
+                    context,
+                    Icons.business_center_rounded,
+                    context.tr('business'),
                     () => _launchUrl(context, 'mailto:business@haoke.com')),
-                _item(context, Icons.feedback_outlined, context.tr('feedback'),
+                _item(context, Icons.feedback_rounded, context.tr('feedback'),
                     () => _launchUrl(context, 'mailto:feedback@haoke.com')),
               ],
             ),
@@ -70,9 +74,9 @@ class AboutUsPage extends StatelessWidget {
             context.tr('legal'),
             Column(
               children: [
-                _item(context, Icons.description_outlined,
+                _item(context, Icons.description_rounded,
                     context.tr('user_agreement'), () {}),
-                _item(context, Icons.privacy_tip_outlined,
+                _item(context, Icons.privacy_tip_rounded,
                     context.tr('privacy_policy'), () {}),
                 _item(context, Icons.gavel_rounded, context.tr('disclaimer'),
                     () {}),
@@ -115,7 +119,7 @@ class AboutUsPage extends StatelessWidget {
       BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon),
+      leading: CommonIconBadge(icon: icon, boxSize: 34, iconSize: 17),
       title: Text(title),
       trailing: const Icon(Icons.chevron_right_rounded),
       onTap: onTap,

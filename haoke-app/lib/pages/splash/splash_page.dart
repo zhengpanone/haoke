@@ -44,13 +44,13 @@ class _SplashPageState extends State<SplashPage> {
                 ],
               ),
               child: Icon(
-                Icons.home,
+                Icons.home_rounded,
                 size: 60,
                 color: Theme.of(context).primaryColor,
               ),
             ),
             const SizedBox(height: 30),
-            // 应用名称
+            // 搴旂敤鍚嶇О
             const Text(
               AppConfig.appName,
               style: TextStyle(

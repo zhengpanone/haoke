@@ -41,7 +41,7 @@ class CommonSelectFormItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(options[value], style: const TextStyle(fontSize: 16)),
-                const Icon(Icons.keyboard_arrow_right),
+                const Icon(Icons.keyboard_arrow_right_rounded),
               ],
             ),
           ),

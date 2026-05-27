@@ -55,7 +55,7 @@ class CommonImage extends StatelessWidget {
           width: width,
           height: height,
           color: Colors.grey.shade300,
-          child: const Icon(Icons.broken_image, color: Colors.grey),
+          child: const Icon(Icons.broken_image_rounded, color: Colors.grey),
         ),
       );
     } else {

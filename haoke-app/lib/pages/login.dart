@@ -50,7 +50,8 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? context.tr('login_failed')),
+            content:
+                Text(authProvider.errorMessage ?? context.tr('login_failed')),
             backgroundColor: Colors.red,
           ),
         );
@@ -183,8 +184,8 @@ class _LoginPageState extends State<LoginPage> {
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _showPassword
-                                        ? Icons.visibility_off_outlined
-                                        : Icons.visibility_outlined,
+                                        ? Icons.visibility_off_rounded
+                                        : Icons.visibility_rounded,
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -208,7 +209,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Text(
                                   context.tr('remember_me'),
-                                  style: const TextStyle(color: Color(0xFF55607A)),
+                                  style:
+                                      const TextStyle(color: Color(0xFF55607A)),
                                 ),
                               ],
                             ),

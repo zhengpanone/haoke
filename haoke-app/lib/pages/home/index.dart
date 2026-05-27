@@ -34,12 +34,13 @@ class _HomePageState extends State<HomePage> {
       BottomNavigationBarItem(
           icon: const Icon(Icons.home_rounded), label: context.tr('home')),
       BottomNavigationBarItem(
-          icon: const Icon(Icons.travel_explore_rounded),
+          icon: const Icon(Icons.search_rounded),
           label: context.tr('find_house')),
       BottomNavigationBarItem(
-          icon: const Icon(Icons.newspaper_rounded), label: context.tr('info')),
+          icon: const Icon(Icons.article_rounded), label: context.tr('info')),
       BottomNavigationBarItem(
-          icon: const Icon(Icons.person_rounded), label: context.tr('mine')),
+          icon: const Icon(Icons.account_circle_rounded),
+          label: context.tr('mine')),
     ];
 
     return Scaffold(

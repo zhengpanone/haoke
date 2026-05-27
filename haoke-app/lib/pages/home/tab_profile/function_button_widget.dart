@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/tab_profile/function_button_data.dart';
-import 'package:haoke_rent/widgets/common_image.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class FunctionButtonWidget extends StatelessWidget {
   final FunctionButtonItem data;
@@ -20,11 +20,11 @@ class FunctionButtonWidget extends StatelessWidget {
         margin: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
-            CommonImage(
-              imageUrl: data.imageUri,
-              width: 44,
-              height: 44,
-              borderRadius: BorderRadius.circular(12),
+            CommonIconBadge(
+              icon: data.icon,
+              boxSize: 52,
+              iconSize: 28,
+              radius: 14,
             ),
             const SizedBox(height: 8),
             Text(

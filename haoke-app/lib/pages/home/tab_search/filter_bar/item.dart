@@ -23,7 +23,7 @@ class FilterBarItem extends StatelessWidget {
         child: Row(
           children: [
             Text(title, style: TextStyle(color: color, fontSize: 18)),
-            Icon(Icons.arrow_drop_down, color: color),
+            Icon(Icons.arrow_drop_down_rounded, color: color),
           ],
         ),
       ),

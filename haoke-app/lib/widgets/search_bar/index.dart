@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class SearchBar extends StatefulWidget {
   final bool showLocation;
@@ -163,15 +164,11 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         if (widget.showMap)
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F6F2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.map_rounded,
-                color: Color(0xFF0F8F7A), size: 20),
+          const CommonIconBadge(
+            icon: Icons.map_rounded,
+            boxSize: 38,
+            iconSize: 20,
+            radius: 12,
           ),
       ],
     );

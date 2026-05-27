@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/l10n/app_localizations.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class PrivacySettingsPage extends StatefulWidget {
   const PrivacySettingsPage({super.key});
@@ -75,11 +76,11 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
               _adPersonalization,
               (value) => setState(() => _adPersonalization = value)),
           _buildSectionTitle(context.tr('privacy_actions')),
-          _buildActionTile(Icons.delete_outline_rounded,
+          _buildActionTile(Icons.history_rounded,
               context.tr('clear_search_history'), _clearSearchHistory),
-          _buildActionTile(Icons.delete_sweep_outlined,
+          _buildActionTile(Icons.forum_rounded,
               context.tr('clear_chat_records'), _clearChatHistory),
-          _buildActionTile(Icons.person_off_outlined,
+          _buildActionTile(Icons.person_remove_rounded,
               context.tr('delete_account'), _showDeleteAccountDialog),
           const SizedBox(height: 20),
         ],
@@ -117,7 +118,7 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(14)),
       child: ListTile(
-        leading: Icon(icon),
+        leading: CommonIconBadge(icon: icon, boxSize: 34, iconSize: 17),
         title: Text(title),
         trailing: const Icon(Icons.chevron_right_rounded),
         onTap: onTap,

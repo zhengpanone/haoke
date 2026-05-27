@@ -67,7 +67,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               obscureText: true,
               decoration: InputDecoration(
                   labelText: context.tr('confirm_new_password'),
-                  prefixIcon: const Icon(Icons.verified_user_outlined)),
+                  prefixIcon: const Icon(Icons.verified_user_rounded)),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return context.tr('input_confirm_password');

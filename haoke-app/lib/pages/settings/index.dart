@@ -8,6 +8,7 @@ import 'package:haoke_rent/pages/settings/phone_binding.dart';
 import 'package:haoke_rent/pages/settings/privacy_settings.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
 import 'package:haoke_rent/providers/locale_provider.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -26,7 +27,7 @@ class SettingsPage extends StatelessWidget {
           _buildSectionTitle(context, context.tr('section_account_security')),
           _buildCard([
             _buildSettingItem(
-              icon: Icons.lock_outline_rounded,
+              icon: Icons.password_rounded,
               title: context.tr('change_password'),
               onTap: () {
                 Navigator.push(
@@ -37,7 +38,7 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             _buildSettingItem(
-              icon: Icons.phone_android_rounded,
+              icon: Icons.phone_iphone_rounded,
               title: context.tr('phone_binding'),
               subTitle:
                   authProvider.currentUser?.phone ?? context.tr('not_bound'),
@@ -53,7 +54,7 @@ class SettingsPage extends StatelessWidget {
           _buildSectionTitle(context, context.tr('section_notification')),
           _buildCard([
             _buildSettingItem(
-              icon: Icons.notifications_outlined,
+              icon: Icons.notifications_active_rounded,
               title: context.tr('push_notifications'),
               trailing: Switch(
                 value: true,
@@ -65,7 +66,7 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             _buildSettingItem(
-              icon: Icons.email_outlined,
+              icon: Icons.email_rounded,
               title: context.tr('email_notifications'),
               trailing: Switch(
                 value: false,
@@ -82,7 +83,7 @@ class SettingsPage extends StatelessWidget {
           _buildSectionTitle(context, context.tr('section_privacy')),
           _buildCard([
             _buildSettingItem(
-              icon: Icons.privacy_tip_outlined,
+              icon: Icons.admin_panel_settings_rounded,
               title: context.tr('privacy_options'),
               subTitle: context.tr('visible_only_me'),
               onTap: () {
@@ -97,7 +98,7 @@ class SettingsPage extends StatelessWidget {
           _buildSectionTitle(context, context.tr('section_general')),
           _buildCard([
             _buildSettingItem(
-              icon: Icons.language_rounded,
+              icon: Icons.translate_rounded,
               title: context.tr('language'),
               subTitle: _languageNameByCode(context, localeCode),
               onTap: () {
@@ -109,7 +110,7 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             _buildSettingItem(
-              icon: Icons.help_outline_rounded,
+              icon: Icons.support_agent_rounded,
               title: context.tr('help_center'),
               onTap: () {
                 Navigator.push(
@@ -120,7 +121,7 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             _buildSettingItem(
-              icon: Icons.info_outline_rounded,
+              icon: Icons.info_rounded,
               title: context.tr('about_us'),
               onTap: () {
                 Navigator.push(
@@ -199,7 +200,7 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, size: 22),
+            CommonIconBadge(icon: icon, boxSize: 36, iconSize: 18),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

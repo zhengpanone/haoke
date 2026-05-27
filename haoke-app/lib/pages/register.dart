@@ -144,8 +144,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     Text(
                       context.tr('register_subtitle'),
                       textAlign: TextAlign.center,
-                      style:
-                          const TextStyle(fontSize: 14, color: Color(0xFF6A7C79)),
+                      style: const TextStyle(
+                          fontSize: 14, color: Color(0xFF6A7C79)),
                     ),
                     const SizedBox(height: 24),
                     Container(
@@ -188,8 +188,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _showPassword
-                                        ? Icons.visibility_off_outlined
-                                        : Icons.visibility_outlined,
+                                        ? Icons.visibility_off_rounded
+                                        : Icons.visibility_rounded,
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -209,12 +209,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               decoration: _buildInputDecoration(
                                 labelText: context.tr('confirm_password'),
                                 hintText: context.tr('reenter_password'),
-                                icon: Icons.shield_outlined,
+                                icon: Icons.shield_rounded,
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _showConfirmPassword
-                                        ? Icons.visibility_off_outlined
-                                        : Icons.visibility_outlined,
+                                        ? Icons.visibility_off_rounded
+                                        : Icons.visibility_rounded,
                                   ),
                                   onPressed: () {
                                     setState(() {

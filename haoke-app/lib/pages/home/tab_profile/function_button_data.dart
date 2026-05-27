@@ -1,26 +1,24 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class FunctionButtonItem {
-  final String imageUri;
+  final IconData icon;
   final String titleKey;
   final Function? onTapHandle;
 
-  FunctionButtonItem(this.imageUri, this.titleKey, [this.onTapHandle]);
+  FunctionButtonItem(this.icon, this.titleKey, [this.onTapHandle]);
 }
 
 void defaultTapHandler(context) {}
 
 final List<FunctionButtonItem> list = [
-  FunctionButtonItem('statics/images/profile_identity.png', 'viewing_history'),
-  FunctionButtonItem('statics/images/profile_identity.png', 'my_orders'),
-  FunctionButtonItem('statics/images/profile_identity.png', 'my_favorites'),
-  FunctionButtonItem(
-      'statics/images/profile_identity.png', 'identity_verification'),
-  FunctionButtonItem('statics/images/profile_message.png', 'contact_us'),
-  FunctionButtonItem('statics/images/profile_contract.png', 'e_contract'),
-  FunctionButtonItem('statics/images/profile_house.png', 'house_management',
-      (context) {
+  FunctionButtonItem(Icons.history_rounded, 'viewing_history'),
+  FunctionButtonItem(Icons.receipt_long_rounded, 'my_orders'),
+  FunctionButtonItem(Icons.favorite_rounded, 'my_favorites'),
+  FunctionButtonItem(Icons.verified_user_rounded, 'identity_verification'),
+  FunctionButtonItem(Icons.support_agent_rounded, 'contact_us'),
+  FunctionButtonItem(Icons.description_rounded, 'e_contract'),
+  FunctionButtonItem(Icons.home_work_rounded, 'house_management', (context) {
     Navigator.of(context).pushNamed('roomManage');
   }),
-  FunctionButtonItem('statics/images/profile_wallet.png', 'wallet'),
+  FunctionButtonItem(Icons.account_balance_wallet_rounded, 'wallet'),
 ];

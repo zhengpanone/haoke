@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/l10n/app_localizations.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class HelpCenterPage extends StatelessWidget {
   const HelpCenterPage({super.key});
@@ -55,7 +56,7 @@ class HelpCenterPage extends StatelessWidget {
               action: context.tr('call')),
           const SizedBox(height: 10),
           _buildContactItem(
-              icon: Icons.email_outlined,
+              icon: Icons.email_rounded,
               title: context.tr('support_email'),
               subtitle: 'support@haoke.com',
               action: context.tr('email')),
@@ -95,7 +96,7 @@ class HelpCenterPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon),
+          CommonIconBadge(icon: icon, boxSize: 34, iconSize: 17),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

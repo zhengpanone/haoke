@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/providers/locale_provider.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSettingsPage extends StatefulWidget {
@@ -59,7 +60,12 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.info_outline_rounded),
+                const CommonIconBadge(
+                  icon: Icons.info_outline_rounded,
+                  boxSize: 30,
+                  iconSize: 15,
+                  radius: 9,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(

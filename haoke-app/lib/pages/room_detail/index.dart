@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:haoke_rent/pages/home/info/info.dart';
 import 'package:haoke_rent/pages/room_detail/data.dart';
 import 'package:haoke_rent/widgets/common_price_text.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 import 'package:haoke_rent/widgets/common_swipper.dart';
 import 'package:haoke_rent/widgets/common_tag.dart';
 import 'package:haoke_rent/widgets/common_title.dart';
@@ -54,7 +55,11 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                 const SnackBar(content: Text('分享链接已复制')),
               );
             },
-            icon: const Icon(Icons.share_outlined),
+            icon: const CommonIconBadge(
+              icon: Icons.share_rounded,
+              boxSize: 32,
+              iconSize: 16,
+            ),
           ),
         ],
       ),
@@ -127,8 +132,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                     Text(showAllText ? 'Collapse' : 'Expand'),
                                     Icon(
                                       showAllText
-                                          ? Icons.keyboard_arrow_up
-                                          : Icons.keyboard_arrow_down,
+                                          ? Icons.keyboard_arrow_up_rounded
+                                          : Icons.keyboard_arrow_down_rounded,
                                     ),
                                   ],
                                 ),
@@ -177,8 +182,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         children: [
                           Icon(
                             isLike
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
+                                ? Icons.bookmark_added_rounded
+                                : Icons.bookmark_add_rounded,
                             color: isLike
                                 ? const Color(0xFF0F8F7A)
                                 : const Color(0xFF516360),

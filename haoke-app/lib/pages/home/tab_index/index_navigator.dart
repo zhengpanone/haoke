@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/pages/home/tab_index/index_navigator_item.dart';
-import 'package:haoke_rent/widgets/common_image.dart';
+import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class IndexNavigator extends StatelessWidget {
   const IndexNavigator({super.key});
@@ -32,12 +32,11 @@ class IndexNavigator extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     children: [
-                      CommonImage(
-                        imageUrl: item.imageUrl,
-                        width: 46,
-                        height: 46,
-                        borderRadius: BorderRadius.circular(12),
-                        fit: BoxFit.cover,
+                      CommonIconBadge(
+                        icon: item.icon,
+                        boxSize: 52,
+                        iconSize: 26,
+                        radius: 14,
                       ),
                       const SizedBox(height: 7),
                       Text(

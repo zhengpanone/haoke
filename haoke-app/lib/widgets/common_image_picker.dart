@@ -62,7 +62,7 @@ class _CommonImagePickerState extends State<CommonImagePicker> {
                 });
                 widget.onChange(fileList);
               },
-              icon: const Icon(Icons.delete_forever, color: Colors.red),
+              icon: const Icon(Icons.delete_forever_rounded, color: Colors.red),
             ),
           ),
         ],
