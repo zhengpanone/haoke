@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/info/info.dart';
 import 'package:haoke_rent/pages/home/tab_profile/advertisement.dart';
 import 'package:haoke_rent/pages/home/tab_profile/function_button.dart';
@@ -12,7 +13,7 @@ class TabProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的'),
+        title: Text(context.tr('mine')),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 10),

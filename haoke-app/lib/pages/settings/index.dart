@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/settings/about_us.dart';
 import 'package:haoke_rent/pages/settings/change_password.dart';
 import 'package:haoke_rent/pages/settings/help_center.dart';
@@ -6,6 +7,7 @@ import 'package:haoke_rent/pages/settings/language_setting.dart';
 import 'package:haoke_rent/pages/settings/phone_binding.dart';
 import 'package:haoke_rent/pages/settings/privacy_settings.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
+import 'package:haoke_rent/providers/locale_provider.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -14,17 +16,18 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final localeCode = context.watch<LocaleProvider>().localeCode;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(context.tr('settings'))),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 22),
         children: [
-          _buildSectionTitle('Account & Security'),
+          _buildSectionTitle(context, context.tr('section_account_security')),
           _buildCard([
             _buildSettingItem(
               icon: Icons.lock_outline_rounded,
-              title: 'Change password',
+              title: context.tr('change_password'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -35,8 +38,9 @@ class SettingsPage extends StatelessWidget {
             ),
             _buildSettingItem(
               icon: Icons.phone_android_rounded,
-              title: 'Phone binding',
-              subTitle: authProvider.currentUser?.phone ?? 'Not bound',
+              title: context.tr('phone_binding'),
+              subTitle:
+                  authProvider.currentUser?.phone ?? context.tr('not_bound'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -46,39 +50,41 @@ class SettingsPage extends StatelessWidget {
               },
             ),
           ]),
-          _buildSectionTitle('Notification'),
+          _buildSectionTitle(context, context.tr('section_notification')),
           _buildCard([
             _buildSettingItem(
               icon: Icons.notifications_outlined,
-              title: 'Push notifications',
+              title: context.tr('push_notifications'),
               trailing: Switch(
                 value: true,
                 onChanged: (value) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Notification updated')),
+                    SnackBar(content: Text(context.tr('notification_updated'))),
                   );
                 },
               ),
             ),
             _buildSettingItem(
               icon: Icons.email_outlined,
-              title: 'Email notifications',
+              title: context.tr('email_notifications'),
               trailing: Switch(
                 value: false,
                 onChanged: (value) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Email notification updated')),
+                    SnackBar(
+                        content:
+                            Text(context.tr('email_notification_updated'))),
                   );
                 },
               ),
             ),
           ]),
-          _buildSectionTitle('Privacy'),
+          _buildSectionTitle(context, context.tr('section_privacy')),
           _buildCard([
             _buildSettingItem(
               icon: Icons.privacy_tip_outlined,
-              title: 'Privacy options',
-              subTitle: 'Only visible to myself',
+              title: context.tr('privacy_options'),
+              subTitle: context.tr('visible_only_me'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -88,12 +94,12 @@ class SettingsPage extends StatelessWidget {
               },
             ),
           ]),
-          _buildSectionTitle('General'),
+          _buildSectionTitle(context, context.tr('section_general')),
           _buildCard([
             _buildSettingItem(
               icon: Icons.language_rounded,
-              title: 'Language',
-              subTitle: 'Simplified Chinese',
+              title: context.tr('language'),
+              subTitle: _languageNameByCode(context, localeCode),
               onTap: () {
                 Navigator.push(
                   context,
@@ -104,7 +110,7 @@ class SettingsPage extends StatelessWidget {
             ),
             _buildSettingItem(
               icon: Icons.help_outline_rounded,
-              title: 'Help center',
+              title: context.tr('help_center'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -115,7 +121,7 @@ class SettingsPage extends StatelessWidget {
             ),
             _buildSettingItem(
               icon: Icons.info_outline_rounded,
-              title: 'About us',
+              title: context.tr('about_us'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -130,12 +136,22 @@ class SettingsPage extends StatelessWidget {
               onPressed: () {
                 _showLogoutConfirmation(context, authProvider);
               },
-              child: const Text('Log out'),
+              child: Text(context.tr('logout')),
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _languageNameByCode(BuildContext context, String code) {
+    switch (code) {
+      case 'zh':
+        return context.tr('lang_zh');
+      case 'en':
+      default:
+        return context.tr('lang_en');
+    }
   }
 
   Widget _buildCard(List<Widget> children) {
@@ -155,7 +171,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, top: 14, bottom: 8),
       child: Text(
@@ -217,12 +233,12 @@ class SettingsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm log out'),
-        content: const Text('Are you sure you want to log out?'),
+        title: Text(context.tr('confirm_logout')),
+        content: Text(context.tr('confirm_logout_content')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.tr('cancel')),
           ),
           TextButton(
             onPressed: () async {
@@ -232,7 +248,7 @@ class SettingsPage extends StatelessWidget {
               Navigator.of(context)
                   .pushNamedAndRemoveUntil('/login', (route) => false);
             },
-            child: const Text('Log out'),
+            child: Text(context.tr('logout')),
           )
         ],
       ),

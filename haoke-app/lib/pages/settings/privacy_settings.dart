@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 
 class PrivacySettingsPage extends StatefulWidget {
   const PrivacySettingsPage({super.key});
@@ -21,56 +22,65 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Privacy Settings'),
+        title: Text(context.tr('privacy_settings')),
         actions: [
-          TextButton(onPressed: _saveSettings, child: const Text('Save'))
+          TextButton(onPressed: _saveSettings, child: Text(context.tr('save')))
         ],
       ),
       body: ListView(
         children: [
-          _buildSectionTitle('Profile Visibility'),
+          _buildSectionTitle(context.tr('profile_visibility')),
           _buildSwitchTile(
-              'Public profile',
-              'Others can view your profile',
+              context.tr('public_profile'),
+              context.tr('others_can_view_profile'),
               _profilePublic,
               (value) => setState(() => _profilePublic = value)),
           if (_profilePublic) ...[
-            _buildSwitchTile('Show phone', 'Display your phone on profile',
-                _showPhone, (value) => setState(() => _showPhone = value)),
-            _buildSwitchTile('Show email', 'Display your email on profile',
-                _showEmail, (value) => setState(() => _showEmail = value)),
+            _buildSwitchTile(
+                context.tr('show_phone'),
+                context.tr('display_phone_profile'),
+                _showPhone,
+                (value) => setState(() => _showPhone = value)),
+            _buildSwitchTile(
+                context.tr('show_email'),
+                context.tr('display_email_profile'),
+                _showEmail,
+                (value) => setState(() => _showEmail = value)),
           ],
-          _buildSectionTitle('Search & Discovery'),
+          _buildSectionTitle(context.tr('search_discovery')),
           _buildSwitchTile(
-              'Search by phone',
-              'Allow others search you by phone',
+              context.tr('search_by_phone'),
+              context.tr('allow_search_by_phone'),
               _allowSearchByPhone,
               (value) => setState(() => _allowSearchByPhone = value)),
           _buildSwitchTile(
-              'Friend recommendation',
-              'Recommend your account to contacts',
+              context.tr('friend_recommendation'),
+              context.tr('recommend_to_contacts'),
               _friendRecommendation,
               (value) => setState(() => _friendRecommendation = value)),
-          _buildSectionTitle('Data Permission'),
+          _buildSectionTitle(context.tr('data_permission')),
           _buildSwitchTile(
-              'Data collection',
-              'Improve app experience with usage data',
+              context.tr('data_collection'),
+              context.tr('improve_with_usage'),
               _dataCollection,
               (value) => setState(() => _dataCollection = value)),
-          _buildSwitchTile('Analytics', 'Allow anonymous data analytics',
-              _analytics, (value) => setState(() => _analytics = value)),
           _buildSwitchTile(
-              'Ad personalization',
-              'Show more relevant ads',
+              context.tr('analytics'),
+              context.tr('allow_anonymous_analytics'),
+              _analytics,
+              (value) => setState(() => _analytics = value)),
+          _buildSwitchTile(
+              context.tr('ad_personalization'),
+              context.tr('relevant_ads'),
               _adPersonalization,
               (value) => setState(() => _adPersonalization = value)),
-          _buildSectionTitle('Privacy Actions'),
-          _buildActionTile(Icons.delete_outline_rounded, 'Clear search history',
-              _clearSearchHistory),
-          _buildActionTile(Icons.delete_sweep_outlined, 'Clear chat records',
-              _clearChatHistory),
-          _buildActionTile(Icons.person_off_outlined, 'Delete account',
-              _showDeleteAccountDialog),
+          _buildSectionTitle(context.tr('privacy_actions')),
+          _buildActionTile(Icons.delete_outline_rounded,
+              context.tr('clear_search_history'), _clearSearchHistory),
+          _buildActionTile(Icons.delete_sweep_outlined,
+              context.tr('clear_chat_records'), _clearChatHistory),
+          _buildActionTile(Icons.person_off_outlined,
+              context.tr('delete_account'), _showDeleteAccountDialog),
           const SizedBox(height: 20),
         ],
       ),
@@ -116,34 +126,35 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
   }
 
   void _saveSettings() {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Privacy settings saved')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.tr('privacy_settings_saved'))),
+    );
   }
 
   void _clearSearchHistory() {
     _showConfirmDialog(
-      title: 'Clear search history',
-      content: 'Are you sure to clear all search history?',
+      title: context.tr('clear_search_history'),
+      content: context.tr('confirm_clear_search_history'),
       onConfirm: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Search history cleared'))),
+          SnackBar(content: Text(context.tr('search_history_cleared')))),
     );
   }
 
   void _clearChatHistory() {
     _showConfirmDialog(
-      title: 'Clear chat records',
-      content: 'Are you sure to clear all chat records?',
-      onConfirm: () => ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Chat records cleared'))),
+      title: context.tr('clear_chat_records'),
+      content: context.tr('confirm_clear_chat_records'),
+      onConfirm: () => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.tr('chat_records_cleared')))),
     );
   }
 
   void _showDeleteAccountDialog() {
     _showConfirmDialog(
-      title: 'Delete account',
-      content: 'This action cannot be undone. Continue?',
+      title: context.tr('delete_account'),
+      content: context.tr('cannot_undo_continue'),
       onConfirm: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Delete request submitted'))),
+          SnackBar(content: Text(context.tr('delete_request_submitted')))),
     );
   }
 
@@ -159,13 +170,13 @@ class _PrivacySettingsPageState extends State<PrivacySettingsPage> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+              child: Text(context.tr('cancel'))),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               onConfirm();
             },
-            child: const Text('Confirm'),
+            child: Text(context.tr('confirm')),
           ),
         ],
       ),

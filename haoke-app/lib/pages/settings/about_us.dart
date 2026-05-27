@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -8,14 +9,14 @@ class AboutUsPage extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: url));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('链接已复制，请在浏览器中打开')),
+      SnackBar(content: Text(context.tr('link_copied_open_browser'))),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('About Haoke Rent')),
+      appBar: AppBar(title: Text(context.tr('about_haoke_rent'))),
       body: ListView(
         padding: const EdgeInsets.all(14),
         children: [
@@ -46,41 +47,43 @@ class AboutUsPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _section(
-            'Our Mission',
-            const Text(
-              'Haoke Rent connects landlords and tenants with transparent listings, efficient communication and safer rental decisions.',
-              style: TextStyle(height: 1.55, color: Color(0xFF4C5F5C)),
+            context.tr('our_mission'),
+            Text(
+              context.tr('mission_content'),
+              style: const TextStyle(height: 1.55, color: Color(0xFF4C5F5C)),
             ),
           ),
           _section(
-            'Contact',
+            context.tr('contact'),
             Column(
               children: [
-                _item(context, Icons.language_rounded, 'Website',
+                _item(context, Icons.language_rounded, context.tr('website'),
                     () => _launchUrl(context, 'https://www.haoke.com')),
-                _item(context, Icons.email_outlined, 'Business',
+                _item(context, Icons.email_outlined, context.tr('business'),
                     () => _launchUrl(context, 'mailto:business@haoke.com')),
-                _item(context, Icons.feedback_outlined, 'Feedback',
+                _item(context, Icons.feedback_outlined, context.tr('feedback'),
                     () => _launchUrl(context, 'mailto:feedback@haoke.com')),
               ],
             ),
           ),
           _section(
-            'Legal',
+            context.tr('legal'),
             Column(
               children: [
-                _item(context, Icons.description_outlined, 'User Agreement',
+                _item(context, Icons.description_outlined,
+                    context.tr('user_agreement'), () {}),
+                _item(context, Icons.privacy_tip_outlined,
+                    context.tr('privacy_policy'), () {}),
+                _item(context, Icons.gavel_rounded, context.tr('disclaimer'),
                     () {}),
-                _item(context, Icons.privacy_tip_outlined, 'Privacy Policy',
-                    () {}),
-                _item(context, Icons.gavel_rounded, 'Disclaimer', () {}),
               ],
             ),
           ),
           const SizedBox(height: 12),
-          const Center(
-            child: Text('? 2026 Haoke Rent. All rights reserved.',
-                style: TextStyle(color: Color(0xFF8D9997), fontSize: 12)),
+          Center(
+            child: Text(
+                '(c) 2026 Haoke Rent. ${context.tr('all_rights_reserved')}',
+                style: const TextStyle(color: Color(0xFF8D9997), fontSize: 12)),
           ),
         ],
       ),

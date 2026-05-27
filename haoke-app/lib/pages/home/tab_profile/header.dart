@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -35,19 +36,19 @@ class Header extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed('login'),
-                    child: const Text('登录', style: loginTextStyle),
+                    child: Text(context.tr('login'), style: loginTextStyle),
                   ),
                   const Text(' / ', style: loginTextStyle),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed('register'),
-                    child: const Text('注册', style: loginTextStyle),
+                    child: Text(context.tr('register'), style: loginTextStyle),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              const Text(
-                '登录后解锁更多功能',
-                style: TextStyle(color: Colors.white, fontSize: 13),
+              Text(
+                context.tr('sign_in_unlock'),
+                style: const TextStyle(color: Colors.white, fontSize: 13),
               ),
             ],
           ),
@@ -60,7 +61,7 @@ class Header extends StatelessWidget {
     final user = authProvider.currentUser;
     final avatarUrl = user?.avatar ??
         'https://images.pexels.com/photos/33412303/pexels-photo-33412303.jpeg';
-    final username = user?.username ?? user?.nickname ?? '游客';
+    final username = user?.username ?? user?.nickname ?? context.tr('guest');
 
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
@@ -86,9 +87,9 @@ class Header extends StatelessWidget {
                   onTap: () {
                     Navigator.pushNamed(context, '/profile/edit');
                   },
-                  child: const Text(
-                    '查看并编辑个人资料',
-                    style: TextStyle(color: Colors.white, fontSize: 13),
+                  child: Text(
+                    context.tr('view_edit_profile'),
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +34,7 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
     final currentPhone = authProvider.currentUser?.phone;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Phone Binding')),
+      appBar: AppBar(title: Text(context.tr('phone_binding_title'))),
       body: Padding(
         padding: const EdgeInsets.all(14),
         child: currentPhone != null && currentPhone.isNotEmpty
@@ -47,8 +48,8 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Current bound phone',
-            style: TextStyle(fontWeight: FontWeight.w700)),
+        Text(context.tr('current_bound_phone'),
+            style: const TextStyle(fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
         Text(phone,
             style: const TextStyle(
@@ -56,8 +57,8 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
                 color: Color(0xFF0F8F7A),
                 fontWeight: FontWeight.w700)),
         const SizedBox(height: 12),
-        const Text('Unbind this phone before binding a new one.',
-            style: TextStyle(color: Color(0xFF7D8C89))),
+        Text(context.tr('unbind_phone_tip'),
+            style: const TextStyle(color: Color(0xFF7D8C89))),
         const SizedBox(height: 18),
         SizedBox(
           width: double.infinity,
@@ -70,7 +71,7 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
                     width: 18,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Text('Unbind Phone'),
+                : Text(context.tr('unbind_phone')),
           ),
         )
       ],
@@ -82,20 +83,22 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
       children: [
         TextFormField(
           controller: _phoneController,
-          decoration: const InputDecoration(
-              labelText: 'Phone number', prefixIcon: Icon(Icons.phone_rounded)),
+          decoration: InputDecoration(
+              labelText: context.tr('phone_number'),
+              prefixIcon: const Icon(Icons.phone_rounded)),
           keyboardType: TextInputType.phone,
         ),
         const SizedBox(height: 12),
         TextFormField(
           controller: _codeController,
           decoration: InputDecoration(
-            labelText: 'Verification code',
+            labelText: context.tr('verification_code'),
             prefixIcon: const Icon(Icons.sms_rounded),
             suffixIcon: TextButton(
               onPressed: _codeSent && _countdown > 0 ? null : _sendCode,
-              child: Text(
-                  _codeSent && _countdown > 0 ? '${_countdown}s' : 'Get code'),
+              child: Text(_codeSent && _countdown > 0
+                  ? '${_countdown}s'
+                  : context.tr('get_code')),
             ),
           ),
           keyboardType: TextInputType.number,
@@ -112,7 +115,7 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
                     child: CircularProgressIndicator(
                         strokeWidth: 2, color: Colors.white),
                   )
-                : const Text('Bind Phone'),
+                : Text(context.tr('bind_phone')),
           ),
         ),
       ],
@@ -121,8 +124,8 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
 
   Future<void> _sendCode() async {
     if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(_phoneController.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please input a valid phone number')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(context.tr('invalid_phone'))));
       return;
     }
 
@@ -133,8 +136,8 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
     });
 
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Verification code sent')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(context.tr('code_sent'))));
       _timer?.cancel();
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!mounted) return;
@@ -159,14 +162,14 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
 
   Future<void> _bindPhone() async {
     if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(_phoneController.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please input a valid phone number')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(context.tr('invalid_phone'))));
       return;
     }
 
     if (_codeController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please input verification code')));
+          SnackBar(content: Text(context.tr('input_verification_code'))));
       return;
     }
 
@@ -176,11 +179,11 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
       if (!mounted) return;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Phone bound successfully')));
+            SnackBar(content: Text(context.tr('phone_bind_success'))));
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Bind failed')));
+            .showSnackBar(SnackBar(content: Text(context.tr('bind_failed'))));
       }
     } finally {
       if (mounted) {
@@ -197,11 +200,12 @@ class _PhoneBindingPageState extends State<PhoneBindingPage> {
       if (!mounted) return;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Phone unbound successfully')));
+            SnackBar(content: Text(context.tr('phone_unbind_success'))));
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Unbind failed')));
+            content: Text(
+                authProvider.errorMessage ?? context.tr('unbind_failed'))));
       }
     } finally {
       if (mounted) {

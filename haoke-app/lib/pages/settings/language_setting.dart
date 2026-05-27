@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
+import 'package:haoke_rent/providers/locale_provider.dart';
+import 'package:provider/provider.dart';
 
 class LanguageSettingsPage extends StatefulWidget {
   const LanguageSettingsPage({super.key});
@@ -8,30 +11,41 @@ class LanguageSettingsPage extends StatefulWidget {
 }
 
 class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
-  final List<Language> _languages = [
+  final List<Language> _languages = const [
     Language(
-        code: 'zh',
-        name: 'Simplified Chinese',
-        nativeName: 'Chinese',
-        isDefault: true),
-    Language(
-        code: 'zh_TW',
-        name: 'Traditional Chinese',
-        nativeName: 'Chinese Traditional'),
-    Language(code: 'en', name: 'English', nativeName: 'English'),
-    Language(code: 'ja', name: 'Japanese', nativeName: 'Japanese'),
-    Language(code: 'ko', name: 'Korean', nativeName: 'Korean'),
+      code: 'zh',
+      nameKey: 'lang_zh',
+      nativeName: 'Chinese (Simplified)',
+      isDefault: true,
+    ),
+    Language(code: 'en', nameKey: 'lang_en', nativeName: 'English'),
   ];
 
   String _selectedLanguageCode = 'zh';
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) {
+      return;
+    }
+    final localeCode = context.read<LocaleProvider>().localeCode;
+    _selectedLanguageCode = _languages.any((item) => item.code == localeCode)
+        ? localeCode
+        : _languages.first.code;
+    _initialized = true;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final current = _getCurrentLanguage();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Language'),
+        title: Text(context.tr('language')),
         actions: [
-          TextButton(onPressed: _saveSettings, child: const Text('Save'))
+          TextButton(onPressed: _saveSettings, child: Text(context.tr('save')))
         ],
       ),
       body: ListView(
@@ -48,8 +62,10 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                 const Icon(Icons.info_outline_rounded),
                 const SizedBox(width: 8),
                 Expanded(
-                    child:
-                        Text('Current: ${_getCurrentLanguage().nativeName}')),
+                  child: Text(
+                    '${context.tr('current_language')}: ${context.tr(current.nameKey)}',
+                  ),
+                ),
               ],
             ),
           ),
@@ -84,14 +100,15 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
                     color: const Color(0xFF0F8F7A),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('Default',
-                      style: TextStyle(color: Colors.white, fontSize: 10)),
+                  child: Text(context.tr('default'),
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 10)),
                 ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(language.name,
+                    Text(context.tr(language.nameKey),
                         style: const TextStyle(fontWeight: FontWeight.w600)),
                     Text(
                       language.nativeName,
@@ -123,11 +140,18 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
     );
   }
 
-  void _saveSettings() {
+  Future<void> _saveSettings() async {
     final selectedLanguage = _getCurrentLanguage();
+    await context.read<LocaleProvider>().setLocaleByCode(selectedLanguage.code);
+    if (!mounted) {
+      return;
+    }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text('Language switched to ${selectedLanguage.nativeName}')),
+        content: Text(
+          '${context.tr('language_switched_to')} ${context.tr(selectedLanguage.nameKey)}',
+        ),
+      ),
     );
     Navigator.pop(context);
   }
@@ -135,13 +159,13 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
 
 class Language {
   final String code;
-  final String name;
+  final String nameKey;
   final String nativeName;
   final bool isDefault;
 
-  Language({
+  const Language({
     required this.code,
-    required this.name,
+    required this.nameKey,
     required this.nativeName,
     this.isDefault = false,
   });

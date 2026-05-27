@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/models/auth/login_request.dart';
 import 'package:haoke_rent/services/api_service.dart';
 import 'package:haoke_rent/utils/validators.dart';
@@ -40,8 +41,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
       if (response.isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('注册成功'),
+          SnackBar(
+            content: Text(context.tr('register_success')),
             backgroundColor: Colors.green,
           ),
         );
@@ -58,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('注册失败：$e'),
+          content: Text('${context.tr('register_failed')}：$e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -130,20 +131,21 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Color(0xFF07A786),
                     ),
                     const SizedBox(height: 14),
-                    const Text(
-                      '创建账号',
+                    Text(
+                      context.tr('create_account'),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 29,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF1E2F2C),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '开启你的租房旅程',
+                    Text(
+                      context.tr('register_subtitle'),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Color(0xFF6A7C79)),
+                      style:
+                          const TextStyle(fontSize: 14, color: Color(0xFF6A7C79)),
                     ),
                     const SizedBox(height: 24),
                     Container(
@@ -168,8 +170,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller: _usernameController,
                               textInputAction: TextInputAction.next,
                               decoration: _buildInputDecoration(
-                                labelText: '用户名',
-                                hintText: '3-20位字母、数字或下划线',
+                                labelText: context.tr('username'),
+                                hintText: context.tr('username_rule'),
                                 icon: Icons.person_outline_rounded,
                               ),
                               validator: Validators.validateUsername,
@@ -180,8 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               obscureText: !_showPassword,
                               textInputAction: TextInputAction.next,
                               decoration: _buildInputDecoration(
-                                labelText: '密码',
-                                hintText: '至少6位字符',
+                                labelText: context.tr('password'),
+                                hintText: context.tr('password_rule'),
                                 icon: Icons.lock_outline_rounded,
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -205,8 +207,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               onFieldSubmitted: (_) =>
                                   _isLoading ? null : _registerHandler(),
                               decoration: _buildInputDecoration(
-                                labelText: '确认密码',
-                                hintText: '请再次输入密码',
+                                labelText: context.tr('confirm_password'),
+                                hintText: context.tr('reenter_password'),
                                 icon: Icons.shield_outlined,
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -253,9 +255,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           ),
                                         ),
                                       )
-                                    : const Text(
-                                        '注册',
-                                        style: TextStyle(
+                                    : Text(
+                                        context.tr('register'),
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -270,7 +272,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         context,
                                         '/login',
                                       ),
-                              child: const Text('已有账号？去登录'),
+                              child: Text(context.tr('have_account_login')),
                             ),
                           ],
                         ),

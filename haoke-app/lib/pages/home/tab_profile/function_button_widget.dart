@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/tab_profile/function_button_data.dart';
 import 'package:haoke_rent/widgets/common_image.dart';
 
@@ -27,7 +28,7 @@ class FunctionButtonWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              data.title,
+              context.tr(data.titleKey),
               style: const TextStyle(
                 color: Color(0xFF334845),
                 fontSize: 13,

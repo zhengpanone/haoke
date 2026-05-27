@@ -1,40 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 
-class HelpCenterPage extends StatefulWidget {
+class HelpCenterPage extends StatelessWidget {
   const HelpCenterPage({super.key});
 
   @override
-  State<HelpCenterPage> createState() => _HelpCenterPageState();
-}
-
-class _HelpCenterPageState extends State<HelpCenterPage> {
-  final List<FAQItem> _faqList = [
-    FAQItem(
-        question: 'How do I publish a listing?',
-        answer:
-            'Go to Home > Me > Room Management > Publish New Listing. Complete details and submit.'),
-    FAQItem(
-        question: 'How can I contact landlord?',
-        answer:
-            'Open any listing detail page and tap Contact Owner or Book Viewing.'),
-    FAQItem(
-        question: 'How long does listing review take?',
-        answer: 'Usually 1-3 business days depending on listing completeness.'),
-    FAQItem(
-        question: 'How can I edit my listing?',
-        answer: 'Open Room Management and edit your target listing card.'),
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final faqList = [
+      FAQItem(
+          question: context.tr('faq_publish_q'),
+          answer: context.tr('faq_publish_a')),
+      FAQItem(
+          question: context.tr('faq_contact_q'),
+          answer: context.tr('faq_contact_a')),
+      FAQItem(
+          question: context.tr('faq_review_q'),
+          answer: context.tr('faq_review_a')),
+      FAQItem(
+          question: context.tr('faq_edit_q'), answer: context.tr('faq_edit_a')),
+    ];
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Help Center')),
+      appBar: AppBar(title: Text(context.tr('help_center'))),
       body: ListView(
         padding: const EdgeInsets.all(14),
         children: [
           TextField(
             decoration: InputDecoration(
-              hintText: 'Search questions',
+              hintText: context.tr('search_questions'),
               prefixIcon: const Icon(Icons.search_rounded),
               filled: true,
               fillColor: Colors.white,
@@ -45,25 +38,27 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
             ),
           ),
           const SizedBox(height: 14),
-          const Text('Popular Questions',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+          Text(context.tr('popular_questions'),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           const SizedBox(height: 8),
-          ..._faqList.map(_buildFAQItem),
+          ...faqList.map(_buildFAQItem),
           const SizedBox(height: 14),
-          const Text('Contact Support',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+          Text(context.tr('contact_support'),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           const SizedBox(height: 8),
           _buildContactItem(
               icon: Icons.phone_rounded,
-              title: 'Support Hotline',
+              title: context.tr('support_hotline'),
               subtitle: '400-888-9999',
-              action: 'Call'),
+              action: context.tr('call')),
           const SizedBox(height: 10),
           _buildContactItem(
               icon: Icons.email_outlined,
-              title: 'Support Email',
+              title: context.tr('support_email'),
               subtitle: 'support@haoke.com',
-              action: 'Email'),
+              action: context.tr('email')),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/tab_index/index.dart';
 import 'package:haoke_rent/pages/home/tab_info/index.dart';
 import 'package:haoke_rent/pages/home/tab_profile/index.dart';
@@ -9,14 +10,6 @@ const List<Widget> tabViewList = [
   TableSearch(),
   TableInfo(),
   TabProfile(),
-];
-
-const List<BottomNavigationBarItem> homeNavItems = [
-  BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: '首页'),
-  BottomNavigationBarItem(
-      icon: Icon(Icons.travel_explore_rounded), label: '找房'),
-  BottomNavigationBarItem(icon: Icon(Icons.newspaper_rounded), label: '资讯'),
-  BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: '我的'),
 ];
 
 class HomePage extends StatefulWidget {
@@ -37,6 +30,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final homeNavItems = [
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.home_rounded), label: context.tr('home')),
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.travel_explore_rounded),
+          label: context.tr('find_house')),
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.newspaper_rounded), label: context.tr('info')),
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.person_rounded), label: context.tr('mine')),
+    ];
+
     return Scaffold(
       body: tabViewList[selectedIndex],
       bottomNavigationBar: Container(

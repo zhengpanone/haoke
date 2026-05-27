@@ -2,28 +2,25 @@ import 'package:flutter/widgets.dart';
 
 class FunctionButtonItem {
   final String imageUri;
-  final String title;
+  final String titleKey;
   final Function? onTapHandle;
 
-  FunctionButtonItem(this.imageUri, this.title, [this.onTapHandle]);
+  FunctionButtonItem(this.imageUri, this.titleKey, [this.onTapHandle]);
 }
 
 void defaultTapHandler(context) {}
 
 final List<FunctionButtonItem> list = [
-  FunctionButtonItem('statics/images/profile_identity.png', '看房记录'),
-  FunctionButtonItem('statics/images/profile_identity.png', '我的订单'),
-  FunctionButtonItem('statics/images/profile_identity.png', '我的收藏'),
-  FunctionButtonItem('statics/images/profile_identity.png', '身份认证'),
-  FunctionButtonItem('statics/images/profile_message.png', '联系我们'),
-  FunctionButtonItem('statics/images/profile_contract.png', '电子合同'),
-  FunctionButtonItem('statics/images/profile_house.png', '房屋管理', (context) {
-    bool isLogin = true;
-    if (isLogin) {
-      Navigator.of(context).pushNamed('roomManage');
-      return;
-    }
-    Navigator.pushNamed(context, 'login');
+  FunctionButtonItem('statics/images/profile_identity.png', 'viewing_history'),
+  FunctionButtonItem('statics/images/profile_identity.png', 'my_orders'),
+  FunctionButtonItem('statics/images/profile_identity.png', 'my_favorites'),
+  FunctionButtonItem(
+      'statics/images/profile_identity.png', 'identity_verification'),
+  FunctionButtonItem('statics/images/profile_message.png', 'contact_us'),
+  FunctionButtonItem('statics/images/profile_contract.png', 'e_contract'),
+  FunctionButtonItem('statics/images/profile_house.png', 'house_management',
+      (context) {
+    Navigator.of(context).pushNamed('roomManage');
   }),
-  FunctionButtonItem('statics/images/profile_wallet.png', '钱包'),
+  FunctionButtonItem('statics/images/profile_wallet.png', 'wallet'),
 ];

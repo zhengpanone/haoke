@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Change Password')),
+      appBar: AppBar(title: Text(context.tr('change_password_title'))),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -36,26 +37,26 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             TextFormField(
               controller: _oldPasswordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: 'Current password',
-                  prefixIcon: Icon(Icons.lock_outline_rounded)),
+              decoration: InputDecoration(
+                  labelText: context.tr('current_password'),
+                  prefixIcon: const Icon(Icons.lock_outline_rounded)),
               validator: (value) => value == null || value.isEmpty
-                  ? 'Please input current password'
+                  ? context.tr('input_current_password')
                   : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _newPasswordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: 'New password',
-                  prefixIcon: Icon(Icons.key_rounded)),
+              decoration: InputDecoration(
+                  labelText: context.tr('new_password'),
+                  prefixIcon: const Icon(Icons.key_rounded)),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please input new password';
+                  return context.tr('input_new_password');
                 }
                 if (value.length < 6) {
-                  return 'Password must be at least 6 chars';
+                  return context.tr('password_min_6');
                 }
                 return null;
               },
@@ -64,15 +65,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             TextFormField(
               controller: _confirmPasswordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: 'Confirm new password',
-                  prefixIcon: Icon(Icons.verified_user_outlined)),
+              decoration: InputDecoration(
+                  labelText: context.tr('confirm_new_password'),
+                  prefixIcon: const Icon(Icons.verified_user_outlined)),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please confirm password';
+                  return context.tr('input_confirm_password');
                 }
                 if (value != _newPasswordController.text) {
-                  return 'Passwords do not match';
+                  return context.tr('password_mismatch');
                 }
                 return null;
               },
@@ -89,7 +90,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: Colors.white),
                       )
-                    : const Text('Update Password'),
+                    : Text(context.tr('update_password')),
               ),
             ),
           ],
@@ -112,21 +113,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
       if (!mounted) return;
       if (success) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Password updated')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.tr('password_updated'))));
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(Provider.of<AuthProvider>(context, listen: false)
                       .errorMessage ??
-                  'Update failed')),
+                  context.tr('update_failed'))),
         );
       }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $e')));
+          .showSnackBar(SnackBar(content: Text('${context.tr('error')}: $e')));
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);

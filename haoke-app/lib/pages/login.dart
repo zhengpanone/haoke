@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/providers/auth_provider.dart';
 import 'package:haoke_rent/utils/validators.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? '登录失败'),
+            content: Text(authProvider.errorMessage ?? context.tr('login_failed')),
             backgroundColor: Colors.red,
           ),
         );
@@ -122,20 +123,20 @@ class _LoginPageState extends State<LoginPage> {
                       color: Color(0xFF2E6BFF),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      '欢迎回来',
+                    Text(
+                      context.tr('welcome_back'),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF1F2A44),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '登录后继续使用好客租房',
+                    Text(
+                      context.tr('login_subtitle'),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xFF6F7A92),
                       ),
@@ -163,8 +164,8 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _usernameController,
                               textInputAction: TextInputAction.next,
                               decoration: _buildInputDecoration(
-                                labelText: '用户名',
-                                hintText: '请输入用户名',
+                                labelText: context.tr('username'),
+                                hintText: context.tr('enter_username'),
                                 icon: Icons.person_outline_rounded,
                               ),
                               validator: Validators.validateUsername,
@@ -176,8 +177,8 @@ class _LoginPageState extends State<LoginPage> {
                               onFieldSubmitted: (_) =>
                                   _isLoading ? null : _login(),
                               decoration: _buildInputDecoration(
-                                labelText: '密码',
-                                hintText: '请输入密码',
+                                labelText: context.tr('password'),
+                                hintText: context.tr('enter_password'),
                                 icon: Icons.lock_outline_rounded,
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -205,9 +206,9 @@ class _LoginPageState extends State<LoginPage> {
                                     });
                                   },
                                 ),
-                                const Text(
-                                  '记住我',
-                                  style: TextStyle(color: Color(0xFF55607A)),
+                                Text(
+                                  context.tr('remember_me'),
+                                  style: const TextStyle(color: Color(0xFF55607A)),
                                 ),
                               ],
                             ),
@@ -236,9 +237,9 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                       )
-                                    : const Text(
-                                        '登录',
-                                        style: TextStyle(
+                                    : Text(
+                                        context.tr('login'),
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -253,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                                         context,
                                         '/register',
                                       ),
-                              child: const Text('还没有账号？去注册'),
+                              child: Text(context.tr('no_account_register')),
                             ),
                           ],
                         ),
