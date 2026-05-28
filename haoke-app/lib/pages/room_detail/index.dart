@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/info/info.dart';
 import 'package:haoke_rent/pages/room_detail/data.dart';
 import 'package:haoke_rent/widgets/common_price_text.dart';
@@ -52,7 +53,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
               );
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('分享链接已复制')),
+                SnackBar(content: Text(context.tr('share_link_copied'))),
               );
             },
             icon: const CommonIconBadge(
@@ -75,7 +76,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: CommonPriceText(
                   price: data.price.toString(),
-                  unit: '/month',
+                  unit: context.tr('per_month'),
                   color: const Color(0xFF0F8F7A),
                 ),
               ),
@@ -93,24 +94,27 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                 child: Wrap(
                   runSpacing: 16,
                   children: [
-                    BaseInfoItem('Area: ${data.size} sqm'),
-                    BaseInfoItem('Floor: ${data.floor}'),
-                    BaseInfoItem('Type: ${data.roomType}'),
-                    BaseInfoItem('Orientation: ${data.oriented.join('/')}'),
+                    BaseInfoItem(
+                        '${context.tr('area_label')}: ${data.size}${context.tr('sqm')}'),
+                    BaseInfoItem('${context.tr('floor_label')}: ${data.floor}'),
+                    BaseInfoItem(
+                        '${context.tr('type_label')}: ${data.roomType}'),
+                    BaseInfoItem(
+                        '${context.tr('orientation_label')}: ${data.oriented.join('/')}'),
                   ],
                 ),
               ),
-              const CommonTitle('House Facilities'),
+              CommonTitle(context.tr('house_facilities')),
               _buildSectionCard(
                   child: RoomApplianceList(list: data.applicances)),
-              const CommonTitle('House Description'),
+              CommonTitle(context.tr('house_description')),
               _buildSectionCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       data.subTitle.isEmpty
-                          ? 'No description yet'
+                          ? context.tr('no_description_yet')
                           : data.subTitle,
                       maxLines: showAllText ? null : 5,
                       style: const TextStyle(
@@ -129,7 +133,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 },
                                 child: Row(
                                   children: [
-                                    Text(showAllText ? 'Collapse' : 'Expand'),
+                                    Text(showAllText
+                                        ? context.tr('collapse')
+                                        : context.tr('expand')),
                                     Icon(
                                       showAllText
                                           ? Icons.keyboard_arrow_up_rounded
@@ -139,14 +145,14 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 ),
                               )
                             : const SizedBox.shrink(),
-                        const Text('Report',
-                            style: TextStyle(color: Color(0xFF7B8885))),
+                        Text(context.tr('report'),
+                            style: const TextStyle(color: Color(0xFF7B8885))),
                       ],
                     ),
                   ],
                 ),
               ),
-              const CommonTitle('You May Also Like'),
+              CommonTitle(context.tr('you_may_also_like')),
               const Info(),
             ],
           ),
@@ -190,7 +196,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             size: 22,
                           ),
                           Text(
-                            isLike ? 'Saved' : 'Save',
+                            isLike
+                                ? context.tr('saved_listing')
+                                : context.tr('save_listing'),
                             style: const TextStyle(fontSize: 12),
                           ),
                         ],
@@ -205,9 +213,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         color: const Color(0xFF4AA9D8),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Center(
-                        child:
-                            Text('Contact Owner', style: buttonBottomTextStyle),
+                      child: Center(
+                        child: Text(context.tr('contact_owner'),
+                            style: buttonBottomTextStyle),
                       ),
                     ),
                   ),
@@ -219,9 +227,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         color: const Color(0xFF0F8F7A),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Center(
-                        child:
-                            Text('Book Viewing', style: buttonBottomTextStyle),
+                      child: Center(
+                        child: Text(context.tr('book_viewing'),
+                            style: buttonBottomTextStyle),
                       ),
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/widgets/common_image.dart';
 
 const List<String> defaultImagList = [
@@ -35,7 +36,7 @@ class _CommonSwipperState extends State<CommonSwipper> {
     if (widget.images.isEmpty) {
       return SizedBox(
         height: height,
-        child: const Center(child: Text('No images yet')),
+        child: Center(child: Text(context.tr('no_images_yet'))),
       );
     }
 

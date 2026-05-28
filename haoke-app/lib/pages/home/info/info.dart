@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/info/data.dart';
 import 'package:haoke_rent/pages/home/info/item_widget.dart';
 
@@ -16,9 +17,9 @@ class Info extends StatelessWidget {
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-            child: const Text(
-              'Latest News',
-              style: TextStyle(
+            child: Text(
+              context.tr('latest_news'),
+              style: const TextStyle(
                 color: Color(0xFF1F2B2A),
                 fontWeight: FontWeight.w700,
                 fontSize: 18,

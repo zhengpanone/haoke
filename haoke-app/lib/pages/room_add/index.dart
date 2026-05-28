@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/widgets/common_float_action_button.dart';
 import 'package:haoke_rent/widgets/common_form_item.dart';
 import 'package:haoke_rent/widgets/common_image_picker.dart';
@@ -36,22 +37,23 @@ class _RoomAddState extends State<RoomAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Publish Listing')),
+      appBar: AppBar(title: Text(context.tr('publish_listing'))),
       body: ListView(
         children: [
-          const CommonTitle('Property Details'),
+          CommonTitle(context.tr('property_details')),
           CommonFormItem(
-            label: 'Community',
+            label: context.tr('community'),
             contextBuilder: (context) {
               return GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                child: const SizedBox(
+                child: SizedBox(
                   height: 40,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Choose community', style: TextStyle(fontSize: 15)),
-                      Icon(Icons.keyboard_arrow_right_rounded),
+                      Text(context.tr('choose_community'),
+                          style: const TextStyle(fontSize: 15)),
+                      const Icon(Icons.keyboard_arrow_right_rounded),
                     ],
                   ),
                 ),
@@ -63,20 +65,20 @@ class _RoomAddState extends State<RoomAdd> {
             controller: TextEditingController(),
           ),
           CommonFormItem(
-            label: 'Rent',
-            hintText: 'Input rent amount',
-            suffixText: '/month',
+            label: context.tr('rent'),
+            hintText: context.tr('input_rent_amount'),
+            suffixText: context.tr('per_month'),
             controller: TextEditingController(),
           ),
           CommonFormItem(
-            label: 'Area',
-            hintText: 'Input area size',
-            suffixText: 'sqm',
+            label: context.tr('area'),
+            hintText: context.tr('input_area_size'),
+            suffixText: context.tr('sqm'),
             controller: TextEditingController(),
           ),
           CommonRadioFormItem(
-            label: 'Rent Type',
-            options: const ['Shared', 'Whole'],
+            label: context.tr('rent_type'),
+            options: [context.tr('rent_shared'), context.tr('rent_whole')],
             value: rendType,
             onChange: (index) {
               setState(() {
@@ -85,9 +87,14 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonSelectFormItem(
-            label: 'Room Type',
+            label: context.tr('room_type'),
             value: roomType,
-            options: const ['1 Bedroom', '2 Bedroom', '3 Bedroom', '4 Bedroom'],
+            options: [
+              context.tr('one_bedroom'),
+              context.tr('two_bedroom'),
+              context.tr('three_bedroom'),
+              context.tr('four_bedroom'),
+            ],
             onChange: (val) {
               setState(() {
                 roomType = val;
@@ -95,9 +102,13 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonSelectFormItem(
-            label: 'Floor',
+            label: context.tr('floor'),
             value: floor,
-            options: const ['High', 'Middle', 'Low'],
+            options: [
+              context.tr('floor_high'),
+              context.tr('floor_middle'),
+              context.tr('floor_low'),
+            ],
             onChange: (val) {
               setState(() {
                 floor = val;
@@ -105,9 +116,14 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonSelectFormItem(
-            label: 'Orientation',
+            label: context.tr('orientation'),
             value: oriented,
-            options: const ['East', 'South', 'West', 'North'],
+            options: [
+              context.tr('east'),
+              context.tr('south'),
+              context.tr('west'),
+              context.tr('north'),
+            ],
             onChange: (val) {
               setState(() {
                 oriented = val;
@@ -115,8 +131,11 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonRadioFormItem(
-            label: 'Decoration',
-            options: const ['Fine', 'Simple'],
+            label: context.tr('decoration'),
+            options: [
+              context.tr('decoration_fine'),
+              context.tr('decoration_simple'),
+            ],
             value: decorationType,
             onChange: (index) {
               setState(() {
@@ -124,9 +143,9 @@ class _RoomAddState extends State<RoomAdd> {
               });
             },
           ),
-          const CommonTitle('Property Photos'),
+          CommonTitle(context.tr('property_photos')),
           CommonImagePicker(onChange: (List<File> files) {}),
-          const CommonTitle('Listing Title'),
+          CommonTitle(context.tr('listing_title')),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 12),
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -137,13 +156,13 @@ class _RoomAddState extends State<RoomAdd> {
             ),
             child: TextField(
               controller: titleController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'For example: 2B1B near metro, great light',
+                hintText: context.tr('listing_title_hint'),
               ),
             ),
           ),
-          const CommonTitle('Facilities'),
+          CommonTitle(context.tr('facilities')),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 12),
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -154,7 +173,7 @@ class _RoomAddState extends State<RoomAdd> {
             ),
             child: RoomAppliance(onChange: (data) => {}),
           ),
-          const CommonTitle('Description'),
+          CommonTitle(context.tr('description')),
           Container(
             margin: const EdgeInsets.fromLTRB(12, 0, 12, 100),
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -167,16 +186,17 @@ class _RoomAddState extends State<RoomAdd> {
               controller: descController,
               maxLength: 2000,
               maxLines: 9,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Describe highlights, transport and nearby services',
+                hintText: context.tr('description_hint'),
               ),
             ),
           ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: CommonFloatActionButton('Publish', () {}),
+      floatingActionButton:
+          CommonFloatActionButton(context.tr('publish'), () {}),
     );
   }
 }

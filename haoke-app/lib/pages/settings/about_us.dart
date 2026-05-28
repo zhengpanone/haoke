@@ -27,22 +27,22 @@ class AboutUsPage extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
             ),
-            child: const Column(
+            child: Column(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 38,
                   backgroundColor: Color(0xFFE8F6F2),
                   child: Icon(Icons.home_rounded,
                       size: 38, color: Color(0xFF0F8F7A)),
                 ),
-                SizedBox(height: 12),
-                Text(
+                const SizedBox(height: 12),
+                const Text(
                   'Haoke Rent',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
                 ),
-                SizedBox(height: 4),
-                Text('Version 1.0.0',
-                    style: TextStyle(color: Color(0xFF7B8885))),
+                const SizedBox(height: 4),
+                Text('${context.tr('version')} 1.0.0',
+                    style: const TextStyle(color: Color(0xFF7B8885))),
               ],
             ),
           ),

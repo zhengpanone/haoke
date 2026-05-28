@@ -76,7 +76,7 @@ class RoomListItemWidget extends StatelessWidget {
                       ),
                       children: const [
                         TextSpan(
-                          text: ' /month',
+                          text: ' 元/月',
                           style: TextStyle(
                             fontSize: 12,
                             color: Color(0xFF0F8F7A),

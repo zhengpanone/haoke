@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/widgets/common_icon_badge.dart';
 
 class SearchBar extends StatefulWidget {
@@ -16,7 +17,7 @@ class SearchBar extends StatefulWidget {
     this.showLocation = false,
     this.showMap = false,
     this.inputValue = '',
-    this.defaultInputValue = 'Search community, area, subway...',
+    this.defaultInputValue = '',
     this.goBackCallback,
     this.onCancel,
     this.onSearch,
@@ -56,6 +57,10 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final hintText = widget.defaultInputValue.isEmpty
+        ? context.tr('search_placeholder')
+        : widget.defaultInputValue;
+
     return Row(
       children: [
         if (widget.showLocation)
@@ -66,14 +71,14 @@ class _SearchBarState extends State<SearchBar> {
               color: const Color(0xFFE8F6F2),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.location_on_rounded,
+                const Icon(Icons.location_on_rounded,
                     color: Color(0xFF0F8F7A), size: 16),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
-                  'Beijing',
-                  style: TextStyle(
+                  context.tr('beijing'),
+                  style: const TextStyle(
                     color: Color(0xFF0F8F7A),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -140,7 +145,7 @@ class _SearchBarState extends State<SearchBar> {
                     size: 18,
                   ),
                 ),
-                hintText: widget.defaultInputValue,
+                hintText: hintText,
                 hintStyle:
                     const TextStyle(fontSize: 13, color: Color(0xFF9AA8A5)),
                 contentPadding: const EdgeInsets.only(top: 1),
@@ -151,11 +156,11 @@ class _SearchBarState extends State<SearchBar> {
         if (widget.onCancel != null)
           GestureDetector(
             onTap: widget.onCancel as void Function()?,
-            child: const Padding(
-              padding: EdgeInsets.only(right: 8),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
               child: Text(
-                'Cancel',
-                style: TextStyle(
+                context.tr('cancel_search'),
+                style: const TextStyle(
                   color: Color(0xFF4A5B58),
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

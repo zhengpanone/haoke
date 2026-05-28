@@ -16,7 +16,7 @@ class _LanguageSettingsPageState extends State<LanguageSettingsPage> {
     Language(
       code: 'zh',
       nameKey: 'lang_zh',
-      nativeName: 'Chinese (Simplified)',
+      nativeName: '简体中文',
       isDefault: true,
     ),
     Language(code: 'en', nameKey: 'lang_en', nativeName: 'English'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_rent/l10n/app_localizations.dart';
 import 'package:haoke_rent/pages/home/tab_search/data_list.dart';
 import 'package:haoke_rent/widgets/common_float_action_button.dart';
 import 'package:haoke_rent/widgets/room_list_item_widget.dart';
@@ -14,15 +15,15 @@ class RoomManage extends StatelessWidget {
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton:
-            CommonFloatActionButton('Publish New Listing', () {
+            CommonFloatActionButton(context.tr('publish_new_listing'), () {
           Navigator.of(context).pushNamed('roomAdd');
         }),
         appBar: AppBar(
-          title: const Text('Room Management'),
-          bottom: const TabBar(
+          title: Text(context.tr('house_management')),
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Vacant'),
-              Tab(text: 'Rented'),
+              Tab(text: context.tr('vacant')),
+              Tab(text: context.tr('rented')),
             ],
           ),
         ),
