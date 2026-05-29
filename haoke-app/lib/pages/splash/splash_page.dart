@@ -15,6 +15,9 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     // TODO
     Future.delayed(const Duration(seconds: 2), () async {
+      if (!mounted) {
+        return;
+      }
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));

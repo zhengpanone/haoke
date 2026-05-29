@@ -19,13 +19,11 @@ class FilterBarItem extends StatelessWidget {
       onTap: () {
         onTap(context);
       },
-      child: Container(
-        child: Row(
-          children: [
-            Text(title, style: TextStyle(color: color, fontSize: 18)),
-            Icon(Icons.arrow_drop_down_rounded, color: color),
-          ],
-        ),
+      child: Row(
+        children: [
+          Text(title, style: TextStyle(color: color, fontSize: 18)),
+          Icon(Icons.arrow_drop_down_rounded, color: color),
+        ],
       ),
     );
   }

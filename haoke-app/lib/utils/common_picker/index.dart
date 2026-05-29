@@ -26,24 +26,22 @@ class CommonPicker {
           height: height,
           child: Column(
             children: [
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('取消', style: buttonColor),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(controller.selectedItem);
-                      },
-                      child: Text('确定', style: buttonColor),
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('取消', style: buttonColor),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(controller.selectedItem);
+                    },
+                    child: Text('确定', style: buttonColor),
+                  ),
+                ],
               ),
               Expanded(
                 child: CupertinoPicker(

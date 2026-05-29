@@ -1,14 +1,20 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class ImagePickerUtil {
   static const MethodChannel _channel =
       MethodChannel('com.example.haoke_rent/image_picker');
 
+  @visibleForTesting
+  static bool? debugIsAndroidOverride;
+
+  static bool get _isAndroid => debugIsAndroidOverride ?? Platform.isAndroid;
+
   /// 选择单张图片
   static Future<File?> pickImage() async {
-    if (!Platform.isAndroid) {
+    if (!_isAndroid) {
       return null;
     }
 
@@ -23,7 +29,7 @@ class ImagePickerUtil {
 
   /// 选择多张图片
   static Future<List<File>> pickMultiImage() async {
-    if (!Platform.isAndroid) {
+    if (!_isAndroid) {
       return [];
     }
 

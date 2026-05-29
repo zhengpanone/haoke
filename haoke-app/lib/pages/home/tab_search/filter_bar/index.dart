@@ -45,7 +45,6 @@ class FilterBar extends StatelessWidget {
 
     /// 打开 Drawer
     void onFilterChange(context) {
-      final filterModel = scaffoldKey.currentContext!.read<FilterModel>();
       scaffoldKey.currentState?.openEndDrawer();
     }
 
