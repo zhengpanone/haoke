@@ -4,6 +4,7 @@ import 'package:haoke_rent/pages/home/index.dart';
 import 'package:haoke_rent/pages/login.dart';
 import 'package:haoke_rent/pages/not_found.dart';
 import 'package:haoke_rent/pages/register.dart';
+import 'package:haoke_rent/pages/community_select/index.dart';
 import 'package:haoke_rent/pages/room_add/index.dart';
 import 'package:haoke_rent/pages/room_detail/index.dart';
 import 'package:haoke_rent/pages/room_manage/index.dart';
@@ -56,5 +57,11 @@ Handler roomManageHandler = Handler(
 Handler roomAddHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return const RoomAdd();
+  },
+);
+
+Handler communitySelectHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const CommunitySelectPage();
   },
 );

@@ -7,9 +7,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "House estate update request")
-public class HouseEstateUpdateDTO extends HouseEstateCreateDTO {
+@Schema(description = "City update request")
+public class CityUpdateDTO extends CityCreateDTO {
     @NotBlank(message = "id is required")
-    @Schema(description = "Estate id", example = "2034514861085626370")
+    @Schema(description = "City id", example = "11010000000000000000000000000000")
     private String id;
 }

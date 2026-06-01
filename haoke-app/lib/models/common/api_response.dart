@@ -25,9 +25,9 @@ class ApiResponse<T> {
       data: fromJsonT != null && json['data'] != null
           ? fromJsonT(json['data'])
           : json['data'],
-      message: json['message'] ?? '',
+      message: json['message'] ?? json['msg'] ?? '',
       code: json['code'] ?? 200,
-      timestamp: json['timestamp'] as int,
+      timestamp: json['timestamp'] as int? ?? DateTime.timestamp().millisecond,
     );
   }
 
@@ -36,9 +36,9 @@ class ApiResponse<T> {
     return ApiResponse<void>(
       success: json['success'] ?? false,
       data: null,
-      message: json['message'] ?? '',
+      message: json['message'] ?? json['msg'] ?? '',
       code: json['code'] ?? 200,
-      timestamp: json['timestamp'] as int,
+      timestamp: json['timestamp'] as int? ?? DateTime.timestamp().millisecond,
     );
   }
 

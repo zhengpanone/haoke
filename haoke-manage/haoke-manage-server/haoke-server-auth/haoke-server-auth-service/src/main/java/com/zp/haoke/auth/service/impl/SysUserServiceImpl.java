@@ -9,7 +9,6 @@ import com.zp.haoke.auth.domain.vo.UserVO;
 import com.zp.haoke.auth.enums.UserErrorCode;
 import com.zp.haoke.auth.mapper.SysUserMapper;
 import com.zp.haoke.auth.service.ISysUserService;
-import com.zp.haoke.framework.core.enums.ErrorCode;
 import com.zp.haoke.framework.core.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,0 +1,5 @@
+{
+    "java.debug.settings.hotCodeReplace": "auto",
+    "maven.view": "hierarchical",
+    "java.debug.settings.onBuildFailureProceed": true
+}

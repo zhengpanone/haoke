@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:haoke_rent/l10n/app_localizations.dart';
+import 'package:haoke_rent/models/community/community_model.dart';
+import 'package:haoke_rent/routes.dart';
+import 'package:haoke_rent/utils/common_toast.dart';
 import 'package:haoke_rent/widgets/common_float_action_button.dart';
 import 'package:haoke_rent/widgets/common_form_item.dart';
 import 'package:haoke_rent/widgets/common_image_picker.dart';
@@ -23,15 +26,55 @@ class _RoomAddState extends State<RoomAdd> {
   int roomType = 0;
   int floor = 0;
   int oriented = 0;
+  CommunityModel? community;
+  List<File> roomImages = [];
+  List<String> selectedAppliances = [];
 
+  final rentController = TextEditingController();
+  final areaController = TextEditingController();
   final titleController = TextEditingController();
   final descController = TextEditingController();
 
   @override
   void dispose() {
+    rentController.dispose();
+    areaController.dispose();
     titleController.dispose();
     descController.dispose();
     super.dispose();
+  }
+
+  Future<void> _chooseCommunity() async {
+    final result =
+        await Navigator.of(context).pushNamed(Routes.communitySelect);
+    if (!mounted || result is! CommunityModel || result.name.trim().isEmpty) {
+      return;
+    }
+    setState(() {
+      community = result;
+    });
+  }
+
+  void _publishRoom() {
+    if (community == null) {
+      CommonToast.showToast(context.tr('please_choose_community'),
+          context: context);
+      return;
+    }
+    if (rentController.text.trim().isEmpty) {
+      CommonToast.showToast(context.tr('please_input_rent'), context: context);
+      return;
+    }
+    if (areaController.text.trim().isEmpty) {
+      CommonToast.showToast(context.tr('please_input_area'), context: context);
+      return;
+    }
+    if (titleController.text.trim().isEmpty) {
+      CommonToast.showToast(context.tr('please_input_listing_title'),
+          context: context);
+      return;
+    }
+    CommonToast.showToast(context.tr('publish_success'), context: context);
   }
 
   @override
@@ -46,20 +89,30 @@ class _RoomAddState extends State<RoomAdd> {
             contextBuilder: (context) {
               return GestureDetector(
                 behavior: HitTestBehavior.translucent,
+                onTap: _chooseCommunity,
                 child: SizedBox(
                   height: 40,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(context.tr('choose_community'),
-                          style: const TextStyle(fontSize: 15)),
+                      Expanded(
+                        child: Text(
+                          community == null
+                              ? context.tr('choose_community')
+                              : community!.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: community == null
+                                ? const Color(0xFF9AA8A5)
+                                : const Color(0xFF1F2B2A),
+                          ),
+                        ),
+                      ),
                       const Icon(Icons.keyboard_arrow_right_rounded),
                     ],
                   ),
                 ),
-                onTap: () {
-                  Navigator.of(context).pushNamed('');
-                },
               );
             },
             controller: TextEditingController(),
@@ -68,13 +121,13 @@ class _RoomAddState extends State<RoomAdd> {
             label: context.tr('rent'),
             hintText: context.tr('input_rent_amount'),
             suffixText: context.tr('per_month'),
-            controller: TextEditingController(),
+            controller: rentController,
           ),
           CommonFormItem(
             label: context.tr('area'),
             hintText: context.tr('input_area_size'),
             suffixText: context.tr('sqm'),
-            controller: TextEditingController(),
+            controller: areaController,
           ),
           CommonRadioFormItem(
             label: context.tr('rent_type'),
@@ -144,7 +197,9 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonTitle(context.tr('property_photos')),
-          CommonImagePicker(onChange: (List<File> files) {}),
+          CommonImagePicker(onChange: (List<File> files) {
+            roomImages = files;
+          }),
           CommonTitle(context.tr('listing_title')),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -171,7 +226,12 @@ class _RoomAddState extends State<RoomAdd> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: const Color(0xFFE5EEEB)),
             ),
-            child: RoomAppliance(onChange: (data) => {}),
+            child: RoomAppliance(onChange: (data) {
+              selectedAppliances = data
+                  .where((item) => item.isChecked)
+                  .map((item) => item.title)
+                  .toList();
+            }),
           ),
           CommonTitle(context.tr('description')),
           Container(
@@ -196,7 +256,7 @@ class _RoomAddState extends State<RoomAdd> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton:
-          CommonFloatActionButton(context.tr('publish'), () {}),
+          CommonFloatActionButton(context.tr('publish'), _publishRoom),
     );
   }
 }

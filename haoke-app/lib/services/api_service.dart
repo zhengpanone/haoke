@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:haoke_rent/models/common/api_response.dart';
 import 'package:haoke_rent/models/auth/login_request.dart';
 import 'package:haoke_rent/models/auth/login_response.dart';
+import 'package:haoke_rent/models/city/city_model.dart';
+import 'package:haoke_rent/models/community/community_model.dart';
 import 'package:haoke_rent/models/user/user_model.dart';
 import 'package:haoke_rent/services/dio_client.dart';
 import 'package:haoke_rent/services/storage_service.dart';
@@ -152,6 +154,64 @@ class ApiService {
       );
     } catch (e) {
       AppLogger.e('获取用户信息失败：$e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<CommunityModel>>> queryCommunities({
+    String keyword = '',
+  }) async {
+    try {
+      final response = await _dio.put(
+        '/api/house/community/page',
+        data: {
+          'keyword': keyword,
+          'pageNum': 1,
+          'pageSize': 20,
+        },
+      );
+      return ApiResponse<List<CommunityModel>>.fromJson(
+        response.data,
+        (data) => (data as List)
+            .map(
+                (item) => CommunityModel.fromJson(item as Map<String, dynamic>))
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query communities failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<CityModel>>> queryCityTree() async {
+    try {
+      final response = await _dio.get('/api/house/city/tree');
+      return ApiResponse<List<CityModel>>.fromJson(
+        response.data,
+        (data) => (data as List)
+            .map((item) => CityModel.fromJson(item as Map<String, dynamic>))
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query city tree failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<CommunityModel>> createCommunity(
+    CommunityModel community,
+  ) async {
+    try {
+      final response = await _dio.put(
+        '/api/house/community/create',
+        data: community.toCreateJson(),
+      );
+      return ApiResponse<CommunityModel>.fromJson(
+        response.data,
+        (data) => CommunityModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Create community failed: $e');
       rethrow;
     }
   }

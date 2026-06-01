@@ -2,7 +2,6 @@ package com.zp.haoke.controller.auth;
 
 import com.zp.haoke.auth.domain.dto.LoginDTO;
 import com.zp.haoke.auth.domain.vo.LoginVO;
-import com.zp.haoke.auth.domain.vo.UserInfoVO;
 import com.zp.haoke.auth.service.IAuthService;
 import com.zp.haoke.framework.core.domain.response.R;
 import jakarta.validation.Valid;

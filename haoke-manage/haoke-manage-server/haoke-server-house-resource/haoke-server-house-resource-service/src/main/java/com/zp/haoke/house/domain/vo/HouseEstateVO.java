@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class HouseEstateVO {
     
     @Schema(description = "楼盘ID", example = "1")
-    private Long id;
+    private String id;
     
     @Schema(description = "楼盘名称", example = "阳光花园")
     private String name;

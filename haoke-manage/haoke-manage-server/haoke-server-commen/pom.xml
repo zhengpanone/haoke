@@ -9,6 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>haoke-server-commen</artifactId>
+    <packaging>pom</packaging>
     <name>haoke-server-commen</name>
 
     <modules>
