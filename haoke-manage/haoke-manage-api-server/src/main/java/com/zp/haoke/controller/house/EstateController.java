@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 房源管理
+ */
 @RestController
 @Tag(name = "Estate Management")
 @RequestMapping({"/estate", "/api/house/estate"})

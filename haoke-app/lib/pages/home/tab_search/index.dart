@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide SearchBar;
 import 'package:haoke_rent/pages/home/tab_search/data_list.dart';
 import 'package:haoke_rent/pages/home/tab_search/filter_bar/filter_drawer.dart';
 import 'package:haoke_rent/pages/home/tab_search/filter_bar/index.dart';
+import 'package:haoke_rent/widgets/common_refresh_indicator.dart';
 import 'package:haoke_rent/widgets/room_list_item_widget.dart';
 import 'package:haoke_rent/widgets/search_bar/index.dart' show SearchBar;
 
@@ -13,6 +14,13 @@ class TableSearch extends StatefulWidget {
 }
 
 class _TableSearchState extends State<TableSearch> {
+  Future<void> _refreshRooms() async {
+    await Future<void>.delayed(const Duration(milliseconds: 600));
+
+    if (!mounted) return;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -45,9 +53,13 @@ class _TableSearchState extends State<TableSearch> {
             child: FilterBar(onChange: (data) {}, scaffoldKey: scaffoldKey),
           ),
           Expanded(
-            child: ListView(
-              children:
-                  dataList.map((item) => RoomListItemWidget(item)).toList(),
+            child: CommonRefreshIndicator(
+              onRefresh: _refreshRooms,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children:
+                    dataList.map((item) => RoomListItemWidget(item)).toList(),
+              ),
             ),
           ),
         ],

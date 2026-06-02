@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:haoke_rent/pages/home/info/info.dart';
+import 'package:haoke_rent/widgets/common_refresh_indicator.dart';
 import 'package:haoke_rent/widgets/search_bar/index.dart' show SearchBar;
 
 class TableInfo extends StatefulWidget {
@@ -24,12 +25,15 @@ class _TableInfoState extends State<TableInfo> {
           },
         ),
       ),
-      body: ListView(
-        children: const [
-          SizedBox(height: 6),
-          Info(showTitle: true),
-          SizedBox(height: 20),
-        ],
+      body: CommonRefreshIndicator(
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: const [
+            SizedBox(height: 6),
+            Info(showTitle: true),
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 楼盘
+ */
 @RestController
 @Tag(name = "Community Management")
 @RequestMapping({"/community", "/api/house/community"})

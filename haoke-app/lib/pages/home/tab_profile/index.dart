@@ -6,6 +6,7 @@ import 'package:haoke_rent/pages/home/tab_profile/function_button.dart';
 import 'package:haoke_rent/pages/home/tab_profile/header.dart';
 import 'package:haoke_rent/pages/settings/index.dart';
 import 'package:haoke_rent/widgets/common_icon_badge.dart';
+import 'package:haoke_rent/widgets/common_refresh_indicator.dart';
 
 class TabProfile extends StatelessWidget {
   const TabProfile({super.key});
@@ -33,16 +34,19 @@ class TabProfile extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        children: const [
-          Header(),
-          SizedBox(height: 8),
-          FunctionButton(),
-          Advertisement(),
-          SizedBox(height: 8),
-          Info(showTitle: true),
-          SizedBox(height: 20),
-        ],
+      body: CommonRefreshIndicator(
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: const [
+            Header(),
+            SizedBox(height: 8),
+            FunctionButton(),
+            Advertisement(),
+            SizedBox(height: 8),
+            Info(showTitle: true),
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
