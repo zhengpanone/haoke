@@ -3,17 +3,16 @@ package com.zp.haoke.house.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zp.haoke.house.domain.dto.HouseEstateCreateDTO;
-import com.zp.haoke.house.domain.dto.HouseEstateQueryDTO;
-import com.zp.haoke.house.domain.dto.HouseEstateUpdateDTO;
-import com.zp.haoke.house.domain.po.HouseEstatePO;
+import com.zp.haoke.house.domain.dto.HouseCommunityCreateDTO;
+import com.zp.haoke.house.domain.dto.HouseCommunityQueryDTO;
+import com.zp.haoke.house.domain.dto.HouseCommunityUpdateDTO;
+import com.zp.haoke.house.domain.po.HouseCommunityPO;
 import com.zp.haoke.house.domain.vo.HouseEstateVO;
-import com.zp.haoke.house.mapper.HouseEstateMapper;
-import com.zp.haoke.house.service.IHouseEstateService;
+import com.zp.haoke.house.mapper.HouseCommunityMapper;
+import com.zp.haoke.house.service.IHouseCommunityService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,11 +23,11 @@ import java.util.UUID;
  * Description: 房源管理服务类
  */
 @Service
-public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, HouseEstatePO> implements IHouseEstateService {
+public class HouseCommunityServiceImpl extends ServiceImpl<HouseCommunityMapper, HouseCommunityPO> implements IHouseCommunityService {
 
     @Override
-    public HouseEstateVO createHouseEstate(HouseEstateCreateDTO createDTO) {
-        HouseEstatePO estatePO = toPO(createDTO);
+    public HouseEstateVO create(HouseCommunityCreateDTO createDTO) {
+        HouseCommunityPO estatePO = toPO(createDTO);
         estatePO.setId(UUID.randomUUID().toString().replace("-", ""));
         baseMapper.insert(estatePO);
         return toVO(estatePO);
@@ -40,36 +39,36 @@ public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, House
     }
 
     @Override
-    public HouseEstateVO updateById(HouseEstateUpdateDTO houseEstateUpdateDTO) {
-        HouseEstatePO estatePO = toPO(houseEstateUpdateDTO);
+    public HouseEstateVO updateById(HouseCommunityUpdateDTO houseEstateUpdateDTO) {
+        HouseCommunityPO estatePO = toPO(houseEstateUpdateDTO);
         estatePO.setId(houseEstateUpdateDTO.getId());
         baseMapper.updateById(estatePO);
         return queryById(houseEstateUpdateDTO.getId());
     }
 
     @Override
-    public boolean deleteHouseEstate(String id) {
+    public boolean delete(String id) {
         return baseMapper.deleteById(id) > 0;
     }
 
     @Override
-    public List<HouseEstateVO> queryPageList(HouseEstateQueryDTO queryDTO) {
-        HouseEstateQueryDTO safeQuery = queryDTO == null ? new HouseEstateQueryDTO() : queryDTO;
+    public List<HouseEstateVO> queryPageList(HouseCommunityQueryDTO queryDTO) {
+        HouseCommunityQueryDTO safeQuery = queryDTO == null ? new HouseCommunityQueryDTO() : queryDTO;
         String keyword = safeQuery.getKeyword();
-        int pageNum = safeQuery.getPageNum() == null || safeQuery.getPageNum() < 1 ? 1 : safeQuery.getPageNum();
+        int pageNum = safeQuery.getCurrentPage() == null || safeQuery.getCurrentPage() < 1 ? 1 : safeQuery.getCurrentPage();
         int pageSize = safeQuery.getPageSize() == null || safeQuery.getPageSize() < 1 ? 20 : safeQuery.getPageSize();
-        LambdaQueryWrapper<HouseEstatePO> wrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<HouseCommunityPO> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasText(keyword)) {
             wrapper.and(query -> query
-                    .like(HouseEstatePO::getName, keyword)
+                    .like(HouseCommunityPO::getName, keyword)
                     .or()
-                    .like(HouseEstatePO::getAddress, keyword)
+                    .like(HouseCommunityPO::getAddress, keyword)
                     .or()
-                    .like(HouseEstatePO::getArea, keyword)
+                    .like(HouseCommunityPO::getArea, keyword)
                     .or()
-                    .like(HouseEstatePO::getCity, keyword));
+                    .like(HouseCommunityPO::getCity, keyword));
         }
-        wrapper.orderByDesc(HouseEstatePO::getCreateTime);
+        wrapper.orderByDesc(HouseCommunityPO::getCreateTime);
         return baseMapper.selectPage(new Page<>(pageNum, pageSize), wrapper)
                 .getRecords()
                 .stream()
@@ -77,8 +76,8 @@ public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, House
                 .toList();
     }
 
-    private HouseEstatePO toPO(HouseEstateCreateDTO dto) {
-        HouseEstatePO estatePO = new HouseEstatePO();
+    private HouseCommunityPO toPO(HouseCommunityCreateDTO dto) {
+        HouseCommunityPO estatePO = new HouseCommunityPO();
         estatePO.setName(dto.getName());
         estatePO.setProvince(dto.getProvince());
         estatePO.setCity(dto.getCity());
@@ -92,7 +91,7 @@ public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, House
         return estatePO;
     }
 
-    private HouseEstateVO toVO(HouseEstatePO po) {
+    private HouseEstateVO toVO(HouseCommunityPO po) {
         if (po == null) {
             return null;
         }

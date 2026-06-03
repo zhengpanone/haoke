@@ -1,6 +1,6 @@
 # CREATE DATABASE IF NOT EXISTS haoke CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- 楼盘数据表
-CREATE TABLE IF NOT EXISTS `house_estate`
+-- 小区数据表
+CREATE TABLE IF NOT EXISTS `house_community`
 (
     id               varchar(32) PRIMARY KEY COMMENT '楼盘id',
     name             VARCHAR(10) COMMENT '楼盘名称',
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `house_estate`
     update_user_id   varchar(32) comment '更新人ID',
     update_user_name varchar(32) comment '更新人名称'
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='楼盘数据表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='小区数据表';
 
 -- 房源数据表
 CREATE TABLE IF NOT EXISTS `house_resource`
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `house_resource`
     rent_method        tinyint(1) COMMENT '租赁方式，1-整租，2-合租',
     payment_method     tinyint(1) COMMENT '支付方式，1-付一押一，2-付三押一，3-付六押一，4-年付押一，5-其它',
     house_type         VARCHAR(50) COMMENT '户型，如：2室1厅1卫',
-    covered_area       VARCHAR(10) COMMENT '建筑面积',
+    covered_area       decimal(10,2) COMMENT '建筑面积,单位：平方米',
     use_area           VARCHAR(10) COMMENT '使用面积',
     floor              VARCHAR(50) COMMENT '楼层，如：8/26',
     orientation        INT COMMENT '朝向：东、南、西、北',

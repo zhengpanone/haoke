@@ -1,6 +1,8 @@
 package com.zp.haoke.framework.core.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -32,6 +34,17 @@ public enum HouseRentStatus {
     OFF_SHELF("5", "已下架");
 
     @EnumValue
+    @JsonValue
     private final String code;
     private final String info;
+
+    @JsonCreator
+    public static HouseRentStatus fromCode(String code) {
+        for (HouseRentStatus status : values()) {
+            if (status.code.equals(code)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Invalid HouseRentStatus code: " + code);
+    }
 }

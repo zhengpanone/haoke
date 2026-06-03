@@ -22,9 +22,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("house_estate")
-@Schema(title = "HouseEstate", description = "楼盘数据表")
-public class HouseEstatePO extends BasePojo {
+@TableName("house_community")
+@Schema(title = "HouseCommunity", description = "楼盘数据表")
+public class HouseCommunityPO extends BasePojo {
 
     @Schema(description = "楼盘id")
     @TableId("id")

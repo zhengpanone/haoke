@@ -1,5 +1,6 @@
 package com.zp.haoke.house.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -52,8 +53,8 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
                 .eq(StringUtils.isNotBlank(queryDTO.getEstateId()), HouseResourcePO::getEstateId, queryDTO.getEstateId())
                 .eq(queryDTO.getRentMethod() != null, HouseResourcePO::getRentMethod, queryDTO.getRentMethod())
                 .eq(queryDTO.getStatus() != null, HouseResourcePO::getStatus, queryDTO.getStatus())
+                .in(CollUtil.isNotEmpty(queryDTO.getStatusList()), HouseResourcePO::getStatus, queryDTO.getStatusList())
                 .orderByDesc(HouseResourcePO::getCreateTime);
-
         Page<HouseResourcePO> page = Page.of(queryDTO.getCurrentPage(), queryDTO.getPageSize());
         IPage<HouseResourcePO> poPage = baseMapper.selectPage(page, wrapper);
         return poPage.convert(houseResourceConvert::toVO);

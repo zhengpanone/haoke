@@ -64,8 +64,8 @@ public class HouseResourceController {
     }
 
     @Operation(summary = "分页查询房源列表", description = "分页查询房源列表，支持标题、楼盘、租赁方式、状态等条件筛选")
-    @GetMapping("/page")
-    public R<PageVO<HouseResourceVO>> queryHouseResourcePageList(HouseResourceQueryDTO queryDTO) {
+    @PostMapping("/page")
+    public R<PageVO<HouseResourceVO>> queryHouseResourcePageList(@RequestBody HouseResourceQueryDTO queryDTO) {
         return R.ok(PageVO.of(houseResourceService.queryPageList(queryDTO)));
     }
 

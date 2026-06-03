@@ -1,10 +1,10 @@
 package com.zp.haoke.house.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zp.haoke.house.domain.dto.HouseEstateCreateDTO;
-import com.zp.haoke.house.domain.dto.HouseEstateQueryDTO;
-import com.zp.haoke.house.domain.dto.HouseEstateUpdateDTO;
-import com.zp.haoke.house.domain.po.HouseEstatePO;
+import com.zp.haoke.house.domain.dto.HouseCommunityCreateDTO;
+import com.zp.haoke.house.domain.dto.HouseCommunityQueryDTO;
+import com.zp.haoke.house.domain.dto.HouseCommunityUpdateDTO;
+import com.zp.haoke.house.domain.po.HouseCommunityPO;
 import com.zp.haoke.house.domain.vo.HouseEstateVO;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  * Version : v1.0.0
  * Description:
  */
-public interface IHouseEstateService extends IService<HouseEstatePO> {
+public interface IHouseCommunityService extends IService<HouseCommunityPO> {
 
     /**
      * 创建楼盘
@@ -23,7 +23,7 @@ public interface IHouseEstateService extends IService<HouseEstatePO> {
      * @param createDTO
      * @return
      */
-    HouseEstateVO createHouseEstate(HouseEstateCreateDTO createDTO);
+    HouseEstateVO create(HouseCommunityCreateDTO createDTO);
 
     /**
      * 查询楼盘
@@ -39,7 +39,7 @@ public interface IHouseEstateService extends IService<HouseEstatePO> {
      * @param estateUpdateDTO
      * @return
      */
-    HouseEstateVO updateById(HouseEstateUpdateDTO estateUpdateDTO);
+    HouseEstateVO updateById(HouseCommunityUpdateDTO estateUpdateDTO);
 
     /**
      * 删除楼盘
@@ -47,8 +47,8 @@ public interface IHouseEstateService extends IService<HouseEstatePO> {
      * @param id
      * @return
      */
-    boolean deleteHouseEstate(String id);
+    boolean delete(String id);
 
-    List<HouseEstateVO> queryPageList(HouseEstateQueryDTO queryDTO);
+    List<HouseEstateVO> queryPageList(HouseCommunityQueryDTO queryDTO);
 
 }

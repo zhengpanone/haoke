@@ -7,7 +7,8 @@ import lombok.Data;
 
 @Data
 @Schema(description = "House estate create request")
-public class HouseEstateCreateDTO {
+public class HouseCommunityCreateDTO {
+
     @NotBlank(message = "name is required")
     @Size(max = 50, message = "name length must be less than 50")
     @Schema(description = "Estate name", example = "Sunshine Garden")

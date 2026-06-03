@@ -4,6 +4,7 @@ import 'package:haoke_app/models/auth/login_request.dart';
 import 'package:haoke_app/models/auth/login_response.dart';
 import 'package:haoke_app/models/city/city_model.dart';
 import 'package:haoke_app/models/community/community_model.dart';
+import 'package:haoke_app/models/room/room_model.dart';
 import 'package:haoke_app/models/room/room_publish_request.dart';
 import 'package:haoke_app/models/user/user_model.dart';
 import 'package:haoke_app/services/dio_client.dart';
@@ -163,7 +164,7 @@ class ApiService {
     String keyword = '',
   }) async {
     try {
-      final response = await _dio.put(
+      final response = await _dio.post(
         '/api/house/community/page',
         data: {'keyword': keyword, 'pageNum': 1, 'pageSize': 20},
       );
@@ -202,12 +203,12 @@ class ApiService {
       rethrow;
     }
   }
-
+  // 创建小区
   Future<ApiResponse<CommunityModel>> createCommunity(
     CommunityModel community,
   ) async {
     try {
-      final response = await _dio.put(
+      final response = await _dio.post(
         '/api/house/community/create',
         data: community.toCreateJson(),
       );
@@ -230,6 +231,63 @@ class ApiService {
       return ApiResponse.emptyFromJson(response.data);
     } catch (e) {
       AppLogger.e('Publish room failed: $e');
+      rethrow;
+    }
+  }
+
+  /// 查询房源（我发布的 空置/已出租）
+  /// [status] 可选过滤：VACANT（空置中）、RENTED（已出租），不传则查全部
+  Future<ApiResponse<List<RoomModel>>> queryPublishRooms({
+    String? status,
+    List<String>? statusList,
+    int pageNum = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final requestData = <String, dynamic>{
+        'pageNum': pageNum,
+        'pageSize': pageSize,
+      };
+      if (status != null && status.isNotEmpty) {
+        requestData['status'] = status;
+      }
+      if (statusList != null && statusList.isNotEmpty) {
+        requestData['statusList'] = statusList;
+      }
+
+      final response = await _dio.post(
+        '/api/house/resource/page',
+        data: requestData,
+      );
+      final responseData = response.data;
+      if (responseData is! Map<String, dynamic>) {
+        throw FormatException(
+          'Invalid rooms response: ${response.statusCode}',
+        );
+      }
+
+      return ApiResponse<List<RoomModel>>.fromJson(
+        responseData,
+        (data) {
+          // 后端返回分页结构，data 是 Map，items 在 data['items'] 中
+          if (data is Map<String, dynamic>) {
+            final items = data['items'] ?? data['records'] ?? data['list'] ?? [];
+            return (items as List)
+                .map(
+                    (item) => RoomModel.fromJson(item as Map<String, dynamic>))
+                .toList();
+          }
+          if (data is List) {
+            return data
+                .map(
+                    (item) => RoomModel.fromJson(item as Map<String, dynamic>))
+                .toList();
+          }
+          return <RoomModel>[];
+        },
+      );
+    } catch (e) {
+      AppLogger.e('Query publish rooms failed: $e');
       rethrow;
     }
   }
