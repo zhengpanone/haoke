@@ -4,7 +4,7 @@ class RoomListItemData {
   final String subTitle;
   final String imageUrl;
   final List<String> tags;
-  final int price;
+  final double price;
 
   const RoomListItemData({
     required this.id,

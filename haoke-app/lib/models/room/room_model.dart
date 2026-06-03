@@ -46,7 +46,7 @@ class RoomModel {
       title: json['title']?.toString() ?? '',
       estateId: json['estateId']?.toString(),
       communityName: json['communityName']?.toString(),
-      rent: json['rent'],
+      rent: (json['rent'] as num?)?.toDouble(),
       rentMethod: json['rentMethod'],
       houseType: json['houseType']?.toString(),
       coveredArea: (json['coveredArea'] as num?)?.toDouble(),
@@ -67,7 +67,7 @@ class RoomModel {
       'id': id,
       'title': title,
       'subTitle': subTitle ?? _buildSubTitle(),
-      'imageUrl': imageUrl ?? '',
+      'imageUrl': imageUrl ,
       'tags': tags,
       'price': rent ?? 0,
     };

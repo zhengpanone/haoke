@@ -68,17 +68,19 @@ class _RoomManageState extends State<RoomManage> {
   }
 
   List<RoomListItemData> _toListItemData(List<RoomModel> rooms) {
-    return rooms.map((room) {
+    var result =  rooms.map((room) {
       final json = room.toListItemJson();
       return RoomListItemData(
         id: json['id'] as String,
         title: json['title'] as String,
         subTitle: json['subTitle'] as String? ?? '',
-        imageUrl: json['imageUrl'] as String? ?? '',
+        imageUrl: (json['imageUrl'] as String?)?.isNotEmpty == true ? json['imageUrl'] as String :  'https://images.pexels.com/photos/33564839/pexels-photo-33564839.jpeg',
         tags: List<String>.from(json['tags'] as List),
-        price: json['price'] as int,
+        price: json['price'] as double,
       );
     }).toList();
+
+    return result;
   }
 
   @override

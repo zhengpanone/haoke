@@ -35,7 +35,15 @@ class CommonImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget imageWidget;
-    if (isNetwork) {
+    if (imageUrl.isEmpty) {
+      // 空字符串，直接显示占位图
+      imageWidget = Container(
+        width: width,
+        height: height,
+        color: Colors.grey.shade300,
+        child: const Icon(Icons.image_not_supported, color: Colors.grey),
+      );
+    } else if (isNetwork) {
       // 网络图片（带缓存）
       imageWidget = CachedNetworkImage(
         imageUrl: imageUrl,
