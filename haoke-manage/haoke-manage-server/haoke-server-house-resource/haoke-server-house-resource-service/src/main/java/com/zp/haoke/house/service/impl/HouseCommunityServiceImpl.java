@@ -55,8 +55,8 @@ public class HouseCommunityServiceImpl extends ServiceImpl<HouseCommunityMapper,
     public List<HouseEstateVO> queryPageList(HouseCommunityQueryDTO queryDTO) {
         HouseCommunityQueryDTO safeQuery = queryDTO == null ? new HouseCommunityQueryDTO() : queryDTO;
         String keyword = safeQuery.getKeyword();
-        int pageNum = safeQuery.getCurrentPage() == null || safeQuery.getCurrentPage() < 1 ? 1 : safeQuery.getCurrentPage();
-        int pageSize = safeQuery.getPageSize() == null || safeQuery.getPageSize() < 1 ? 20 : safeQuery.getPageSize();
+        int pageNum = safeQuery.getPageNum();
+        int pageSize = safeQuery.getPageSize();
         LambdaQueryWrapper<HouseCommunityPO> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasText(keyword)) {
             wrapper.and(query -> query

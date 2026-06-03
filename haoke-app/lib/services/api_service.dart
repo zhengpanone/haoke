@@ -203,6 +203,7 @@ class ApiService {
       rethrow;
     }
   }
+
   // 创建小区
   Future<ApiResponse<CommunityModel>> createCommunity(
     CommunityModel community,
@@ -261,31 +262,24 @@ class ApiService {
       );
       final responseData = response.data;
       if (responseData is! Map<String, dynamic>) {
-        throw FormatException(
-          'Invalid rooms response: ${response.statusCode}',
-        );
+        throw FormatException('Invalid rooms response: ${response.statusCode}');
       }
 
-      return ApiResponse<List<RoomModel>>.fromJson(
-        responseData,
-        (data) {
-          // 后端返回分页结构，data 是 Map，items 在 data['items'] 中
-          if (data is Map<String, dynamic>) {
-            final items = data['items'] ?? data['records'] ?? data['list'] ?? [];
-            return (items as List)
-                .map(
-                    (item) => RoomModel.fromJson(item as Map<String, dynamic>))
-                .toList();
-          }
-          if (data is List) {
-            return data
-                .map(
-                    (item) => RoomModel.fromJson(item as Map<String, dynamic>))
-                .toList();
-          }
-          return <RoomModel>[];
-        },
-      );
+      return ApiResponse<List<RoomModel>>.fromJson(responseData, (data) {
+        // 后端返回分页结构，data 是 Map，items 在 data['items'] 中
+        if (data is Map<String, dynamic>) {
+          final items = data['items'] ?? data['records'] ?? data['list'] ?? [];
+          return (items as List)
+              .map((item) => RoomModel.fromJson(item as Map<String, dynamic>))
+              .toList();
+        }
+        if (data is List) {
+          return data
+              .map((item) => RoomModel.fromJson(item as Map<String, dynamic>))
+              .toList();
+        }
+        return <RoomModel>[];
+      });
     } catch (e) {
       AppLogger.e('Query publish rooms failed: $e');
       rethrow;

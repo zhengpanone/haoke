@@ -57,7 +57,7 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
                 .in(CollUtil.isNotEmpty(queryDTO.getStatusList()), HouseResourcePO::getStatus, queryDTO.getStatusList());
 //                .orderByDesc(HouseResourcePO::getCreateTime);
 
-        IPage<HouseResourcePO> page = Page.of(queryDTO.getCurrentPage(), queryDTO.getPageSize());
+        IPage<HouseResourcePO> page = Page.of(queryDTO.getPageNum(), queryDTO.getPageSize());
         IPage<HouseResourcePO> poPage = baseMapper.selectPage(page, wrapper);
         return poPage.convert(houseResourceConvert::toVO);
     }
