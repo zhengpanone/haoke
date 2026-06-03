@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
-import 'package:haoke_app/pages/home/tab_search/data_list.dart';
 import 'package:haoke_app/models/room/room_model.dart';
+import 'package:haoke_app/pages/home/tab_search/data_list.dart';
 import 'package:haoke_app/services/api_service.dart';
 import 'package:haoke_app/widgets/common_float_action_button.dart';
+import 'package:haoke_app/widgets/common_refresh_indicator.dart';
 import 'package:haoke_app/widgets/room_list_item_widget.dart';
 
 class RoomManage extends StatefulWidget {
@@ -27,35 +28,41 @@ class _RoomManageState extends State<RoomManage> {
     _loadVacantRooms();
     _loadRentedRooms();
   }
+
   // 空置房屋
   Future<void> _loadVacantRooms() async {
     try {
-      final response = await _apiService.queryPublishRooms(statusList: ['1','2','3','5']);
-      if (response.isSuccess && response.data != null) {
-        setState(() {
+      final response = await _apiService.queryPublishRooms(
+        statusList: ['1', '2', '3', '5'],
+      );
+      if (!mounted) return;
+
+      setState(() {
+        if (response.isSuccess && response.data != null) {
           _vacantRooms = response.data!;
-          _isLoadingVacant = false;
-        });
-      } else {
-        setState(() => _isLoadingVacant = false);
-      }
+        }
+        _isLoadingVacant = false;
+      });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoadingVacant = false);
     }
   }
+
   // 已出租房屋
   Future<void> _loadRentedRooms() async {
     try {
       final response = await _apiService.queryPublishRooms(status: '4');
-      if (response.isSuccess && response.data != null) {
-        setState(() {
+      if (!mounted) return;
+
+      setState(() {
+        if (response.isSuccess && response.data != null) {
           _rentedRooms = response.data!;
-          _isLoadingRented = false;
-        });
-      } else {
-        setState(() => _isLoadingRented = false);
-      }
+        }
+        _isLoadingRented = false;
+      });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoadingRented = false);
     }
   }
@@ -81,13 +88,15 @@ class _RoomManageState extends State<RoomManage> {
       initialIndex: 0,
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton:
-            CommonFloatActionButton(context.tr('publish_new_listing'), () {
-          Navigator.of(context).pushNamed('roomAdd').then((_) {
-            // 发布房源返回后刷新列表
-            _loadVacantRooms();
-          });
-        }),
+        floatingActionButton: CommonFloatActionButton(
+          context.tr('publish_new_listing'),
+          () {
+            Navigator.of(context).pushNamed('roomAdd').then((_) {
+              // 发布房源返回后刷新列表
+              _loadVacantRooms();
+            });
+          },
+        ),
         appBar: AppBar(
           title: Text(context.tr('house_management')),
           bottom: TabBar(
@@ -120,34 +129,42 @@ class _RoomManageState extends State<RoomManage> {
     required List<RoomModel> rooms,
     required Future<void> Function() onRefresh,
   }) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    Widget child;
 
-    if (rooms.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.home_outlined, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              context.tr('no_data'),
-              style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+    if (isLoading) {
+      child = const Center(child: CircularProgressIndicator());
+    } else if (rooms.isEmpty) {
+      child = ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.55,
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.home_outlined, size: 64, color: Colors.grey[400]),
+                  const SizedBox(height: 16),
+                  Text(
+                    context.tr('no_data'),
+                    style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
+      );
+    } else {
+      final items = _toListItemData(rooms);
+
+      child = ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(bottom: 90, top: 6),
+        children: items.map((item) => RoomListItemWidget(item)).toList(),
       );
     }
 
-    final items = _toListItemData(rooms);
-
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: ListView(
-        padding: const EdgeInsets.only(bottom: 90, top: 6),
-        children: items.map((item) => RoomListItemWidget(item)).toList(),
-      ),
-    );
+    return CommonRefreshIndicator(onRefresh: onRefresh, child: child);
   }
 }
