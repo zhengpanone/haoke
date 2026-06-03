@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/utils/image_picker_util.dart';
+import 'package:haoke_app/utils/image_picker_util.dart';
 
 var imageWidth = 750;
 var imageHeight = 424;

@@ -1,5 +1,5 @@
 // lib/models/user/user_model.dart
-import 'package:haoke_rent/config/env.dart';
+import 'package:haoke_app/config/env.dart';
 
 class UserModel {
   final String id;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/services/storage_service.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/services/storage_service.dart';
 
 class LocaleProvider with ChangeNotifier {
   static const String _languageKey = 'app_language';

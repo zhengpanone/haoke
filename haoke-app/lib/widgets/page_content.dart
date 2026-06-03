@@ -1,7 +1,7 @@
 // 1. 添加material包
 
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/routes.dart';
+import 'package:haoke_app/routes.dart';
 // 2. 编写无状态组件PageContent
 
 class PageContent extends StatelessWidget {

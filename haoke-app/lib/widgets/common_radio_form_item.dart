@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/widgets/common_form_item.dart';
+import 'package:haoke_app/widgets/common_form_item.dart';
 
 class CommonRadioFormItem extends StatelessWidget {
   final String label;

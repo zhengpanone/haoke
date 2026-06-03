@@ -1,10 +1,10 @@
 // 状态管理
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/models/auth/login_request.dart';
-import 'package:haoke_rent/models/user/user_model.dart';
-import 'package:haoke_rent/services/api_service.dart';
-import 'package:haoke_rent/services/storage_service.dart';
-import 'package:haoke_rent/utils/logger.dart';
+import 'package:haoke_app/models/auth/login_request.dart';
+import 'package:haoke_app/models/user/user_model.dart';
+import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/services/storage_service.dart';
+import 'package:haoke_app/utils/logger.dart';
 
 class AuthProvider with ChangeNotifier {
   UserModel? _currentUser;

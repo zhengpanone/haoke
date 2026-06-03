@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/models/auth/login_request.dart';
-import 'package:haoke_rent/services/api_service.dart';
-import 'package:haoke_rent/utils/validators.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/models/auth/login_request.dart';
+import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/utils/validators.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

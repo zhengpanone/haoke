@@ -1,4 +1,0 @@
-{
-  "gradle.nestedProjects": true,
-  "dart.flutterSdkPath": ".fvm/versions/stable"
-}

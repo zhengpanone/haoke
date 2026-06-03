@@ -1,5 +1,5 @@
 import 'package:fluro/fluro.dart';
-import 'package:haoke_rent/routes_handlers.dart';
+import 'package:haoke_app/routes_handlers.dart';
 
 class Routes {
   // 1. 定义路由名称

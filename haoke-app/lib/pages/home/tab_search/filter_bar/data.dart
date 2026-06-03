@@ -1,5 +1,5 @@
 // 结果数据类型
-import 'package:haoke_rent/models/filter_model.dart';
+import 'package:haoke_app/models/filter_model.dart';
 
 class FilterBarResult {
   final Map<String, FilterItem> filters;

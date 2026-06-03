@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/pages/home/tab_index/index_recommand_date.dart';
-import 'package:haoke_rent/widgets/common_image.dart';
+import 'package:haoke_app/pages/home/tab_index/index_recommand_date.dart';
+import 'package:haoke_app/widgets/common_image.dart';
 
 class IndexRecommondItemWidget extends StatelessWidget {
   final IndexRecommandItem data;

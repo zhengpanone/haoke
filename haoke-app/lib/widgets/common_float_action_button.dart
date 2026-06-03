@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 class CommonFloatActionButton extends StatelessWidget {
   final String title;
-  final void Function() onTap;
+  final VoidCallback? onTap;
+  final bool isLoading;
 
-  const CommonFloatActionButton(this.title, this.onTap, {super.key});
+  const CommonFloatActionButton(
+    this.title,
+    this.onTap, {
+    super.key,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         height: 48,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -27,14 +33,23 @@ class CommonFloatActionButton extends StatelessWidget {
           ],
         ),
         child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          child: isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
         ),
       ),
     );

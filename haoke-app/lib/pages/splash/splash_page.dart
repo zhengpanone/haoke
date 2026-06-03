@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/config/app_config.dart';
-import 'package:haoke_rent/pages/home/index.dart';
+import 'package:haoke_app/config/app_config.dart';
+import 'package:haoke_app/pages/home/index.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

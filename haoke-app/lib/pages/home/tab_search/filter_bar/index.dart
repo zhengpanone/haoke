@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/models/filter_model.dart';
-import 'package:haoke_rent/pages/home/tab_search/filter_bar/data.dart';
-import 'package:haoke_rent/pages/home/tab_search/filter_bar/item.dart';
-import 'package:haoke_rent/utils/common_picker/index.dart';
+import 'package:haoke_app/models/filter_model.dart';
+import 'package:haoke_app/pages/home/tab_search/filter_bar/data.dart';
+import 'package:haoke_app/pages/home/tab_search/filter_bar/item.dart';
+import 'package:haoke_app/utils/common_picker/index.dart';
 import 'package:provider/provider.dart';
 
 class FilterBar extends StatelessWidget {

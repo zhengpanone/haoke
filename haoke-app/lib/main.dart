@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/application.dart';
-import 'package:haoke_rent/models/filter_model.dart';
-import 'package:haoke_rent/providers/auth_provider.dart';
-import 'package:haoke_rent/providers/locale_provider.dart';
+import 'package:haoke_app/application.dart';
+import 'package:haoke_app/models/filter_model.dart';
+import 'package:haoke_app/providers/auth_provider.dart';
+import 'package:haoke_app/providers/locale_provider.dart';
 import 'package:provider/provider.dart';
 
 // 程序入口

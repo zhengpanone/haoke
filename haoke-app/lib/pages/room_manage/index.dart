@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/home/tab_search/data_list.dart';
-import 'package:haoke_rent/widgets/common_float_action_button.dart';
-import 'package:haoke_rent/widgets/room_list_item_widget.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/home/tab_search/data_list.dart';
+import 'package:haoke_app/widgets/common_float_action_button.dart';
+import 'package:haoke_app/widgets/room_list_item_widget.dart';
 
 class RoomManage extends StatelessWidget {
   const RoomManage({super.key});

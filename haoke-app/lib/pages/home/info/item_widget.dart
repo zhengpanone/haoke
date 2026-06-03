@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/pages/home/info/data.dart';
-import 'package:haoke_rent/widgets/common_image.dart';
+import 'package:haoke_app/pages/home/info/data.dart';
+import 'package:haoke_app/widgets/common_image.dart';
 
 const textStyle = TextStyle(color: Color(0xFF7A8885), fontSize: 12);
 

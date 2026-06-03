@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 class ImagePickerUtil {
   static const MethodChannel _channel =
-      MethodChannel('com.example.haoke_rent/image_picker');
+      MethodChannel('com.example.haoke_app/image_picker');
 
   @visibleForTesting
   static bool? debugIsAndroidOverride;

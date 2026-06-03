@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/home/tab_index/index_recommand_date.dart';
-import 'package:haoke_rent/pages/home/tab_index/index_recommond_item_widget.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/home/tab_index/index_recommand_date.dart';
+import 'package:haoke_app/pages/home/tab_index/index_recommond_item_widget.dart';
 
 class IndexRecommond extends StatelessWidget {
   const IndexRecommond({super.key});

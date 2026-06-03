@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/config/app_config.dart';
-import 'package:haoke_rent/widgets/common_check_button.dart';
+import 'package:haoke_app/config/app_config.dart';
+import 'package:haoke_app/widgets/common_check_button.dart';
 
 class RoomApplianceItem {
   final String title;

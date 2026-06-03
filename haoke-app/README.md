@@ -1,25 +1,17 @@
-# haoke_rent
+# haoke_app
 
-haoke_rent project `好客租房`.
+A new Flutter project.
 
 ## Getting Started
 
-```shell
-# 安装fluro依赖
-flutter pub add fluro
-flutter pub add carousel_slider
+This project is a starting point for a Flutter application.
 
-brew install entr
-ls lib/*.dart | entr -r flutter run
+A few resources to get you started if this is your first Flutter project:
 
-flutter test test/utils/image_picker_util_test.dart
-flutter test
+- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
+- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
 
-
-ADB_TRACE=pairing,adb adb pair 192.168.0.4:33927
-adb connect 192.168.0.4:39847
-
-
-emulator -avd Pixel_9_Pro -gpu swiftshader_indirect -no-snapshot -no-boot-anim -cores 2 -memory 3072 
-````
-
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

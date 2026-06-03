@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/widgets/common_image.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/widgets/common_image.dart';
 
 const List<String> defaultImagList = [
   'https://images.pexels.com/photos/33564839/pexels-photo-33564839.jpeg',

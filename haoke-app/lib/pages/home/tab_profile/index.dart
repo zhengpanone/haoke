@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/home/info/info.dart';
-import 'package:haoke_rent/pages/home/tab_profile/advertisement.dart';
-import 'package:haoke_rent/pages/home/tab_profile/function_button.dart';
-import 'package:haoke_rent/pages/home/tab_profile/header.dart';
-import 'package:haoke_rent/pages/settings/index.dart';
-import 'package:haoke_rent/widgets/common_icon_badge.dart';
-import 'package:haoke_rent/widgets/common_refresh_indicator.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/home/info/info.dart';
+import 'package:haoke_app/pages/home/tab_profile/advertisement.dart';
+import 'package:haoke_app/pages/home/tab_profile/function_button.dart';
+import 'package:haoke_app/pages/home/tab_profile/header.dart';
+import 'package:haoke_app/pages/settings/index.dart';
+import 'package:haoke_app/widgets/common_icon_badge.dart';
+import 'package:haoke_app/widgets/common_refresh_indicator.dart';
 
 class TabProfile extends StatelessWidget {
   const TabProfile({super.key});

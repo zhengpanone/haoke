@@ -1,17 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/models/community/community_model.dart';
-import 'package:haoke_rent/routes.dart';
-import 'package:haoke_rent/utils/common_toast.dart';
-import 'package:haoke_rent/widgets/common_float_action_button.dart';
-import 'package:haoke_rent/widgets/common_form_item.dart';
-import 'package:haoke_rent/widgets/common_image_picker.dart';
-import 'package:haoke_rent/widgets/common_radio_form_item.dart';
-import 'package:haoke_rent/widgets/common_select_form_item.dart';
-import 'package:haoke_rent/widgets/common_title.dart';
-import 'package:haoke_rent/widgets/room_appliance.dart';
+import 'package:flutter/services.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/models/community/community_model.dart';
+import 'package:haoke_app/models/room/room_publish_request.dart';
+import 'package:haoke_app/routes.dart';
+import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/utils/common_toast.dart';
+import 'package:haoke_app/widgets/common_float_action_button.dart';
+import 'package:haoke_app/widgets/common_form_item.dart';
+import 'package:haoke_app/widgets/common_image_picker.dart';
+import 'package:haoke_app/widgets/common_radio_form_item.dart';
+import 'package:haoke_app/widgets/common_select_form_item.dart';
+import 'package:haoke_app/widgets/common_title.dart';
+import 'package:haoke_app/widgets/room_appliance.dart';
 
 class RoomAdd extends StatefulWidget {
   const RoomAdd({super.key});
@@ -21,11 +24,14 @@ class RoomAdd extends StatefulWidget {
 }
 
 class _RoomAddState extends State<RoomAdd> {
+  final ApiService apiService = ApiService();
+
   int rendType = 0;
   int decorationType = 0;
   int roomType = 0;
   int floor = 0;
   int oriented = 0;
+  bool isPublishing = false;
   CommunityModel? community;
   List<File> roomImages = [];
   List<String> selectedAppliances = [];
@@ -55,9 +61,30 @@ class _RoomAddState extends State<RoomAdd> {
     });
   }
 
-  void _publishRoom() {
+  int get _rentMethodCode {
+    return rendType == 0 ? 2 : 1;
+  }
+
+  String get _houseTypeValue {
+    return '${roomType + 1}室1厅1卫';
+  }
+
+  int? get _estateId {
+    return int.tryParse(community?.id ?? '');
+  }
+
+  Future<void> _publishRoom() async {
+    if (isPublishing) {
+      return;
+    }
     if (community == null) {
       CommonToast.showToast(context.tr('please_choose_community'),
+          context: context);
+      return;
+    }
+    final estateId = _estateId;
+    if (estateId == null || estateId <= 0) {
+      CommonToast.showToast(context.tr('please_choose_valid_community'),
           context: context);
       return;
     }
@@ -65,8 +92,18 @@ class _RoomAddState extends State<RoomAdd> {
       CommonToast.showToast(context.tr('please_input_rent'), context: context);
       return;
     }
+    final rent = int.tryParse(rentController.text.trim());
+    if (rent == null || rent <= 0) {
+      CommonToast.showToast(context.tr('invalid_rent'), context: context);
+      return;
+    }
     if (areaController.text.trim().isEmpty) {
       CommonToast.showToast(context.tr('please_input_area'), context: context);
+      return;
+    }
+    final area = double.tryParse(areaController.text.trim());
+    if (area == null || area <= 0) {
+      CommonToast.showToast(context.tr('invalid_area'), context: context);
       return;
     }
     if (titleController.text.trim().isEmpty) {
@@ -74,7 +111,51 @@ class _RoomAddState extends State<RoomAdd> {
           context: context);
       return;
     }
-    CommonToast.showToast(context.tr('publish_success'), context: context);
+
+    setState(() {
+      isPublishing = true;
+    });
+
+    try {
+      final response = await apiService.publishRoom(
+        RoomPublishRequest(
+          title: titleController.text.trim(),
+          estateId: estateId,
+          rent: rent,
+          rentMethod: _rentMethodCode,
+          houseType: _houseTypeValue,
+          coveredArea: area,
+          orientation: oriented + 1,
+          decoration: decorationType + 1,
+        ),
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      if (response.isSuccess) {
+        CommonToast.showToast(context.tr('publish_success'), context: context);
+        Navigator.of(context).pop(true);
+      } else {
+        CommonToast.showToast(
+          response.message.isEmpty
+              ? context.tr('publish_failed')
+              : response.message,
+          context: context,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        CommonToast.showToast(context.tr('publish_failed'), context: context);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isPublishing = false;
+        });
+      }
+    }
   }
 
   @override
@@ -122,12 +203,15 @@ class _RoomAddState extends State<RoomAdd> {
             hintText: context.tr('input_rent_amount'),
             suffixText: context.tr('per_month'),
             controller: rentController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
           CommonFormItem(
             label: context.tr('area'),
             hintText: context.tr('input_area_size'),
             suffixText: context.tr('sqm'),
             controller: areaController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
           ),
           CommonRadioFormItem(
             label: context.tr('rent_type'),
@@ -255,8 +339,11 @@ class _RoomAddState extends State<RoomAdd> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:
-          CommonFloatActionButton(context.tr('publish'), _publishRoom),
+      floatingActionButton: CommonFloatActionButton(
+        isPublishing ? context.tr('publishing') : context.tr('publish'),
+        _publishRoom,
+        isLoading: isPublishing,
+      ),
     );
   }
 }

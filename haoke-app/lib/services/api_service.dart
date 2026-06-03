@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:haoke_rent/models/common/api_response.dart';
-import 'package:haoke_rent/models/auth/login_request.dart';
-import 'package:haoke_rent/models/auth/login_response.dart';
-import 'package:haoke_rent/models/city/city_model.dart';
-import 'package:haoke_rent/models/community/community_model.dart';
-import 'package:haoke_rent/models/user/user_model.dart';
-import 'package:haoke_rent/services/dio_client.dart';
-import 'package:haoke_rent/services/storage_service.dart';
-import 'package:haoke_rent/utils/logger.dart';
+import 'package:haoke_app/models/common/api_response.dart';
+import 'package:haoke_app/models/auth/login_request.dart';
+import 'package:haoke_app/models/auth/login_response.dart';
+import 'package:haoke_app/models/city/city_model.dart';
+import 'package:haoke_app/models/community/community_model.dart';
+import 'package:haoke_app/models/room/room_publish_request.dart';
+import 'package:haoke_app/models/user/user_model.dart';
+import 'package:haoke_app/services/dio_client.dart';
+import 'package:haoke_app/services/storage_service.dart';
+import 'package:haoke_app/utils/logger.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -212,6 +213,19 @@ class ApiService {
       );
     } catch (e) {
       AppLogger.e('Create community failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<void>> publishRoom(RoomPublishRequest request) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/resource/create',
+        data: request.toJson(),
+      );
+      return ApiResponse.emptyFromJson(response.data);
+    } catch (e) {
+      AppLogger.e('Publish room failed: $e');
       rethrow;
     }
   }

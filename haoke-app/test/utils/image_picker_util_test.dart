@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:haoke_rent/utils/image_picker_util.dart';
+import 'package:haoke_app/utils/image_picker_util.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel('com.example.haoke_rent/image_picker');
+  const channel = MethodChannel('com.example.haoke_app/image_picker');
   final calls = <MethodCall>[];
 
   setUp(() {

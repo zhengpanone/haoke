@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommonFormItem extends StatelessWidget {
   final String label;
@@ -10,6 +11,8 @@ class CommonFormItem extends StatelessWidget {
   final String? hintText;
   final ValueChanged? onChanged;
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CommonFormItem({
     super.key,
@@ -20,6 +23,8 @@ class CommonFormItem extends StatelessWidget {
     this.hintText,
     this.onChanged,
     this.controller,
+    this.keyboardType,
+    this.inputFormatters,
   });
 
   @override
@@ -51,6 +56,8 @@ class CommonFormItem extends StatelessWidget {
                 : TextField(
                     controller: controller,
                     onChanged: onChanged,
+                    keyboardType: keyboardType,
+                    inputFormatters: inputFormatters,
                     decoration: InputDecoration(
                       hintText: hintText,
                       border: InputBorder.none,

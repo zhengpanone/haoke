@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/providers/auth_provider.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 const loginTextStyle =

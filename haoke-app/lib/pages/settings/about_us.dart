@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/widgets/common_icon_badge.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/widgets/common_icon_badge.dart';
 
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
@@ -17,7 +17,7 @@ class AboutUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr('about_haoke_rent'))),
+      appBar: AppBar(title: Text(context.tr('about_haoke_app'))),
       body: ListView(
         padding: const EdgeInsets.all(14),
         children: [

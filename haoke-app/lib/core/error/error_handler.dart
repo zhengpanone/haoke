@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:haoke_rent/core/error/exceptions.dart';
+import 'package:haoke_app/core/error/exceptions.dart';
 
 class ErrorHandler {
   static AppException handleError(dynamic error) {

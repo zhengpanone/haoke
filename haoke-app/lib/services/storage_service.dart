@@ -1,8 +1,8 @@
 ﻿import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:haoke_rent/models/user/user_model.dart';
-import 'package:haoke_rent/utils/logger.dart';
+import 'package:haoke_app/models/user/user_model.dart';
+import 'package:haoke_app/utils/logger.dart';
 
 class StorageService {
   static final StorageService _instance = StorageService._internal();

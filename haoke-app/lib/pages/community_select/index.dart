@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/models/city/city_model.dart';
-import 'package:haoke_rent/models/community/community_model.dart';
-import 'package:haoke_rent/services/api_service.dart';
-import 'package:haoke_rent/utils/common_toast.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/models/city/city_model.dart';
+import 'package:haoke_app/models/community/community_model.dart';
+import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/utils/common_toast.dart';
 
 class CommunitySelectPage extends StatefulWidget {
   const CommunitySelectPage({super.key});

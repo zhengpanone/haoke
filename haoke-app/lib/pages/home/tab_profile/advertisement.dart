@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/widgets/common_image.dart';
+import 'package:haoke_app/widgets/common_image.dart';
 
 class Advertisement extends StatelessWidget {
   const Advertisement({super.key});

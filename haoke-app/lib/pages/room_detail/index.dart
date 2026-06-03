@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/home/info/info.dart';
-import 'package:haoke_rent/pages/room_detail/data.dart';
-import 'package:haoke_rent/widgets/common_price_text.dart';
-import 'package:haoke_rent/widgets/common_icon_badge.dart';
-import 'package:haoke_rent/widgets/common_swipper.dart';
-import 'package:haoke_rent/widgets/common_tag.dart';
-import 'package:haoke_rent/widgets/common_title.dart';
-import 'package:haoke_rent/widgets/room_appliance.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/home/info/info.dart';
+import 'package:haoke_app/pages/room_detail/data.dart';
+import 'package:haoke_app/widgets/common_price_text.dart';
+import 'package:haoke_app/widgets/common_icon_badge.dart';
+import 'package:haoke_app/widgets/common_swipper.dart';
+import 'package:haoke_app/widgets/common_tag.dart';
+import 'package:haoke_app/widgets/common_title.dart';
+import 'package:haoke_app/widgets/room_appliance.dart';
 
 const buttonBottomTextStyle = TextStyle(
   fontSize: 16,

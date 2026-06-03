@@ -1,14 +1,14 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/pages/home/index.dart';
-import 'package:haoke_rent/pages/login.dart';
-import 'package:haoke_rent/pages/not_found.dart';
-import 'package:haoke_rent/pages/register.dart';
-import 'package:haoke_rent/pages/community_select/index.dart';
-import 'package:haoke_rent/pages/room_add/index.dart';
-import 'package:haoke_rent/pages/room_detail/index.dart';
-import 'package:haoke_rent/pages/room_manage/index.dart';
-import 'package:haoke_rent/pages/settings/index.dart';
+import 'package:haoke_app/pages/home/index.dart';
+import 'package:haoke_app/pages/login.dart';
+import 'package:haoke_app/pages/not_found.dart';
+import 'package:haoke_app/pages/register.dart';
+import 'package:haoke_app/pages/community_select/index.dart';
+import 'package:haoke_app/pages/room_add/index.dart';
+import 'package:haoke_app/pages/room_detail/index.dart';
+import 'package:haoke_app/pages/room_manage/index.dart';
+import 'package:haoke_app/pages/settings/index.dart';
 
 Handler homeHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {

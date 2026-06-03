@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/home/tab_index/index.dart';
-import 'package:haoke_rent/pages/home/tab_info/index.dart';
-import 'package:haoke_rent/pages/home/tab_profile/index.dart';
-import 'package:haoke_rent/pages/home/tab_search/index.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/home/tab_index/index.dart';
+import 'package:haoke_app/pages/home/tab_info/index.dart';
+import 'package:haoke_app/pages/home/tab_profile/index.dart';
+import 'package:haoke_app/pages/home/tab_search/index.dart';
 
 const List<Widget> tabViewList = [
   TableIndex(),

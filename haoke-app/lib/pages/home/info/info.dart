@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/home/info/data.dart';
-import 'package:haoke_rent/pages/home/info/item_widget.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/home/info/data.dart';
+import 'package:haoke_app/pages/home/info/item_widget.dart';
 
 class Info extends StatelessWidget {
   final bool showTitle;

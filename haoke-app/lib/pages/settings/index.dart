@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/pages/settings/about_us.dart';
-import 'package:haoke_rent/pages/settings/change_password.dart';
-import 'package:haoke_rent/pages/settings/help_center.dart';
-import 'package:haoke_rent/pages/settings/language_setting.dart';
-import 'package:haoke_rent/pages/settings/phone_binding.dart';
-import 'package:haoke_rent/pages/settings/privacy_settings.dart';
-import 'package:haoke_rent/providers/auth_provider.dart';
-import 'package:haoke_rent/providers/locale_provider.dart';
-import 'package:haoke_rent/widgets/common_icon_badge.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/pages/settings/about_us.dart';
+import 'package:haoke_app/pages/settings/change_password.dart';
+import 'package:haoke_app/pages/settings/help_center.dart';
+import 'package:haoke_app/pages/settings/language_setting.dart';
+import 'package:haoke_app/pages/settings/phone_binding.dart';
+import 'package:haoke_app/pages/settings/privacy_settings.dart';
+import 'package:haoke_app/providers/auth_provider.dart';
+import 'package:haoke_app/providers/locale_provider.dart';
+import 'package:haoke_app/widgets/common_icon_badge.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {

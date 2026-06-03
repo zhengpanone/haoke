@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:haoke_rent/l10n/app_localizations.dart';
-import 'package:haoke_rent/providers/locale_provider.dart';
-import 'package:haoke_rent/widgets/common_icon_badge.dart';
+import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/providers/locale_provider.dart';
+import 'package:haoke_app/widgets/common_icon_badge.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSettingsPage extends StatefulWidget {
