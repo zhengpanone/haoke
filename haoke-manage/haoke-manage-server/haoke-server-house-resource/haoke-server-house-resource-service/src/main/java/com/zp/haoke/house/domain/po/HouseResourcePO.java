@@ -12,8 +12,6 @@ import com.zp.haoke.framework.core.enums.HouseRentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * <p>
@@ -132,6 +130,11 @@ public class HouseResourcePO implements Serializable {
      */
     @TableField("mobile")
     private String mobile;
+    /**
+     * 房东ID
+     */
+    @TableField("landlord_id")
+    private String landlordId;
 
     /**
      * 房源状态，1-待审核，2-审核通过，3-审核不通过，4-已出租，5-已下架
@@ -142,7 +145,7 @@ public class HouseResourcePO implements Serializable {
      * 看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天
      */
     @TableField("time")
-    private Boolean time;
+    private Integer time;
     /**
      * 物业费
      */
@@ -157,5 +160,5 @@ public class HouseResourcePO implements Serializable {
      * 更新时间
      */
     @TableField("update_time")
-    private LocalDateTime update_time;
+    private LocalDateTime updateTime;
 }

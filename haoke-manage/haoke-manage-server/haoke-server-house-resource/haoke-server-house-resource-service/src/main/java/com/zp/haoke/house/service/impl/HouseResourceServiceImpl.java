@@ -27,11 +27,13 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
     private final HouseResourceConvert houseResourceConvert;
 
     @Override
-    public int saveHouseResource(HouseResourceCreateDTO houseResourceCreateDTO) {
+    public int saveHouseResource(HouseResourceCreateDTO houseResourceCreateDTO, String landlordId) {
         HouseResourcePO houseResourcePO = houseResourceConvert.toEntity(houseResourceCreateDTO);
         // 新增房源默认状态为待审核
         houseResourcePO.setStatus(HouseRentStatus.PENDING);
-        log.info("新增房源: id={}, title={}, status={}", houseResourcePO.getId(), houseResourcePO.getTitle(), houseResourcePO.getStatus());
+        // 设置房东ID为当前登录用户
+        houseResourcePO.setLandlordId(landlordId);
+        log.info("新增房源: id={}, title={}, status={}, landlordId={}", houseResourcePO.getId(), houseResourcePO.getTitle(), houseResourcePO.getStatus(), landlordId);
         int rows = baseMapper.insert(houseResourcePO);
         log.info("新增房源完成: rows={}", rows);
         return rows;

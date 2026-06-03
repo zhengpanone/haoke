@@ -2,6 +2,7 @@ package com.zp.haoke.controller.house;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zp.haoke.config.SecurityUtils;
 import com.zp.haoke.framework.core.domain.response.R;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
 import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +37,17 @@ public class ResourceController {
     @Resource
     private IHouseResourceService houseResourceService;
 
+    @Resource
+    private SecurityUtils securityUtils;
+
     @Operation(summary = "创建房源", description = "创建新的房源信息")
     @PostMapping("create")
     public R<HouseResourceVO> create(
             @Parameter(description = "房源创建请求参数", required = true)
-            @Valid @RequestBody HouseResourceCreateDTO createDTO) {
-        houseResourceService.saveHouseResource(createDTO);
+            @Valid @RequestBody HouseResourceCreateDTO createDTO,
+            HttpServletRequest request) {
+        String landlordId = securityUtils.getCurrentUserId(request);
+        houseResourceService.saveHouseResource(createDTO, landlordId);
         return R.ok();
     }
 

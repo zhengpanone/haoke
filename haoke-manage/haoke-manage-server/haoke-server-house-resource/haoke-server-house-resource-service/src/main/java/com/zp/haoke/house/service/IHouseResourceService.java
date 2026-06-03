@@ -17,7 +17,7 @@ public interface IHouseResourceService extends IService<HouseResourcePO> {
      * @param houseResourceCreateDTO
      * @return
      */
-    int saveHouseResource(@Valid HouseResourceCreateDTO houseResourceCreateDTO);
+    int saveHouseResource(@Valid HouseResourceCreateDTO houseResourceCreateDTO, String landlordId);
 
     HouseResourceDetailVO queryById(String id);
 

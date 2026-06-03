@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `house_resource`
     contact            varchar(10) COMMENT '联系人',
     mobile             varchar(11) comment '手机号',
     status             tinyint(1) comment '状态，1-待审核，2-审核通过，3-审核不通过',
+    landlord_id        varchar(32) not null comment '房东ID',
     time               tinyint(1) comment '看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天',
     property_cost      varchar(10) comment '物业费',
     create_time        DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
