@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `house_resource`
 (
     id                 varchar(32) PRIMARY KEY COMMENT '房源id',
     title              VARCHAR(20) COMMENT '房源标题，如：南北通透，两室朝南，主卧带阳台',
-    estate_id          BIGINT COMMENT '楼盘id',
+    estate_id          varchar(34) COMMENT '楼盘id',
     building_num       VARCHAR(5) COMMENT '楼号（栋）',
     building_unit      VARCHAR(5) COMMENT '单元号',
     building_floor_num VARCHAR(5) COMMENT '门牌号',
@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `house_resource`
     house_desc         TEXT COMMENT '房源描述',
     contact            varchar(10) COMMENT '联系人',
     mobile             varchar(11) comment '手机号',
+    status             tinyint(1) comment '状态，1-待审核，2-审核通过，3-审核不通过',
     time               tinyint(1) comment '看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天',
     property_cost      varchar(10) comment '物业费',
     create_time        DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -62,6 +63,23 @@ CREATE TABLE IF NOT EXISTS `sys_user`
     update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '用户表';
+
+CREATE TABLE IF NOT EXISTS `city`
+(
+    id          varchar(32) PRIMARY KEY COMMENT 'city id',
+    name        varchar(50) NOT NULL COMMENT 'city name',
+    code        varchar(20) COMMENT 'city code',
+    parent_id   varchar(32) DEFAULT '0' COMMENT 'parent city id',
+    level       tinyint     NOT NULL COMMENT 'level: 1 province, 2 city, 3 area',
+    sort        int         DEFAULT 0 COMMENT 'sort order',
+    hot         tinyint(1)  DEFAULT 0 COMMENT 'hot city flag',
+    create_time datetime    DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+    update_time datetime    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+    INDEX idx_city_parent (parent_id),
+    INDEX idx_city_level (level),
+    INDEX idx_city_hot (hot)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='city dictionary';
 
 
 -- sys_user

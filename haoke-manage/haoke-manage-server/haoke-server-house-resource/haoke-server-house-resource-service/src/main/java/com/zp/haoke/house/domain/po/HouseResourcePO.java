@@ -8,6 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.zp.haoke.framework.core.enums.HouseRentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Data;
@@ -56,98 +57,104 @@ public class HouseResourcePO implements Serializable {
     @TableField("building_unit")
     private String buildingUnit;
     /**
-     *门牌号
+     * 门牌号
      */
     @TableField("building_floor_num")
     private String buildingFloorNum;
     /**
-     *租金
+     * 租金
      */
     @TableField("rent")
     private Integer rent;
     /**
-     *租赁方式，1-整租，2-合租
+     * 租赁方式，1-整租，2-合租
      */
     @TableField("rent_method")
     private Integer rentMethod;
     /**
-     *支付方式，1-付一押一，2-付三押一，3-付六押一，4-年付押一，5-其它
+     * 支付方式，1-付一押一，2-付三押一，3-付六押一，4-年付押一，5-其它
      */
     @TableField("payment_method")
     private Integer paymentMethod;
     /**
-     *户型，如：2室1厅1卫
+     * 户型，如：2室1厅1卫
      */
     @TableField("house_type")
     private String houseType;
     /**
-     *建筑面积
+     * 建筑面积
      */
     @TableField("covered_area")
     private String coveredArea;
     /**
-     *使用面积
+     * 使用面积
      */
     @TableField("use_area")
     private String useArea;
     /**
-     *楼层，如：8/26
+     * 楼层，如：8/26
      */
     @TableField("floor")
     private String floor;
     /**
-     *朝向：东、南、西、北
+     * 朝向：东、南、西、北
      */
     @TableField("orientation")
     private Integer orientation;
     /**
-     *装修，1-精装，2-简装，3-毛坯
+     * 装修，1-精装，2-简装，3-毛坯
      */
     @TableField("decoration")
     private Integer decoration;
     /**
-     *配套设施，如：1,2,3
+     * 配套设施，如：1,2,3
      */
     @Schema(description = "")
     @TableField("facilities")
     private String facilities;
     /**
-     *图片，最多5张
+     * 图片，最多5张
      */
     @TableField("pic")
     private String pic;
     /**
-     *房源描述
+     * 房源描述
      */
     @TableField("house_desc")
     private String houseDesc;
     /**
-     *联系人
+     * 联系人
      */
     @TableField("contact")
     private String contact;
     /**
-     *手机号
+     * 手机号
      */
     @TableField("mobile")
     private String mobile;
+
     /**
-     *看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天
+     * 房源状态，1-待审核，2-审核通过，3-审核不通过，4-已出租，5-已下架
+     */
+    @TableField("status")
+    private HouseRentStatus status;
+    /**
+     * 看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天
      */
     @TableField("time")
     private Boolean time;
     /**
-     *物业费
+     * 物业费
      */
     @TableField("property_cost")
     private String propertyCost;
     /**
-     *创建时间
+     * 创建时间
      */
     @TableField("create_time")
     private LocalDateTime createTime;
     /**
-     *更新时间
+     * 更新时间
      */
     @TableField("update_time")
     private LocalDateTime update_time;

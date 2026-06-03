@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "City Management")
-@RequestMapping({"/city", "/api/house/city"})
+@RequestMapping({ "/api/house/city"})
 public class CityController {
 
     @Resource

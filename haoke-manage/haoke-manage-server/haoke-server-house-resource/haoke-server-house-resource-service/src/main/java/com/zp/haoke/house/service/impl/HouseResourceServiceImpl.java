@@ -3,6 +3,7 @@ package com.zp.haoke.house.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zp.haoke.framework.core.enums.HouseRentStatus;
 import com.zp.haoke.house.domain.convert.HouseResourceConvert;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
 import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
@@ -28,7 +29,12 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
     @Override
     public int saveHouseResource(HouseResourceCreateDTO houseResourceCreateDTO) {
         HouseResourcePO houseResourcePO = houseResourceConvert.toEntity(houseResourceCreateDTO);
-        return baseMapper.insert(houseResourcePO);
+        // 新增房源默认状态为待审核
+        houseResourcePO.setStatus(HouseRentStatus.PENDING);
+        log.info("新增房源: id={}, title={}, status={}", houseResourcePO.getId(), houseResourcePO.getTitle(), houseResourcePO.getStatus());
+        int rows = baseMapper.insert(houseResourcePO);
+        log.info("新增房源完成: rows={}", rows);
+        return rows;
     }
 
     @Override

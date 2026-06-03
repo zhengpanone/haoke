@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-
+        log.warn("参数验证失败: {}", errors);
         return ResponseEntity.badRequest()
                 .body(R.fail(400, "参数验证失败: "+errors));
     }
@@ -41,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<R<Void>> handleConstraintViolationException(
             ConstraintViolationException ex) {
+        log.warn("约束违反: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(R.fail(400, ex.getMessage()));
     }
@@ -51,14 +52,16 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BizException.class)
     public R<?> handleBizException(BizException e) {
+        log.warn("业务异常: code={}, message={}", e.getCode(), e.getMessage());
         return R.fail(e.getCode(), e.getMessage());
     }
 
     /**
-     * 处理业务异常
+     * 处理运行时异常
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<R<Void>> handleBusinessException(RuntimeException ex) {
+        log.error("运行时异常: {}", ex.getMessage(), ex);
         return ResponseEntity.badRequest()
                 .body(R.fail(400, ex.getMessage()));
     }
@@ -69,7 +72,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public R<?> handleException(Exception e) {
-        log.info("系统异常: {}", e.getMessage());
+        log.error("系统异常: {}", e.getMessage(), e);
         return R.fail(ErrorCode.SYSTEM_ERROR);
     }
 }

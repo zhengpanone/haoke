@@ -30,7 +30,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "房源管理")
-@RequestMapping("/resource")
+@RequestMapping("/api/house/resource")
 public class ResourceController {
     @Resource
     private IHouseResourceService houseResourceService;

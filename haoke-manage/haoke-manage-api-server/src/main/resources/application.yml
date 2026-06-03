@@ -21,3 +21,11 @@ jwt:
   expiration: 3600000
   header: Authorization
   prefix: Bearer
+
+logging:
+  level:
+    root: INFO
+    com.zp.haoke: DEBUG               # 你的业务代码日志
+    com.zp.haoke.house.mapper: DEBUG  # MyBatis SQL 日志
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

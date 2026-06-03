@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @Tag(name = "Community Management")
-@RequestMapping({"/community", "/api/house/community"})
+@RequestMapping({ "/api/house/community"})
 public class CommunityController {
 
     @Resource

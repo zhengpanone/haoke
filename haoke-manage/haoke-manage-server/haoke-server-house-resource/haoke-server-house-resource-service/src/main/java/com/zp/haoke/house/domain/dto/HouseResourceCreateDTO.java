@@ -1,6 +1,7 @@
 package com.zp.haoke.house.domain.dto;
 
 
+import com.zp.haoke.framework.core.enums.HouseRentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class HouseResourceCreateDTO {
 
     @NotNull(message = "楼盘ID不能为空")
     @Schema(description = "关联的楼盘ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED, minimum = "1")
-    private Long estateId;
+    private String estateId;
 
     @NotNull(message = "租金不能为空")
     @Min(value = 1, message = "租金必须大于0")
@@ -77,4 +78,7 @@ public class HouseResourceCreateDTO {
     @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
     @Schema(description = "联系人手机号", example = "13800138000", pattern = "^1[3-9]\\d{9}$")
     private String contactPhone;
+
+    @Schema(description = "房源状态", example = "1", allowableValues = {"0", "1"}, defaultValue = "0")
+    private HouseRentStatus status = HouseRentStatus.PENDING;
 }

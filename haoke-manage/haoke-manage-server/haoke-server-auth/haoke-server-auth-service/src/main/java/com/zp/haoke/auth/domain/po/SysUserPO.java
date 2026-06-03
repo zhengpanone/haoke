@@ -40,23 +40,5 @@ public class SysUserPO implements Serializable {
 
     @TableField("update_time")
     private LocalDateTime updateTime = LocalDateTime.now();
-
-    // 枚举类型
-    public enum Gender {
-        MALE, FEMALE, UNKNOWN
-    }
-
-    public enum UserStatus {
-        ACTIVE,     // 激活
-        INACTIVE,   // 未激活
-        LOCKED,     // 锁定
-        DELETED     // 删除
-    }
-
-    public enum UserType {
-        SUPER_ADMIN,    // 超级管理员
-        ADMIN,          // 管理员
-        NORMAL,         // 普通用户
-        VIP             // VIP用户
-    }
+    
 }

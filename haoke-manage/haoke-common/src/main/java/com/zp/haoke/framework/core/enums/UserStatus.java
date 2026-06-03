@@ -15,7 +15,15 @@ public enum UserStatus {
     /**
      * 正常
      */
-    OK("0", "正常"),
+    ACTIVE("0", "正常"),
+    /**
+     * 未激活
+     */
+    INACTIVE("1", "未激活"),
+    /**
+     * 锁定
+     */
+    LOCKED("2", "锁定"),
     /**
      * 停用
      */
@@ -27,5 +35,4 @@ public enum UserStatus {
 
     private final String code;
     private final String info;
-
 }
