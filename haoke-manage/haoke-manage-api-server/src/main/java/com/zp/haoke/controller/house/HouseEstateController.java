@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @Tag(name = "Estate Management")
 @RequestMapping({ "/api/house/estate"})
-public class EstateController {
+public class HouseEstateController {
 
     @Resource
     private IHouseEstateService houseEstateService;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "浏览历史")
 @RequestMapping("/history")
-public class HistoryController {
+public class HouseHistoryController {
 
     @Operation(summary = "添加浏览记录", description = "添加浏览记录信息")
     @PutMapping("/create")

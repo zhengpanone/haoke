@@ -70,14 +70,4 @@ public class HouseEstatePO extends BasePojo {
     @TableField("developers")
     private String developers;
 
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    private LocalDateTime createTime;
-    /**
-     * 更新时间
-     */
-    @TableField("update_time")
-    private LocalDateTime update_time;
 }

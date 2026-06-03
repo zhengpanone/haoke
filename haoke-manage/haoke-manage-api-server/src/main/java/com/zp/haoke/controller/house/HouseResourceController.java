@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Tag(name = "房源管理")
 @RequestMapping("/api/house/resource")
-public class ResourceController {
+public class HouseResourceController {
     @Resource
     private IHouseResourceService houseResourceService;
 

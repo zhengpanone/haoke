@@ -30,8 +30,6 @@ public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, House
     public HouseEstateVO createHouseEstate(HouseEstateCreateDTO createDTO) {
         HouseEstatePO estatePO = toPO(createDTO);
         estatePO.setId(UUID.randomUUID().toString().replace("-", ""));
-        estatePO.setCreateTime(LocalDateTime.now());
-        estatePO.setUpdate_time(LocalDateTime.now());
         baseMapper.insert(estatePO);
         return toVO(estatePO);
     }
@@ -45,7 +43,6 @@ public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, House
     public HouseEstateVO updateById(HouseEstateUpdateDTO houseEstateUpdateDTO) {
         HouseEstatePO estatePO = toPO(houseEstateUpdateDTO);
         estatePO.setId(houseEstateUpdateDTO.getId());
-        estatePO.setUpdate_time(LocalDateTime.now());
         baseMapper.updateById(estatePO);
         return queryById(houseEstateUpdateDTO.getId());
     }
@@ -111,8 +108,6 @@ public class HouseEstateServiceImpl extends ServiceImpl<HouseEstateMapper, House
         vo.setPropertyCost(po.getPropertyCost());
         vo.setPropertyCompany(po.getPropertyCompany());
         vo.setDevelopers(po.getDevelopers());
-        vo.setCreated(po.getCreateTime());
-        vo.setUpdated(po.getUpdate_time());
         return vo;
     }
 }
