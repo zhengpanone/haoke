@@ -241,7 +241,7 @@ class ApiService {
     String? status,
     List<String>? statusList,
     int pageNum = 1,
-    int pageSize = 20,
+    int pageSize = 2,
   }) async {
     try {
       final requestData = <String, dynamic>{

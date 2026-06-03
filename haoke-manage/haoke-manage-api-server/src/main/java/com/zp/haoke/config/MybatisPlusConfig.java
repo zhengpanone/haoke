@@ -16,6 +16,16 @@ import org.springframework.context.annotation.Configuration;
 public class MybatisPlusConfig {
 
     /**
+     * 注册分页插件
+     */
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
+    }
+
+    /**
      * 注册 MyBatis-Plus 枚举类型处理器
      * 使 @EnumValue 注解生效
      */
