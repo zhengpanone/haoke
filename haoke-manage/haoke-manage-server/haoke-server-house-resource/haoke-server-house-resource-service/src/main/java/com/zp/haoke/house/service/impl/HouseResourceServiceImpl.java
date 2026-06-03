@@ -1,23 +1,23 @@
 package com.zp.haoke.house.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zp.haoke.framework.core.enums.HouseRentStatus;
 import com.zp.haoke.house.domain.convert.HouseResourceConvert;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
+import com.zp.haoke.house.domain.dto.HouseResourceQueryDTO;
 import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
 import com.zp.haoke.house.domain.po.HouseResourcePO;
 import com.zp.haoke.house.domain.vo.HouseResourceDetailVO;
 import com.zp.haoke.house.domain.vo.HouseResourceVO;
 import com.zp.haoke.house.mapper.HouseResourceMapper;
 import com.zp.haoke.house.service.IHouseResourceService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -46,19 +46,17 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
     }
 
     @Override
-    public IPage<HouseResourceVO> queryPageList() {
-        IPage<HouseResourcePO> page = baseMapper.selectPage(new Page<>(), null);
-//        List<HouseResourceVO> voList = houseResourceConvert.toDTOList(page.getRecords());
-//        Page<HouseResourceVO> voPage = new Page<>(
-//                page.getCurrent(),
-//                page.getSize(),
-//                page.getTotal()
-//        );
-//
-//        voPage.setRecords(voList);
-//
-//        return voPage;
-        return page.convert(houseResourceConvert::toVO);
+    public IPage<HouseResourceVO> queryPageList(HouseResourceQueryDTO queryDTO) {
+        LambdaQueryWrapper<HouseResourcePO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotBlank(queryDTO.getTitle()), HouseResourcePO::getTitle, queryDTO.getTitle())
+                .eq(StringUtils.isNotBlank(queryDTO.getEstateId()), HouseResourcePO::getEstateId, queryDTO.getEstateId())
+                .eq(queryDTO.getRentMethod() != null, HouseResourcePO::getRentMethod, queryDTO.getRentMethod())
+                .eq(queryDTO.getStatus() != null, HouseResourcePO::getStatus, queryDTO.getStatus())
+                .orderByDesc(HouseResourcePO::getCreateTime);
+
+        Page<HouseResourcePO> page = Page.of(queryDTO.getCurrentPage(), queryDTO.getPageSize());
+        IPage<HouseResourcePO> poPage = baseMapper.selectPage(page, wrapper);
+        return poPage.convert(houseResourceConvert::toVO);
     }
 
     @Override

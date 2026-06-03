@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.zp.haoke.framework.core.domain.pojo.BasePojo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +24,7 @@ import lombok.Setter;
 @Setter
 @TableName("house_estate")
 @Schema(title = "HouseEstate", description = "楼盘数据表")
-public class HouseEstatePO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class HouseEstatePO extends BasePojo {
 
     @Schema(description = "楼盘id")
     @TableId("id")

@@ -1,10 +1,11 @@
 package com.zp.haoke.controller.house;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zp.haoke.config.SecurityUtils;
+import com.zp.haoke.framework.core.domain.response.PageVO;
 import com.zp.haoke.framework.core.domain.response.R;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
+import com.zp.haoke.house.domain.dto.HouseResourceQueryDTO;
 import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
 import com.zp.haoke.house.domain.vo.HouseResourceDetailVO;
 import com.zp.haoke.house.domain.vo.HouseResourceVO;
@@ -20,8 +21,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author : zhengpanone
@@ -64,12 +63,10 @@ public class ResourceController {
         return R.ok(houseResourceService.queryById(id));
     }
 
-    @Operation(summary = "分页查看房源列表", description = "获取房源列表")
-    @GetMapping("/list")
-    public R<List<HouseResourceVO>> queryHouseResourceList(@RequestParam(name = "currentPage", defaultValue = "1") int pageNum,
-                                                           @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
-        IPage<HouseResourceVO> pag = houseResourceService.queryPageList();
-        return R.ok(pag.getRecords());
+    @Operation(summary = "分页查询房源列表", description = "分页查询房源列表，支持标题、楼盘、租赁方式、状态等条件筛选")
+    @GetMapping("/page")
+    public R<PageVO<HouseResourceVO>> queryHouseResourcePageList(HouseResourceQueryDTO queryDTO) {
+        return R.ok(PageVO.of(houseResourceService.queryPageList(queryDTO)));
     }
 
     @Operation(summary = "更新房源", description = "更新房源信息")

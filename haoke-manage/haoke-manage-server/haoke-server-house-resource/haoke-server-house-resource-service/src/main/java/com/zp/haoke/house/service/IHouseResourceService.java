@@ -4,6 +4,7 @@ package com.zp.haoke.house.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zp.haoke.house.domain.dto.HouseResourceCreateDTO;
+import com.zp.haoke.house.domain.dto.HouseResourceQueryDTO;
 import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
 import com.zp.haoke.house.domain.po.HouseResourcePO;
 import com.zp.haoke.house.domain.vo.HouseResourceDetailVO;
@@ -21,7 +22,7 @@ public interface IHouseResourceService extends IService<HouseResourcePO> {
 
     HouseResourceDetailVO queryById(String id);
 
-    IPage<HouseResourceVO> queryPageList();
+    IPage<HouseResourceVO> queryPageList(HouseResourceQueryDTO queryDTO);
 
     Boolean deleteByIds(String id);
 

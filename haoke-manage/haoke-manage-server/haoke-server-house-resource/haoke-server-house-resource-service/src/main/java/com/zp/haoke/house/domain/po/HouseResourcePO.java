@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
+import com.zp.haoke.framework.core.domain.pojo.BasePojo;
 import com.zp.haoke.framework.core.enums.HouseRentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -24,7 +23,7 @@ import lombok.Data;
 @Data
 @TableName("house_resource")
 @Schema(title = "HouseResource对象", description = "房源数据表")
-public class HouseResourcePO implements Serializable {
+public class HouseResourcePO extends BasePojo {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -151,14 +150,5 @@ public class HouseResourcePO implements Serializable {
      */
     @TableField("property_cost")
     private String propertyCost;
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    private LocalDateTime createTime;
-    /**
-     * 更新时间
-     */
-    @TableField("update_time")
-    private LocalDateTime updateTime;
+
 }

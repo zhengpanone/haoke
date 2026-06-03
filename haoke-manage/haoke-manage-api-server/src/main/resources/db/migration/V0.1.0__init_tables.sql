@@ -14,7 +14,11 @@ CREATE TABLE IF NOT EXISTS `house_estate`
     property_company VARCHAR(20) COMMENT '物业公司',
     developers       VARCHAR(20) COMMENT '开发商',
     create_time      DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    create_user_id   varchar(32) comment '创建人ID',
+    create_user_name varchar(32) comment '创建人名称',
+    update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    update_user_id   varchar(32) comment '更新人ID',
+    update_user_name varchar(32) comment '更新人名称'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='楼盘数据表';
 
@@ -46,7 +50,11 @@ CREATE TABLE IF NOT EXISTS `house_resource`
     time               tinyint(1) comment '看房时间，1-上午、2-中午、3-下午、4-晚上、5-全天',
     property_cost      varchar(10) comment '物业费',
     create_time        DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time        DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+    create_user_id     varchar(32) comment '创建人ID',
+    create_user_name   varchar(32) comment '创建人名称',
+    update_time        DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    update_user_id     varchar(32) comment '更新人ID',
+    update_user_name   varchar(32) comment '更新人名称'
 
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT '房源数据表';
@@ -54,28 +62,36 @@ CREATE TABLE IF NOT EXISTS `house_resource`
 -- 用户表
 CREATE TABLE IF NOT EXISTS `sys_user`
 (
-    id          varchar(32) PRIMARY KEY COMMENT '用户ID',
-    username    varchar(64) comment '用户名',
-    password    varchar(255)                       not null comment '密码',
-    email       varchar(255)                       null comment '邮箱',
-    phone       varchar(18)                        null comment '手机号',
-    avatar      varchar(255)                       null comment '图像URL',
-    create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
-    update_time datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间'
+    id               varchar(32) PRIMARY KEY COMMENT '用户ID',
+    username         varchar(64) comment '用户名',
+    password         varchar(255) not null comment '密码',
+    email            varchar(255) null comment '邮箱',
+    phone            varchar(18)  null comment '手机号',
+    avatar           varchar(255) null comment '图像URL',
+    create_time      DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    create_user_id   varchar(32) comment '创建人ID',
+    create_user_name varchar(32) comment '创建人名称',
+    update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    update_user_id   varchar(32) comment '更新人ID',
+    update_user_name varchar(32) comment '更新人名称'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '用户表';
 
 CREATE TABLE IF NOT EXISTS `city`
 (
-    id          varchar(32) PRIMARY KEY COMMENT 'city id',
-    name        varchar(50) NOT NULL COMMENT 'city name',
-    code        varchar(20) COMMENT 'city code',
-    parent_id   varchar(32) DEFAULT '0' COMMENT 'parent city id',
-    level       tinyint     NOT NULL COMMENT 'level: 1 province, 2 city, 3 area',
-    sort        int         DEFAULT 0 COMMENT 'sort order',
-    hot         tinyint(1)  DEFAULT 0 COMMENT 'hot city flag',
-    create_time datetime    DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-    update_time datetime    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
+    id               varchar(32) PRIMARY KEY COMMENT 'city id',
+    name             varchar(50) NOT NULL COMMENT 'city name',
+    code             varchar(20) COMMENT 'city code',
+    parent_id        varchar(32) DEFAULT '0' COMMENT 'parent city id',
+    level            tinyint     NOT NULL COMMENT 'level: 1 province, 2 city, 3 area',
+    sort             int         DEFAULT 0 COMMENT 'sort order',
+    hot              tinyint(1)  DEFAULT 0 COMMENT 'hot city flag',
+    create_time      DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    create_user_id   varchar(32) comment '创建人ID',
+    create_user_name varchar(32) comment '创建人名称',
+    update_time      DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    update_user_id   varchar(32) comment '更新人ID',
+    update_user_name varchar(32) comment '更新人名称',
     INDEX idx_city_parent (parent_id),
     INDEX idx_city_level (level),
     INDEX idx_city_hot (hot)
