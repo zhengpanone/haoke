@@ -17,6 +17,7 @@ class DioClient {
 
   String? _accessToken;
   String? _refreshToken;
+  Future<void>? _initializingTokens;
 
   /// 防止并发刷新 token
   Future<String?>? _refreshing;
@@ -33,7 +34,8 @@ class DioClient {
         'User-Agent': 'FlutterApp/${AppConfig.appVersion}',
       },
       responseType: ResponseType.json,
-      validateStatus: (status) => status != null && status < 500,
+      validateStatus: (status) =>
+          status != null && status >= 200 && status < 300,
     );
 
     _client = Dio(options);
@@ -49,7 +51,7 @@ class DioClient {
         ),
     ]);
 
-    _initToken();
+    _initializingTokens = _initToken();
   }
 
   /// 初始化 token（从本地加载）
@@ -59,12 +61,26 @@ class DioClient {
     _refreshToken = await storage.getRefreshToken();
   }
 
+  Future<void> _ensureTokenLoaded() async {
+    await _initializingTokens;
+
+    if (_accessToken != null && _refreshToken != null) {
+      return;
+    }
+
+    final storage = StorageService.instance;
+    _accessToken ??= await storage.getToken();
+    _refreshToken ??= await storage.getRefreshToken();
+  }
+
   /// =========================
   /// Auth 拦截器（核心）
   /// =========================
   Interceptor _authInterceptor() {
     return InterceptorsWrapper(
-      onRequest: (options, handler) {
+      onRequest: (options, handler) async {
+        await _ensureTokenLoaded();
+
         if (_accessToken != null) {
           options.headers['Authorization'] = 'Bearer $_accessToken';
         }

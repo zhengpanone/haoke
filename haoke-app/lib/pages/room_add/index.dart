@@ -8,6 +8,7 @@ import 'package:haoke_app/models/room/room_publish_request.dart';
 import 'package:haoke_app/routes.dart';
 import 'package:haoke_app/services/api_service.dart';
 import 'package:haoke_app/utils/common_toast.dart';
+import 'package:haoke_app/utils/string_util.dart';
 import 'package:haoke_app/widgets/common_float_action_button.dart';
 import 'package:haoke_app/widgets/common_form_item.dart';
 import 'package:haoke_app/widgets/common_image_picker.dart';
@@ -69,8 +70,8 @@ class _RoomAddState extends State<RoomAdd> {
     return '${roomType + 1}室1厅1卫';
   }
 
-  int? get _estateId {
-    return int.tryParse(community?.id ?? '');
+  String get _estateId {
+    return community?.id ?? '';
   }
 
   Future<void> _publishRoom() async {
@@ -83,7 +84,7 @@ class _RoomAddState extends State<RoomAdd> {
       return;
     }
     final estateId = _estateId;
-    if (estateId == null || estateId <= 0) {
+    if (StringUtil.isBlank(estateId)) {
       CommonToast.showToast(context.tr('please_choose_valid_community'),
           context: context);
       return;

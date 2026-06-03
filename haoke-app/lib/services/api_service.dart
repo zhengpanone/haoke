@@ -165,17 +165,21 @@ class ApiService {
     try {
       final response = await _dio.put(
         '/api/house/community/page',
-        data: {
-          'keyword': keyword,
-          'pageNum': 1,
-          'pageSize': 20,
-        },
+        data: {'keyword': keyword, 'pageNum': 1, 'pageSize': 20},
       );
+      final responseData = response.data;
+      if (responseData is! Map<String, dynamic>) {
+        throw FormatException(
+          'Invalid community response: ${response.statusCode}',
+        );
+      }
+
       return ApiResponse<List<CommunityModel>>.fromJson(
-        response.data,
+        responseData,
         (data) => (data as List)
             .map(
-                (item) => CommunityModel.fromJson(item as Map<String, dynamic>))
+              (item) => CommunityModel.fromJson(item as Map<String, dynamic>),
+            )
             .toList(),
       );
     } catch (e) {

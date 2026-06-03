@@ -1,6 +1,6 @@
 class RoomPublishRequest {
   final String title;
-  final int estateId;
+  final String estateId;
   final int rent;
   final int rentMethod;
   final String houseType;
