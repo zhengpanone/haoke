@@ -1,49 +1,65 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImagePickerUtil {
-  static const MethodChannel _channel =
-      MethodChannel('com.example.haoke_app/image_picker');
+  static final ImagePicker _picker = ImagePicker();
+
+  static String? lastError;
 
   @visibleForTesting
   static bool? debugIsAndroidOverride;
 
-  static bool get _isAndroid => debugIsAndroidOverride ?? Platform.isAndroid;
+  @visibleForTesting
+  static Future<File?> Function()? debugPickImageHandler;
 
-  /// 选择单张图片
+  @visibleForTesting
+  static Future<List<File>> Function()? debugPickMultiImageHandler;
+
+  static bool get _canPick => !kIsWeb && (debugIsAndroidOverride ?? true);
+
   static Future<File?> pickImage() async {
-    if (!_isAndroid) {
+    lastError = null;
+    if (!_canPick) {
+      lastError = 'Unsupported platform';
       return null;
+    }
+    if (debugPickImageHandler != null) {
+      return debugPickImageHandler!();
     }
 
     try {
-      final String? path = await _channel.invokeMethod<String>('pickImage');
-      if (path == null || path.isEmpty) return null;
-      return File(path);
-    } catch (_) {
+      final image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (image == null || image.path.isEmpty) return null;
+      return File(image.path);
+    } catch (e) {
+      lastError = e.toString();
       return null;
     }
   }
 
-  /// 选择多张图片
   static Future<List<File>> pickMultiImage() async {
-    if (!_isAndroid) {
+    lastError = null;
+    if (!_canPick) {
+      lastError = 'Unsupported platform';
       return [];
+    }
+    if (debugPickMultiImageHandler != null) {
+      return debugPickMultiImageHandler!();
     }
 
     try {
-      final List<dynamic>? paths =
-          await _channel.invokeMethod<List<dynamic>>('pickMultiImage');
-      if (paths == null || paths.isEmpty) return [];
-
-      return paths
-          .whereType<String>()
-          .where((path) => path.isNotEmpty)
-          .map(File.new)
+      final images = await _picker.pickMultiImage(imageQuality: 85);
+      return images
+          .where((image) => image.path.isNotEmpty)
+          .map((image) => File(image.path))
           .toList();
-    } catch (_) {
+    } catch (e) {
+      lastError = e.toString();
       return [];
     }
   }

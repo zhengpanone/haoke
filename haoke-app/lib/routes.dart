@@ -9,6 +9,7 @@ class Routes {
   static const String register = '/register';
   static const String roomDetail = '/roomDetail/:roomId';
   static const String profile = '/profile';
+  static const String profileEdit = '/profile/edit';
   static const String settings = '/settings';
   static const String roomManage = '/roomManage';
   static const String roomAdd = '/roomAdd';
@@ -24,6 +25,7 @@ class Routes {
     router.define(login, handler: loginHandler);
     router.define(register, handler: registerHandler);
     router.define(roomDetail, handler: roomDetailHandler);
+    router.define(profileEdit, handler: profileEditHandler);
     router.define(settings, handler: settingsHandler);
     router.define(roomManage, handler: roomManageHandler);
     router.define(roomAdd, handler: roomAddHandler);

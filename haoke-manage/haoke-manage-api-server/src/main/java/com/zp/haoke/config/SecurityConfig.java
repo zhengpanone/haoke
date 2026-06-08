@@ -48,6 +48,7 @@ public class SecurityConfig {
                                 "/api/auth/register",
                                 "/api/user/create",
                                 "/api/auth/refresh-token",
+                                "/files/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()

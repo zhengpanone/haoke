@@ -91,6 +91,27 @@ public class SysUserController {
     /**
      * 从请求中提取Token
      */
+    @PutMapping("/me")
+    @Operation(summary = "Update current user profile")
+    public R<UserVO> updateCurrentUser(
+            HttpServletRequest request,
+            @Valid @RequestBody UpdateUserDTO userDTO) {
+        try {
+            String token = extractToken(request);
+            if (token == null) {
+                return R.fail(401, "Not logged in");
+            }
+
+            String userId = jwtUtil.getUserIdFromToken(token);
+            UserVO user = sysUserService.updateUser(userId, userDTO);
+            return R.ok("User updated successfully", user);
+        } catch (RuntimeException e) {
+            return R.fail(400, e.getMessage());
+        } catch (Exception e) {
+            return R.fail(500, "Failed to update user profile: " + e.getMessage());
+        }
+    }
+
     private String extractToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {

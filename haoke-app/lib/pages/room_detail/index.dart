@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
 import 'package:haoke_app/pages/home/info/info.dart';
 import 'package:haoke_app/pages/room_detail/data.dart';
+import 'package:haoke_app/services/api_service.dart';
 import 'package:haoke_app/widgets/common_price_text.dart';
 import 'package:haoke_app/widgets/common_icon_badge.dart';
 import 'package:haoke_app/widgets/common_swipper.dart';
@@ -26,25 +27,105 @@ class RoomDetailPage extends StatefulWidget {
 }
 
 class _RoomDetailPageState extends State<RoomDetailPage> {
-  late RoomDetailData data;
+  final ApiService _apiService = ApiService();
+  RoomDetailData? data;
   late bool isLike;
   late bool showAllText;
+  bool isLoading = true;
+  String? errorMessage;
 
   @override
   void initState() {
-    data = defaultData;
     isLike = false;
     showAllText = false;
     super.initState();
+    _loadRoomDetail();
+  }
+
+  Future<void> _loadRoomDetail() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final response = await _apiService.queryRoomDetail(widget.roomId);
+      if (!mounted) return;
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          data = response.data;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = response.message.isEmpty
+              ? context.tr('load_room_detail_failed')
+              : response.message;
+          isLoading = false;
+        });
+      }
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        errorMessage = context.tr('load_room_detail_failed');
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final showTextTool = data.subTitle.length > 100;
+    final detail = data;
+
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.tr('property_details'))),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (detail == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.tr('property_details'))),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.error_outline_rounded,
+                  size: 52,
+                  color: Color(0xFF9AA8A5),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  errorMessage ?? context.tr('load_room_detail_failed'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Color(0xFF5A6966)),
+                ),
+                const SizedBox(height: 18),
+                SizedBox(
+                  height: 44,
+                  child: OutlinedButton.icon(
+                    onPressed: _loadRoomDetail,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: Text(context.tr('retry')),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    final showTextTool = detail.subTitle.length > 100;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(data.title),
+        title: Text(detail.title),
         actions: [
           IconButton(
             onPressed: () async {
@@ -69,13 +150,13 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
           ListView(
             padding: const EdgeInsets.only(bottom: 110),
             children: [
-              CommonSwipper(images: data.houseImages),
+              CommonSwipper(images: detail.houseImages),
               const SizedBox(height: 8),
-              CommonTitle(data.title),
+              CommonTitle(detail.title),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: CommonPriceText(
-                  price: data.price.toString(),
+                  price: detail.price.toString(),
                   unit: context.tr('per_month'),
                   color: const Color(0xFF0F8F7A),
                 ),
@@ -84,7 +165,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                 margin: const EdgeInsets.fromLTRB(14, 10, 14, 0),
                 child: Wrap(
                   spacing: 4,
-                  children: data.tags
+                  children: detail.tags
                       .map((item) => CommonTag(tagText: item))
                       .toList(),
                 ),
@@ -95,30 +176,38 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   runSpacing: 16,
                   children: [
                     BaseInfoItem(
-                        '${context.tr('area_label')}: ${data.size}${context.tr('sqm')}'),
-                    BaseInfoItem('${context.tr('floor_label')}: ${data.floor}'),
+                      '${context.tr('area_label')}: ${detail.size}${context.tr('sqm')}',
+                    ),
                     BaseInfoItem(
-                        '${context.tr('type_label')}: ${data.roomType}'),
+                      '${context.tr('floor_label')}: ${detail.floor}',
+                    ),
                     BaseInfoItem(
-                        '${context.tr('orientation_label')}: ${data.oriented.join('/')}'),
+                      '${context.tr('type_label')}: ${detail.roomType}',
+                    ),
+                    BaseInfoItem(
+                      '${context.tr('orientation_label')}: ${detail.oriented.join('/')}',
+                    ),
                   ],
                 ),
               ),
               CommonTitle(context.tr('house_facilities')),
               _buildSectionCard(
-                  child: RoomApplianceList(list: data.applicances)),
+                child: RoomApplianceList(list: detail.applicances),
+              ),
               CommonTitle(context.tr('house_description')),
               _buildSectionCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data.subTitle.isEmpty
+                      detail.subTitle.isEmpty
                           ? context.tr('no_description_yet')
-                          : data.subTitle,
+                          : detail.subTitle,
                       maxLines: showAllText ? null : 5,
                       style: const TextStyle(
-                          height: 1.5, color: Color(0xFF394C49)),
+                        height: 1.5,
+                        color: Color(0xFF394C49),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -133,9 +222,11 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 },
                                 child: Row(
                                   children: [
-                                    Text(showAllText
-                                        ? context.tr('collapse')
-                                        : context.tr('expand')),
+                                    Text(
+                                      showAllText
+                                          ? context.tr('collapse')
+                                          : context.tr('expand'),
+                                    ),
                                     Icon(
                                       showAllText
                                           ? Icons.keyboard_arrow_up_rounded
@@ -145,8 +236,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 ),
                               )
                             : const SizedBox.shrink(),
-                        Text(context.tr('report'),
-                            style: const TextStyle(color: Color(0xFF7B8885))),
+                        Text(
+                          context.tr('report'),
+                          style: const TextStyle(color: Color(0xFF7B8885)),
+                        ),
                       ],
                     ),
                   ],
@@ -214,8 +307,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
-                        child: Text(context.tr('contact_owner'),
-                            style: buttonBottomTextStyle),
+                        child: Text(
+                          context.tr('contact_owner'),
+                          style: buttonBottomTextStyle,
+                        ),
                       ),
                     ),
                   ),
@@ -228,8 +323,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
-                        child: Text(context.tr('book_viewing'),
-                            style: buttonBottomTextStyle),
+                        child: Text(
+                          context.tr('book_viewing'),
+                          style: buttonBottomTextStyle,
+                        ),
                       ),
                     ),
                   ),

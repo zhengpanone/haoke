@@ -35,6 +35,9 @@ public class SysUserPO implements Serializable {
     @TableField("avatar")
     private String avatar;
 
+    @TableField("nickname")
+    private String nickname;
+
     @TableField("create_time")
     private LocalDateTime createTime = LocalDateTime.now();
 

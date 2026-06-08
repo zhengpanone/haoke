@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:haoke_app/models/common/api_response.dart';
 import 'package:haoke_app/models/auth/login_request.dart';
@@ -6,7 +8,9 @@ import 'package:haoke_app/models/city/city_model.dart';
 import 'package:haoke_app/models/community/community_model.dart';
 import 'package:haoke_app/models/room/room_model.dart';
 import 'package:haoke_app/models/room/room_publish_request.dart';
+import 'package:haoke_app/models/user/update_user_profile_request.dart';
 import 'package:haoke_app/models/user/user_model.dart';
+import 'package:haoke_app/pages/room_detail/data.dart';
 import 'package:haoke_app/services/dio_client.dart';
 import 'package:haoke_app/services/storage_service.dart';
 import 'package:haoke_app/utils/logger.dart';
@@ -160,6 +164,44 @@ class ApiService {
     }
   }
 
+  Future<ApiResponse<UserModel>> updateCurrentUser(
+    UpdateUserProfileRequest request,
+  ) async {
+    try {
+      final response = await _dio.put('/api/user/me', data: request.toJson());
+      final apiResponse = ApiResponse<UserModel>.fromJson(
+        response.data,
+        (data) => UserModel.fromJson(data as Map<String, dynamic>),
+      );
+      if (apiResponse.isSuccess && apiResponse.data != null) {
+        await _storage.saveUser(apiResponse.data!);
+      }
+      return apiResponse;
+    } catch (e) {
+      AppLogger.e('Update current user failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<String>> uploadAvatar(File file) async {
+    try {
+      final fileName = file.path.split(RegExp(r'[\\/]')).last;
+      final response = await _dio.post(
+        '/api/file/avatar',
+        data: FormData.fromMap({
+          'file': await MultipartFile.fromFile(file.path, filename: fileName),
+        }),
+      );
+      return ApiResponse<String>.fromJson(
+        response.data,
+        (data) => data.toString(),
+      );
+    } catch (e) {
+      AppLogger.e('Upload avatar failed: $e');
+      rethrow;
+    }
+  }
+
   Future<ApiResponse<List<CommunityModel>>> queryCommunities({
     String keyword = '',
   }) async {
@@ -232,6 +274,19 @@ class ApiService {
       return ApiResponse.emptyFromJson(response.data);
     } catch (e) {
       AppLogger.e('Publish room failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<RoomDetailData>> queryRoomDetail(String roomId) async {
+    try {
+      final response = await _dio.get('/api/house/resource/$roomId');
+      return ApiResponse<RoomDetailData>.fromJson(
+        response.data,
+        (data) => RoomDetailData.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Query room detail failed: $e');
       rethrow;
     }
   }

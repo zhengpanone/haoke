@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/pages/home/tab_search/data_list.dart';
+import 'package:haoke_app/routes.dart';
 import 'package:haoke_app/widgets/common_image.dart';
 import 'package:haoke_app/widgets/common_tag.dart';
 
@@ -12,7 +13,9 @@ class RoomListItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/roomDetail/${data.id}');
+        Navigator.of(
+          context,
+        ).pushNamed(Routes.roomDetail.replaceFirst(':roomId', data.id));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -56,8 +59,10 @@ class RoomListItemWidget extends StatelessWidget {
                     data.subTitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style:
-                        const TextStyle(color: Color(0xFF6E7E7A), fontSize: 12),
+                    style: const TextStyle(
+                      color: Color(0xFF6E7E7A),
+                      fontSize: 12,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Wrap(
@@ -82,7 +87,7 @@ class RoomListItemWidget extends StatelessWidget {
                             color: Color(0xFF0F8F7A),
                             fontWeight: FontWeight.w500,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),

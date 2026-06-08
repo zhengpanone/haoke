@@ -1,90 +1,57 @@
-import 'package:flutter/services.dart';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haoke_app/utils/image_picker_util.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel('com.example.haoke_app/image_picker');
-  final calls = <MethodCall>[];
-
   setUp(() {
-    calls.clear();
     ImagePickerUtil.debugIsAndroidOverride = true;
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
     ImagePickerUtil.debugIsAndroidOverride = null;
+    ImagePickerUtil.debugPickImageHandler = null;
+    ImagePickerUtil.debugPickMultiImageHandler = null;
   });
 
-  void mockImagePickerChannel(
-      Future<dynamic> Function(MethodCall call) handler) {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (call) {
-      calls.add(call);
-      return handler(call);
-    });
-  }
-
   group('pickImage', () {
-    test('通道返回图片路径时返回 File', () async {
-      mockImagePickerChannel((call) async => '/path/to/image.png');
+    test('returns picked image file', () async {
+      ImagePickerUtil.debugPickImageHandler = () async =>
+          File('/path/to/image.png');
 
       final file = await ImagePickerUtil.pickImage();
 
       expect(file, isNotNull);
       expect(file!.path, '/path/to/image.png');
-      expect(calls, hasLength(1));
-      expect(calls.single.method, 'pickImage');
     });
 
-    test('通道返回 null 时返回 null', () async {
-      mockImagePickerChannel((call) async => null);
+    test('returns null when picker returns null', () async {
+      ImagePickerUtil.debugPickImageHandler = () async => null;
 
       final file = await ImagePickerUtil.pickImage();
 
       expect(file, isNull);
-      expect(calls.single.method, 'pickImage');
     });
 
-    test('通道返回空路径时返回 null', () async {
-      mockImagePickerChannel((call) async => '');
-
-      final file = await ImagePickerUtil.pickImage();
-
-      expect(file, isNull);
-      expect(calls.single.method, 'pickImage');
-    });
-
-    test('通道抛出异常时返回 null', () async {
-      mockImagePickerChannel((call) async {
-        throw PlatformException(code: 'PICK_FAILED');
-      });
-
-      final file = await ImagePickerUtil.pickImage();
-
-      expect(file, isNull);
-      expect(calls.single.method, 'pickImage');
-    });
-
-    test('非 Android 平台直接返回 null 且不调用通道', () async {
+    test('returns null when picking is disabled', () async {
       ImagePickerUtil.debugIsAndroidOverride = false;
-      mockImagePickerChannel((call) async => '/path/to/image.png');
+      ImagePickerUtil.debugPickImageHandler = () async =>
+          File('/path/to/image.png');
 
       final file = await ImagePickerUtil.pickImage();
 
       expect(file, isNull);
-      expect(calls, isEmpty);
     });
   });
 
   group('pickMultiImage', () {
-    test('通道返回路径列表时返回 File 列表', () async {
-      mockImagePickerChannel(
-        (call) async => ['/path/to/image1.png', '/path/to/image2.png'],
-      );
+    test('returns picked image files', () async {
+      ImagePickerUtil.debugPickMultiImageHandler = () async => [
+        File('/path/to/image1.png'),
+        File('/path/to/image2.png'),
+      ];
 
       final files = await ImagePickerUtil.pickMultiImage();
 
@@ -92,58 +59,25 @@ void main() {
         '/path/to/image1.png',
         '/path/to/image2.png',
       ]);
-      expect(calls, hasLength(1));
-      expect(calls.single.method, 'pickMultiImage');
     });
 
-    test('过滤空路径和非字符串值', () async {
-      mockImagePickerChannel(
-        (call) async => ['/path/to/image.png', '', 1, null],
-      );
-
-      final files = await ImagePickerUtil.pickMultiImage();
-
-      expect(files.map((file) => file.path), ['/path/to/image.png']);
-      expect(calls.single.method, 'pickMultiImage');
-    });
-
-    test('通道返回 null 时返回空列表', () async {
-      mockImagePickerChannel((call) async => null);
+    test('returns empty list when picker returns empty list', () async {
+      ImagePickerUtil.debugPickMultiImageHandler = () async => [];
 
       final files = await ImagePickerUtil.pickMultiImage();
 
       expect(files, isEmpty);
-      expect(calls.single.method, 'pickMultiImage');
     });
 
-    test('通道返回空列表时返回空列表', () async {
-      mockImagePickerChannel((call) async => []);
-
-      final files = await ImagePickerUtil.pickMultiImage();
-
-      expect(files, isEmpty);
-      expect(calls.single.method, 'pickMultiImage');
-    });
-
-    test('通道抛出异常时返回空列表', () async {
-      mockImagePickerChannel((call) async {
-        throw PlatformException(code: 'PICK_FAILED');
-      });
-
-      final files = await ImagePickerUtil.pickMultiImage();
-
-      expect(files, isEmpty);
-      expect(calls.single.method, 'pickMultiImage');
-    });
-
-    test('非 Android 平台直接返回空列表且不调用通道', () async {
+    test('returns empty list when picking is disabled', () async {
       ImagePickerUtil.debugIsAndroidOverride = false;
-      mockImagePickerChannel((call) async => ['/path/to/image.png']);
+      ImagePickerUtil.debugPickMultiImageHandler = () async => [
+        File('/path/to/image.png'),
+      ];
 
       final files = await ImagePickerUtil.pickMultiImage();
 
       expect(files, isEmpty);
-      expect(calls, isEmpty);
     });
   });
 }

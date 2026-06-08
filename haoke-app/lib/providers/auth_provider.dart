@@ -1,6 +1,9 @@
 // 状态管理
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:haoke_app/models/auth/login_request.dart';
+import 'package:haoke_app/models/user/update_user_profile_request.dart';
 import 'package:haoke_app/models/user/user_model.dart';
 import 'package:haoke_app/services/api_service.dart';
 import 'package:haoke_app/services/storage_service.dart';
@@ -60,8 +63,9 @@ class AuthProvider with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      final response = await _apiService
-          .login(LoginRequest(username: username, password: password));
+      final response = await _apiService.login(
+        LoginRequest(username: username, password: password),
+      );
       if (response.isSuccess) {
         _isLoggedIn = true;
         await _syncUserInfo();
@@ -160,7 +164,9 @@ class AuthProvider with ChangeNotifier {
         // 记录同步时间
         final now = DateTime.now();
         await _storageService.setString(
-            'last_sync_time', now.toIso8601String());
+          'last_sync_time',
+          now.toIso8601String(),
+        );
 
         _isLoading = false;
         _errorMessage = null;
@@ -216,9 +222,58 @@ class AuthProvider with ChangeNotifier {
     return _currentUser;
   }
 
-  /**
-   * 更新用户信息
-   */
+  Future<bool> updateUserInfo(
+    UpdateUserProfileRequest request, {
+    File? avatarFile,
+  }) async {
+    if (_currentUser == null) {
+      _errorMessage = 'User is not logged in';
+      return false;
+    }
+
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      var profileRequest = request;
+      if (avatarFile != null) {
+        final uploadResponse = await _apiService.uploadAvatar(avatarFile);
+        if (!uploadResponse.isSuccess || uploadResponse.data == null) {
+          _errorMessage = uploadResponse.message.isNotEmpty
+              ? uploadResponse.message
+              : 'Avatar upload failed';
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
+        profileRequest = request.copyWith(avatar: uploadResponse.data);
+      }
+
+      final response = await _apiService.updateCurrentUser(profileRequest);
+      if (response.isSuccess && response.data != null) {
+        _currentUser = response.data;
+        await _storageService.saveUser(_currentUser!);
+        _isLoggedIn = true;
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      }
+
+      _errorMessage = response.message;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e, stackTrace) {
+      _errorMessage = e.toString();
+      AppLogger.e('Update user info failed', e, stackTrace);
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // 更新用户信息
   // Future<bool> updateUserInfo(Map<String, dynamic> data) async {
   //   if (_currentUser == null) {
   //     return false;
@@ -262,9 +317,7 @@ class AuthProvider with ChangeNotifier {
   //   }
   // }
 
-  /**
-   * 更新头像
-   */
+  // 更新头像
   // Future<bool> updateAvatar(String avatarUrl) async {
   //   if (_currentUser == null) {
   //     return false;
@@ -307,9 +360,7 @@ class AuthProvider with ChangeNotifier {
   //   }
   // }
 
-  /**
-   * 修改密码
-   */
+  // 修改密码
   // Future<bool> changePassword(String oldPassword, String newPassword) async {
   //   if (_currentUser == null) {
   //     return false;
@@ -352,31 +403,8 @@ class AuthProvider with ChangeNotifier {
   //   }
   // }
 
-  /// 显示成功消息
-  void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+  Future<bool> changePassword(String oldPassword, String newPassword) async {
+    _errorMessage = 'Change password API is not implemented';
+    return false;
   }
-
-  /// 显示错误消息
-  void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
-  // 全局的navigatorKey
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
-
-  changePassword(String text, String text2) {}
 }

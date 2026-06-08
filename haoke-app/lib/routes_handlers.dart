@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:haoke_app/pages/home/index.dart';
 import 'package:haoke_app/pages/login.dart';
 import 'package:haoke_app/pages/not_found.dart';
+import 'package:haoke_app/pages/profile_edit/index.dart';
 import 'package:haoke_app/pages/register.dart';
 import 'package:haoke_app/pages/community_select/index.dart';
 import 'package:haoke_app/pages/room_add/index.dart';
@@ -35,6 +36,12 @@ Handler notFoundHandler = Handler(
 );
 
 // 房源详情页
+Handler profileEditHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const ProfileEditPage();
+  },
+);
+
 Handler roomDetailHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return RoomDetailPage(roomId: params['roomId']![0]);

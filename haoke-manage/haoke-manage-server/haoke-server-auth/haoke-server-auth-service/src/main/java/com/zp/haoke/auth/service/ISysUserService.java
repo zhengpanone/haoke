@@ -16,5 +16,7 @@ public interface ISysUserService {
 
     UserVO updateUser(Long id, @Valid UpdateUserDTO userDTO);
 
+    UserVO updateUser(String id, @Valid UpdateUserDTO userDTO);
+
     void deleteUser(Long id);
 }

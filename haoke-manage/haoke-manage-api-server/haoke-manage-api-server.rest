@@ -25,3 +25,33 @@ Content-Type: application/json
   "password": "123456"
 }
 
+### 4. 获取当前用户资料
+GET http://localhost:8080/api/user/me
+Authorization: Bearer {{token}}
+
+
+### 5. 更新当前用户资料
+PUT http://localhost:8080/api/user/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "nickname": "好客用户",
+  "email": "test@example.com",
+  "phone": "13800138000",
+  "avatar": "avatars/example.png"
+}
+
+
+### 6. 上传头像
+POST http://localhost:8080/api/file/avatar
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=avatar-boundary
+
+--avatar-boundary
+Content-Disposition: form-data; name="file"; filename="avatar.png"
+Content-Type: image/png
+
+< ./avatar.png
+--avatar-boundary--

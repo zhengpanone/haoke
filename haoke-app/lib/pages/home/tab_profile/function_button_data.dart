@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
+typedef FunctionButtonTapHandler = void Function(BuildContext context);
+
 class FunctionButtonItem {
   final IconData icon;
   final String titleKey;
-  final Function? onTapHandle;
+  final FunctionButtonTapHandler? onTapHandle;
 
   FunctionButtonItem(this.icon, this.titleKey, [this.onTapHandle]);
 }
 
-void defaultTapHandler(context) {}
+void defaultTapHandler(BuildContext context) {}
 
 final List<FunctionButtonItem> list = [
   FunctionButtonItem(Icons.history_rounded, 'viewing_history'),

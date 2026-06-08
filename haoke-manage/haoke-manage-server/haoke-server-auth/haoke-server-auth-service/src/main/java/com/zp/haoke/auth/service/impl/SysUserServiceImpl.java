@@ -106,8 +106,10 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-//        user.setNickname(StringUtils.hasText(request.getNickname()) ?
-//                request.getNickname() : request.getUsername());
+        user.setAvatar(request.getAvatar());
+        user.setNickname(StringUtils.hasText(request.getNickname())
+                ? request.getNickname()
+                : request.getUsername());
 //        user.setGender(request.getGender());
 //        user.setType(request.getType());
         user.setCreateTime(LocalDateTime.now());
@@ -119,17 +121,18 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
 
     @Override
     public UserVO updateUser(Long id, UpdateUserDTO userDTO) {
-        return null;
+        return updateUser(String.valueOf(id), userDTO);
     }
 
     @Override
     public void deleteUser(Long id) {
-
+        sysUserMapper.deleteById(id);
     }
 
     /**
      * 更新用户
      */
+    @Override
     public UserVO updateUser(String userId, UpdateUserDTO userDTO) {
         SysUserPO user = findById(userId);
 
@@ -144,16 +147,22 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
 
         // 更新用户信息
         if (StringUtils.hasText(userDTO.getUsername())) {
-            user.setUsername(userDTO.getUsername());
+            user.setUsername(userDTO.getUsername().trim());
         }
         if (StringUtils.hasText(userDTO.getPassword())) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
-        if (StringUtils.hasText(userDTO.getEmail())) {
-            user.setEmail(userDTO.getEmail());
+        if (userDTO.getEmail() != null) {
+            user.setEmail(emptyToNull(userDTO.getEmail()));
         }
-        if (StringUtils.hasText(userDTO.getPhone())) {
-            user.setPhone(userDTO.getPhone());
+        if (userDTO.getPhone() != null) {
+            user.setPhone(emptyToNull(userDTO.getPhone()));
+        }
+        if (userDTO.getAvatar() != null) {
+            user.setAvatar(emptyToNull(userDTO.getAvatar()));
+        }
+        if (userDTO.getNickname() != null) {
+            user.setNickname(emptyToNull(userDTO.getNickname()));
         }
 //        if (StringUtils.hasText(userDTO.getNickname())) {
 //            user.setNickname(userDTO.getNickname());
@@ -169,7 +178,14 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
 //        }
 
         user.setUpdateTime(LocalDateTime.now());
-        sysUserMapper.insert(user);
+        sysUserMapper.updateById(user);
         return sysUserConvert.toVO(user);
+    }
+
+    private String emptyToNull(String value) {
+        if (!StringUtils.hasText(value)) {
+            return null;
+        }
+        return value.trim();
     }
 }
