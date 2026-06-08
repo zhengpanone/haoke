@@ -11,14 +11,15 @@ class FunctionButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (data.onTapHandle != null) {
-          data.onTapHandle!(context);
-        }
-      },
-      child: Container(
-        margin: const EdgeInsets.only(top: 10),
+      behavior: HitTestBehavior.opaque,
+      onTap: data.onTapHandle == null
+          ? null
+          : () {
+              data.onTapHandle!(context);
+            },
+      child: SizedBox.expand(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CommonIconBadge(
               icon: data.icon,

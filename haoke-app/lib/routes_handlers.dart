@@ -1,10 +1,16 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:haoke_app/pages/home/index.dart';
+import 'package:haoke_app/pages/contact_us/index.dart';
+import 'package:haoke_app/pages/e_contract/index.dart';
+import 'package:haoke_app/pages/identity_verification/index.dart';
 import 'package:haoke_app/pages/login.dart';
+import 'package:haoke_app/pages/my_favorites/index.dart';
+import 'package:haoke_app/pages/my_orders/index.dart';
 import 'package:haoke_app/pages/not_found.dart';
 import 'package:haoke_app/pages/profile_edit/index.dart';
 import 'package:haoke_app/pages/register.dart';
+import 'package:haoke_app/pages/wallet/index.dart';
 import 'package:haoke_app/pages/community_select/index.dart';
 import 'package:haoke_app/pages/room_add/index.dart';
 import 'package:haoke_app/pages/room_detail/index.dart';
@@ -77,5 +83,41 @@ Handler communitySelectHandler = Handler(
 Handler viewingHistoryHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return const ViewingHistoryPage();
+  },
+);
+
+Handler myOrdersHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const MyOrdersPage();
+  },
+);
+
+Handler myFavoritesHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const MyFavoritesPage();
+  },
+);
+
+Handler identityVerificationHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const IdentityVerificationPage();
+  },
+);
+
+Handler contactUsHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const ContactUsPage();
+  },
+);
+
+Handler eContractHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const EContractPage();
+  },
+);
+
+Handler walletHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const WalletPage();
   },
 );

@@ -15,6 +15,12 @@ class Routes {
   static const String roomAdd = '/roomAdd';
   static const String communitySelect = '/communitySelect';
   static const String viewingHistory = '/viewingHistory';
+  static const String myOrders = '/myOrders';
+  static const String myFavorites = '/myFavorites';
+  static const String identityVerification = '/identityVerification';
+  static const String contactUs = '/contactUs';
+  static const String eContract = '/eContract';
+  static const String wallet = '/wallet';
 
   // 2. 配置路由
   static void configureRoutes(FluroRouter router) {
@@ -32,5 +38,11 @@ class Routes {
     router.define(roomAdd, handler: roomAddHandler);
     router.define(communitySelect, handler: communitySelectHandler);
     router.define(viewingHistory, handler: viewingHistoryHandler);
+    router.define(myOrders, handler: myOrdersHandler);
+    router.define(myFavorites, handler: myFavoritesHandler);
+    router.define(identityVerification, handler: identityVerificationHandler);
+    router.define(contactUs, handler: contactUsHandler);
+    router.define(eContract, handler: eContractHandler);
+    router.define(wallet, handler: walletHandler);
   }
 }
