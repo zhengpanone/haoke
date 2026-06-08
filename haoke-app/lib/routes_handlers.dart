@@ -10,6 +10,7 @@ import 'package:haoke_app/pages/room_add/index.dart';
 import 'package:haoke_app/pages/room_detail/index.dart';
 import 'package:haoke_app/pages/room_manage/index.dart';
 import 'package:haoke_app/pages/settings/index.dart';
+import 'package:haoke_app/pages/viewing_history/index.dart';
 
 Handler homeHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -70,5 +71,11 @@ Handler roomAddHandler = Handler(
 Handler communitySelectHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return const CommunitySelectPage();
+  },
+);
+
+Handler viewingHistoryHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const ViewingHistoryPage();
   },
 );

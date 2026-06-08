@@ -14,6 +14,7 @@ class Routes {
   static const String roomManage = '/roomManage';
   static const String roomAdd = '/roomAdd';
   static const String communitySelect = '/communitySelect';
+  static const String viewingHistory = '/viewingHistory';
 
   // 2. 配置路由
   static void configureRoutes(FluroRouter router) {
@@ -30,5 +31,6 @@ class Routes {
     router.define(roomManage, handler: roomManageHandler);
     router.define(roomAdd, handler: roomAddHandler);
     router.define(communitySelect, handler: communitySelectHandler);
+    router.define(viewingHistory, handler: viewingHistoryHandler);
   }
 }

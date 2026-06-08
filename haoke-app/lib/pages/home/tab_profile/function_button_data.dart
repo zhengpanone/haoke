@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haoke_app/routes.dart';
 
 typedef FunctionButtonTapHandler = void Function(BuildContext context);
 
@@ -13,7 +14,9 @@ class FunctionButtonItem {
 void defaultTapHandler(BuildContext context) {}
 
 final List<FunctionButtonItem> list = [
-  FunctionButtonItem(Icons.history_rounded, 'viewing_history'),
+  FunctionButtonItem(Icons.history_rounded, 'viewing_history', (context) {
+    Navigator.of(context).pushNamed(Routes.viewingHistory);
+  }),
   FunctionButtonItem(Icons.receipt_long_rounded, 'my_orders'),
   FunctionButtonItem(Icons.favorite_rounded, 'my_favorites'),
   FunctionButtonItem(Icons.verified_user_rounded, 'identity_verification'),
