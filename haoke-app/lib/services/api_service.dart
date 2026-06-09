@@ -420,6 +420,34 @@ class ApiService {
     }
   }
 
+  Future<ApiResponse<HouseOrderModel>> createOrder({
+    required String houseId,
+    required String title,
+    String? address,
+    double? amount,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/order/create',
+        data: {
+          'houseId': houseId,
+          'title': title,
+          if (address != null) 'address': address,
+          if (amount != null) 'amount': amount,
+          'status': 'PENDING_SIGN',
+          'actionText': '去签约',
+        },
+      );
+      return ApiResponse<HouseOrderModel>.fromJson(
+        response.data,
+        (data) => HouseOrderModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Create order failed: $e');
+      rethrow;
+    }
+  }
+
   Future<ApiResponse<List<HouseFavoriteModel>>> queryMyFavorites({
     int pageNum = 1,
     int pageSize = 20,

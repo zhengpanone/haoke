@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -97,6 +98,7 @@ public class ProfileFeatureServiceImpl implements IProfileFeatureService {
         return PageVO.of(houseOrderMapper.selectPage(genericPage(queryDTO), wrapper).convert(this::toHouseOrderVO));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public HouseOrderVO createOrder(String userId, HouseOrderCreateDTO createDTO) {
         HouseResourcePO house = findHouse(createDTO.getHouseId());
@@ -111,6 +113,7 @@ public class ProfileFeatureServiceImpl implements IProfileFeatureService {
         po.setActionText(defaultText(createDTO.getActionText(), "去签约"));
         po.setOrderTime(LocalDateTime.now());
         houseOrderMapper.insert(po);
+        createPendingContract(userId, po);
         return toHouseOrderVO(po);
     }
 
@@ -350,6 +353,21 @@ public class ProfileFeatureServiceImpl implements IProfileFeatureService {
         record.setStatus("SUCCESS");
         record.setRecordTime(LocalDateTime.now());
         walletRecordMapper.insert(record);
+    }
+
+    private void createPendingContract(String userId, HouseOrderPO order) {
+        HouseContractPO contract = new HouseContractPO();
+        contract.setUserId(userId);
+        contract.setHouseId(order.getHouseId());
+        contract.setOrderId(order.getId());
+        contract.setContractNo("HT" + DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()));
+        contract.setTitle(order.getTitle().replace("租房订单", "租赁合同"));
+        contract.setPeriodStart(LocalDate.now().plusDays(1));
+        contract.setPeriodEnd(LocalDate.now().plusYears(1));
+        contract.setStatus("PENDING_SIGN");
+        contract.setPdfUrl("");
+        contract.setSignUrl("");
+        houseContractMapper.insert(contract);
     }
 
     private ViewingRecordVO toViewingRecordVO(HouseViewingRecordPO po) {

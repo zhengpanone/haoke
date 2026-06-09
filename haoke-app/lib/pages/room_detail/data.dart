@@ -9,6 +9,8 @@ class RoomDetailData {
   String floor;
   int price;
   String roomType;
+  String contactName;
+  String contactPhone;
   List<String> houseImages;
   List<String> tags;
   List<String> oriented;
@@ -23,6 +25,8 @@ class RoomDetailData {
     required this.floor,
     required this.price,
     required this.roomType,
+    required this.contactName,
+    required this.contactPhone,
     required this.houseImages,
     required this.tags,
     required this.oriented,
@@ -67,6 +71,14 @@ class RoomDetailData {
       floor: resource['floor']?.toString() ?? '',
       price: _numValue(resource['rent']).round(),
       roomType: resource['houseType']?.toString() ?? '',
+      contactName:
+          resource['contact']?.toString() ??
+          resource['contactName']?.toString() ??
+          '',
+      contactPhone:
+          resource['mobile']?.toString() ??
+          resource['contactPhone']?.toString() ??
+          '',
       houseImages: images,
       tags: _buildTags(resource),
       oriented: _orientationList(resource['orientation']),
@@ -150,6 +162,8 @@ var defaultData = RoomDetailData(
   floor: '5/18',
   price: 6500,
   roomType: '两室一厅',
+  contactName: '好客管家',
+  contactPhone: '400-800-8888',
   houseImages: [
     'https://images.pexels.com/photos/33419928/pexels-photo-33419928.jpeg',
     'https://images.pexels.com/photos/33419928/pexels-photo-33419928.jpeg',

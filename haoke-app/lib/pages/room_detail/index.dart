@@ -34,6 +34,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   bool isLoading = true;
   bool isFavoriteLoading = false;
   bool isBookingViewing = false;
+  bool isCreatingOrder = false;
   String? errorMessage;
 
   @override
@@ -142,6 +143,108 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         setState(() => isBookingViewing = false);
       }
     }
+  }
+
+  Future<void> _createOrder(RoomDetailData detail) async {
+    if (isCreatingOrder) return;
+    setState(() => isCreatingOrder = true);
+    try {
+      final response = await _apiService.createOrder(
+        houseId: detail.id,
+        title: '${detail.title}租房订单',
+        address: detail.community,
+        amount: detail.price.toDouble(),
+      );
+      if (!mounted) return;
+      final orderNo = response.data?.orderNo ?? '';
+      _showTip(
+        context,
+        response.isSuccess
+            ? '订单已生成${orderNo.isEmpty ? '' : '：$orderNo'}'
+            : '订单生成失败',
+      );
+    } finally {
+      if (mounted) {
+        setState(() => isCreatingOrder = false);
+      }
+    }
+  }
+
+  Future<void> _showContactOwner(RoomDetailData detail) async {
+    final contactName = detail.contactName.isEmpty
+        ? '好客管家'
+        : detail.contactName;
+    final contactPhone = detail.contactPhone.isEmpty
+        ? '400-800-8888'
+        : detail.contactPhone;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 22),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '联系房东',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1F2B2A),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                _ContactRow(
+                  icon: Icons.person_outline_rounded,
+                  label: '联系人',
+                  value: contactName,
+                ),
+                const SizedBox(height: 10),
+                _ContactRow(
+                  icon: Icons.phone_outlined,
+                  label: '联系电话',
+                  value: contactPhone,
+                ),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          await Clipboard.setData(
+                            ClipboardData(text: contactPhone),
+                          );
+                          if (!sheetContext.mounted) return;
+                          Navigator.of(sheetContext).pop();
+                          if (!mounted) return;
+                          _showTip(context, '联系电话已复制');
+                        },
+                        icon: const Icon(Icons.copy_rounded),
+                        label: const Text('复制电话'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(sheetContext).pop();
+                          _createOrder(detail);
+                        },
+                        icon: const Icon(Icons.receipt_long_rounded),
+                        label: const Text('生成订单'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -366,16 +469,21 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF4AA9D8),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          context.tr('contact_owner'),
-                          style: buttonBottomTextStyle,
+                    child: GestureDetector(
+                      onTap: () => _showContactOwner(detail),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4AA9D8),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            isCreatingOrder
+                                ? '生成中'
+                                : context.tr('contact_owner'),
+                            style: buttonBottomTextStyle,
+                          ),
                         ),
                       ),
                     ),
@@ -426,6 +534,42 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
 
 void _showTip(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+}
+
+class _ContactRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _ContactRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: const Color(0xFF7D8B88)),
+        const SizedBox(width: 10),
+        Text(
+          '$label：',
+          style: const TextStyle(color: Color(0xFF7D8B88), fontSize: 14),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Color(0xFF1F2B2A),
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class BaseInfoItem extends StatelessWidget {

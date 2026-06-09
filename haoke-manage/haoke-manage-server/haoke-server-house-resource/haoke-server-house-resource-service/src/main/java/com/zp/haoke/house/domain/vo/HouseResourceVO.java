@@ -61,6 +61,12 @@ public class HouseResourceVO {
     @Schema(description = "房源描述")
     private String description;
 
+    @Schema(description = "联系人")
+    private String contact;
+
+    @Schema(description = "联系电话")
+    private String mobile;
+
     @Schema(description = "创建时间")
     private LocalDateTime created;
 
