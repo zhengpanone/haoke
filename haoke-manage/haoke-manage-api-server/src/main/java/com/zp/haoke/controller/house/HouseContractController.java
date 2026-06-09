@@ -1,52 +1,40 @@
 package com.zp.haoke.controller.house;
 
+import com.zp.haoke.config.SecurityUtils;
+import com.zp.haoke.framework.core.domain.response.PageVO;
 import com.zp.haoke.framework.core.domain.response.R;
-import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PutMapping;
+import com.zp.haoke.house.domain.dto.ProfilePageQueryDTO;
+import com.zp.haoke.house.domain.vo.HouseContractVO;
+import com.zp.haoke.house.service.IProfileFeatureService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-@Tag(name = "合同模块")
+@RequiredArgsConstructor
 @RequestMapping("/api/house/contract")
 public class HouseContractController {
+    private final IProfileFeatureService profileFeatureService;
+    private final SecurityUtils securityUtils;
 
-    @Operation(summary = "创建合同", description = "创建合同信息")
-    @PutMapping("/create")
-    public R<Void> create(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public R<HouseContractVO> getById(@PathVariable String id, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.getContract(userId, id));
     }
 
-    @Operation(summary = "删除合同", description = "删除合同信息")
-    @PutMapping("/delete")
-    public R<Void> delete(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
+    @RequestMapping(value = "/page", method = {RequestMethod.POST, RequestMethod.PUT})
+    public R<PageVO<HouseContractVO>> getPageList(@RequestBody(required = false) ProfilePageQueryDTO queryDTO,
+                                                  HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.queryContracts(userId, defaultQuery(queryDTO)));
     }
 
-    @Operation(summary = "终止合同", description = "终止合同信息")
-    @PutMapping("/terminate")
-    public R<Void> terminate(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
-    }
-
-    @Operation(summary = "合同详情", description = "合同详情信息")
-    @PutMapping("/getById")
-    public R<Void> getById(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
-    }
-
-    @Operation(summary = "合同分页查询", description = "合同分页查询信息")
-    @PutMapping("/page")
-    public R<Void> getPageList(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
+    private ProfilePageQueryDTO defaultQuery(ProfilePageQueryDTO queryDTO) {
+        return queryDTO == null ? new ProfilePageQueryDTO() : queryDTO;
     }
 }

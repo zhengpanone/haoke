@@ -1,77 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/models/profile/profile_models.dart';
+import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/widgets/profile_feature_widgets.dart';
 
-class ViewingHistoryPage extends StatelessWidget {
+class ViewingHistoryPage extends StatefulWidget {
   const ViewingHistoryPage({super.key});
 
-  static const List<_ViewingHistoryItem> _items = [
-    _ViewingHistoryItem(
-      title: '阳光花园 2 室 1 厅',
-      address: '朝阳区望京西路 18 号',
-      appointmentTime: '2026-06-10 10:30',
-      statusKey: 'viewing_status_pending',
-      statusColor: Color(0xFFF5A623),
-      noteKey: 'viewing_note_pending',
-      note: '李经理 138****8821',
-    ),
-    _ViewingHistoryItem(
-      title: '滨江雅苑整租一居室',
-      address: '浦东新区张杨路 889 号',
-      appointmentTime: '2026-06-03 15:00',
-      statusKey: 'viewing_status_completed',
-      statusColor: Color(0xFF0F8F7A),
-      noteKey: 'viewing_note_completed',
-      note: '采光不错，已收藏房源',
-    ),
-    _ViewingHistoryItem(
-      title: '星河湾南向三居',
-      address: '海淀区中关村南大街 6 号',
-      appointmentTime: '2026-05-28 09:30',
-      statusKey: 'viewing_status_cancelled',
-      statusColor: Color(0xFF8A9593),
-      noteKey: 'viewing_note_cancelled',
-      note: '行程冲突，已取消预约',
-    ),
-  ];
+  @override
+  State<ViewingHistoryPage> createState() => _ViewingHistoryPageState();
+}
+
+class _ViewingHistoryPageState extends State<ViewingHistoryPage> {
+  final ApiService _apiService = ApiService();
+  late Future<List<ViewingRecordModel>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _loadData();
+  }
+
+  Future<List<ViewingRecordModel>> _loadData() async {
+    final response = await _apiService.queryViewingHistory();
+    if (response.isSuccess) {
+      return response.data ?? <ViewingRecordModel>[];
+    }
+    throw Exception(response.message.isEmpty ? '看房记录加载失败' : response.message);
+  }
+
+  void _reload() {
+    setState(() {
+      _future = _loadData();
+    });
+  }
+
+  Future<void> _refresh() async {
+    _reload();
+    await _future;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(context.tr('viewing_history'))),
-      body: _items.isEmpty
-          ? const _ViewingHistoryEmpty()
-          : ListView.separated(
+      body: FutureBuilder<List<ViewingRecordModel>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return ProfileErrorView(
+              text: '${snapshot.error}',
+              onRetry: _reload,
+            );
+          }
+          final items = snapshot.data ?? <ViewingRecordModel>[];
+          if (items.isEmpty) {
+            return const ProfileEmptyView(
+              icon: Icons.history_rounded,
+              text: '暂无看房记录',
+            );
+          }
+          return RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.separated(
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 20),
-              itemCount: _items.length,
+              itemCount: items.length,
               separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
-                return _ViewingHistoryCard(item: _items[index]);
+                return _ViewingHistoryCard(item: items[index]);
               },
             ),
+          );
+        },
+      ),
     );
   }
 }
 
 class _ViewingHistoryCard extends StatelessWidget {
-  final _ViewingHistoryItem item;
+  final ViewingRecordModel item;
 
   const _ViewingHistoryCard({required this.item});
 
   @override
   Widget build(BuildContext context) {
+    final contact = [
+      item.contactName,
+      item.contactPhone,
+    ].where((value) => value.isNotEmpty).join(' ');
+
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
+      decoration: profileCardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -89,30 +112,34 @@ class _ViewingHistoryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              _StatusChip(
-                label: context.tr(item.statusKey),
-                color: item.statusColor,
+              ProfileStatusBadge(
+                text: item.statusText,
+                color: statusColor(item.status),
               ),
             ],
           ),
           const SizedBox(height: 12),
           _InfoRow(
             icon: Icons.location_on_outlined,
-            label: context.tr('viewing_address'),
+            label: '地址',
             value: item.address,
           ),
           const SizedBox(height: 8),
           _InfoRow(
             icon: Icons.schedule_rounded,
-            label: context.tr('viewing_appointment_time'),
-            value: item.appointmentTime,
+            label: '预约时间',
+            value: formatProfileDate(item.appointmentTime),
           ),
           const SizedBox(height: 8),
           _InfoRow(
             icon: Icons.person_outline_rounded,
-            label: context.tr(item.noteKey),
-            value: item.note,
+            label: contact.isEmpty ? '备注' : '联系人',
+            value: contact.isEmpty ? item.note : contact,
           ),
+          if (contact.isNotEmpty && item.note.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            _InfoRow(icon: Icons.notes_rounded, label: '备注', value: item.note),
+          ],
         ],
       ),
     );
@@ -154,71 +181,4 @@ class _InfoRow extends StatelessWidget {
       ],
     );
   }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _StatusChip({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-}
-
-class _ViewingHistoryEmpty extends StatelessWidget {
-  const _ViewingHistoryEmpty();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.history_rounded, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            context.tr('viewing_history_empty'),
-            style: TextStyle(fontSize: 15, color: Colors.grey[500]),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ViewingHistoryItem {
-  final String title;
-  final String address;
-  final String appointmentTime;
-  final String statusKey;
-  final Color statusColor;
-  final String noteKey;
-  final String note;
-
-  const _ViewingHistoryItem({
-    required this.title,
-    required this.address,
-    required this.appointmentTime,
-    required this.statusKey,
-    required this.statusColor,
-    required this.noteKey,
-    required this.note,
-  });
 }

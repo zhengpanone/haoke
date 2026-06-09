@@ -3,9 +3,9 @@ package com.zp.haoke.controller.house;
 import com.zp.haoke.config.SecurityUtils;
 import com.zp.haoke.framework.core.domain.response.PageVO;
 import com.zp.haoke.framework.core.domain.response.R;
+import com.zp.haoke.house.domain.dto.HouseOrderCreateDTO;
 import com.zp.haoke.house.domain.dto.ProfilePageQueryDTO;
-import com.zp.haoke.house.domain.dto.ViewingRecordCreateDTO;
-import com.zp.haoke.house.domain.vo.ViewingRecordVO;
+import com.zp.haoke.house.domain.vo.HouseOrderVO;
 import com.zp.haoke.house.service.IProfileFeatureService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping({"/api/house/history", "/history"})
-public class HouseHistoryController {
+@RequestMapping("/api/house/order")
+public class HouseOrderController {
     private final IProfileFeatureService profileFeatureService;
     private final SecurityUtils securityUtils;
 
     @RequestMapping(value = "/create", method = {RequestMethod.POST, RequestMethod.PUT})
-    public R<ViewingRecordVO> create(@RequestBody ViewingRecordCreateDTO createDTO, HttpServletRequest request) {
+    public R<HouseOrderVO> create(@RequestBody HouseOrderCreateDTO createDTO, HttpServletRequest request) {
         String userId = securityUtils.getCurrentUserId(request);
-        return R.ok(profileFeatureService.createViewingRecord(userId, createDTO));
+        return R.ok(profileFeatureService.createOrder(userId, createDTO));
     }
 
     @RequestMapping(value = "/page", method = {RequestMethod.POST, RequestMethod.PUT})
-    public R<PageVO<ViewingRecordVO>> getPageList(@RequestBody(required = false) ProfilePageQueryDTO queryDTO,
-                                                  HttpServletRequest request) {
+    public R<PageVO<HouseOrderVO>> getPageList(@RequestBody(required = false) ProfilePageQueryDTO queryDTO,
+                                               HttpServletRequest request) {
         String userId = securityUtils.getCurrentUserId(request);
-        return R.ok(profileFeatureService.queryViewingRecords(userId, defaultQuery(queryDTO)));
+        return R.ok(profileFeatureService.queryOrders(userId, defaultQuery(queryDTO)));
     }
 
     private ProfilePageQueryDTO defaultQuery(ProfilePageQueryDTO queryDTO) {

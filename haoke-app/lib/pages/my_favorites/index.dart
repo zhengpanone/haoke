@@ -1,92 +1,180 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
+import 'package:haoke_app/models/profile/profile_models.dart';
+import 'package:haoke_app/routes.dart';
+import 'package:haoke_app/services/api_service.dart';
 import 'package:haoke_app/widgets/common_icon_badge.dart';
+import 'package:haoke_app/widgets/profile_feature_widgets.dart';
 
-class MyFavoritesPage extends StatelessWidget {
+class MyFavoritesPage extends StatefulWidget {
   const MyFavoritesPage({super.key});
 
-  static const List<_FavoriteItem> _favorites = [
-    _FavoriteItem(
-      title: '阳光花园 2 室 1 厅',
-      address: '近地铁 14 号线，南向采光',
-      price: '¥5800/月',
-      tags: ['整租', '近地铁', '精装'],
-    ),
-    _FavoriteItem(
-      title: '星河湾南向三居',
-      address: '海淀区中关村南大街 6 号',
-      price: '¥8600/月',
-      tags: ['三居', '可短租', '随时看房'],
-    ),
-  ];
+  @override
+  State<MyFavoritesPage> createState() => _MyFavoritesPageState();
+}
+
+class _MyFavoritesPageState extends State<MyFavoritesPage> {
+  final ApiService _apiService = ApiService();
+  late Future<List<HouseFavoriteModel>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _loadData();
+  }
+
+  Future<List<HouseFavoriteModel>> _loadData() async {
+    final response = await _apiService.queryMyFavorites();
+    if (response.isSuccess) {
+      return response.data ?? <HouseFavoriteModel>[];
+    }
+    throw Exception(response.message.isEmpty ? '收藏加载失败' : response.message);
+  }
+
+  void _reload() {
+    setState(() {
+      _future = _loadData();
+    });
+  }
+
+  Future<void> _refresh() async {
+    _reload();
+    await _future;
+  }
+
+  Future<void> _removeFavorite(HouseFavoriteModel item) async {
+    final response = await _apiService.removeFavorite(item.houseId);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(response.isSuccess ? '已取消收藏' : '取消收藏失败')),
+    );
+    _reload();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(context.tr('my_favorites'))),
-      body: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(14, 8, 14, 20),
-        itemCount: _favorites.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 12),
-        itemBuilder: (context, index) {
-          final item = _favorites[index];
-          return Container(
-            padding: const EdgeInsets.all(14),
-            decoration: _cardDecoration(),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CommonIconBadge(
-                  icon: Icons.apartment_rounded,
-                  boxSize: 48,
-                  iconSize: 24,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.title,
-                        style: const TextStyle(
-                          color: Color(0xFF1F2B2A),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        item.address,
-                        style: const TextStyle(
-                          color: Color(0xFF7D8B88),
-                          fontSize: 13,
-                          height: 1.35,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: item.tags
-                            .map((tag) => _SoftTag(tag))
-                            .toList(),
-                      ),
-                    ],
+      body: FutureBuilder<List<HouseFavoriteModel>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return ProfileErrorView(
+              text: '${snapshot.error}',
+              onRetry: _reload,
+            );
+          }
+          final favorites = snapshot.data ?? <HouseFavoriteModel>[];
+          if (favorites.isEmpty) {
+            return const ProfileEmptyView(
+              icon: Icons.favorite_rounded,
+              text: '暂无收藏',
+            );
+          }
+          return RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.separated(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 20),
+              itemCount: favorites.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final item = favorites[index];
+                return _FavoriteCard(
+                  item: item,
+                  onRemove: () => _removeFavorite(item),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _FavoriteCard extends StatelessWidget {
+  final HouseFavoriteModel item;
+  final VoidCallback onRemove;
+
+  const _FavoriteCard({required this.item, required this.onRemove});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: item.houseId.isEmpty
+          ? null
+          : () {
+              Navigator.of(context).pushNamed(
+                Routes.roomDetail.replaceFirst(':roomId', item.houseId),
+              );
+            },
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: profileCardDecoration(),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const CommonIconBadge(
+              icon: Icons.apartment_rounded,
+              boxSize: 48,
+              iconSize: 24,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    style: const TextStyle(
+                      color: Color(0xFF1F2B2A),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
+                  const SizedBox(height: 6),
+                  Text(
+                    item.address,
+                    style: const TextStyle(
+                      color: Color(0xFF7D8B88),
+                      fontSize: 13,
+                      height: 1.35,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: item.tags.map((tag) => _SoftTag(tag)).toList(),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
                 Text(
-                  item.price,
+                  '¥${item.price.toStringAsFixed(0)}/月',
                   style: const TextStyle(
                     color: Color(0xFFFF7A45),
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
+                IconButton(
+                  tooltip: '取消收藏',
+                  onPressed: onRemove,
+                  icon: const Icon(Icons.favorite_rounded, color: Colors.red),
+                ),
               ],
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
@@ -115,32 +203,4 @@ class _SoftTag extends StatelessWidget {
       ),
     );
   }
-}
-
-class _FavoriteItem {
-  final String title;
-  final String address;
-  final String price;
-  final List<String> tags;
-
-  const _FavoriteItem({
-    required this.title,
-    required this.address,
-    required this.price,
-    required this.tags,
-  });
-}
-
-BoxDecoration _cardDecoration() {
-  return BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(16),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withValues(alpha: 0.04),
-        blurRadius: 14,
-        offset: const Offset(0, 6),
-      ),
-    ],
-  );
 }

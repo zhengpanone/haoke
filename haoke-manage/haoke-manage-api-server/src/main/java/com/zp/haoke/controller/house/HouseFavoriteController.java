@@ -1,38 +1,59 @@
 package com.zp.haoke.controller.house;
 
-
+import com.zp.haoke.config.SecurityUtils;
+import com.zp.haoke.framework.core.domain.response.PageVO;
 import com.zp.haoke.framework.core.domain.response.R;
-import com.zp.haoke.house.domain.dto.HouseResourceUpdateDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PutMapping;
+import com.zp.haoke.house.domain.dto.FavoriteCreateDTO;
+import com.zp.haoke.house.domain.dto.ProfilePageQueryDTO;
+import com.zp.haoke.house.domain.vo.HouseFavoriteVO;
+import com.zp.haoke.house.service.IProfileFeatureService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "收藏模块")
-@RequestMapping("/favirite")
+@RequiredArgsConstructor
+@RequestMapping({"/api/house/favorite", "/favirite"})
 public class HouseFavoriteController {
+    private final IProfileFeatureService profileFeatureService;
+    private final SecurityUtils securityUtils;
 
-    @Operation(summary = "收藏房源", description = "收藏房源信息")
-    @PutMapping("/create")
-    public R<Void> create(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
+    @RequestMapping(value = "/create", method = {RequestMethod.POST, RequestMethod.PUT})
+    public R<HouseFavoriteVO> create(@RequestBody FavoriteCreateDTO createDTO, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.createFavorite(userId, createDTO));
     }
 
-    @Operation(summary = "取消收藏", description = "取消收藏信息")
-    @PutMapping("/delete")
-    public R<Void> delete(@RequestBody HouseResourceUpdateDTO updateDTO) {
-
-        return R.ok();
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+    public R<Boolean> delete(@RequestBody FavoriteCreateDTO createDTO, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.deleteFavorite(userId, createDTO.getHouseId()));
     }
 
-    @Operation(summary = "我的收藏", description = "我的收藏信息")
-    @PutMapping("/page")
-    public R<Void> getPageList(@RequestBody HouseResourceUpdateDTO updateDTO) {
+    @RequestMapping(value = "/{houseId}", method = RequestMethod.DELETE)
+    public R<Boolean> deleteByHouseId(@PathVariable String houseId, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.deleteFavorite(userId, houseId));
+    }
 
-        return R.ok();
+    @RequestMapping(value = "/check/{houseId}", method = RequestMethod.GET)
+    public R<Boolean> check(@PathVariable String houseId, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.isFavorite(userId, houseId));
+    }
+
+    @RequestMapping(value = "/page", method = {RequestMethod.POST, RequestMethod.PUT})
+    public R<PageVO<HouseFavoriteVO>> getPageList(@RequestBody(required = false) ProfilePageQueryDTO queryDTO,
+                                                  HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.queryFavorites(userId, defaultQuery(queryDTO)));
+    }
+
+    private ProfilePageQueryDTO defaultQuery(ProfilePageQueryDTO queryDTO) {
+        return queryDTO == null ? new ProfilePageQueryDTO() : queryDTO;
     }
 }

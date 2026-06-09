@@ -32,6 +32,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   late bool isLike;
   late bool showAllText;
   bool isLoading = true;
+  bool isFavoriteLoading = false;
+  bool isBookingViewing = false;
   String? errorMessage;
 
   @override
@@ -53,10 +55,12 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
       if (!mounted) return;
 
       if (response.isSuccess && response.data != null) {
+        final loadedData = response.data!;
         setState(() {
-          data = response.data;
+          data = loadedData;
           isLoading = false;
         });
+        _loadFavoriteState(loadedData.id);
       } else {
         setState(() {
           errorMessage = response.message.isEmpty
@@ -71,6 +75,72 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         errorMessage = context.tr('load_room_detail_failed');
         isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadFavoriteState(String roomId) async {
+    if (roomId.isEmpty) return;
+    try {
+      final response = await _apiService.checkFavorite(roomId);
+      if (!mounted) return;
+      if (response.isSuccess) {
+        setState(() => isLike = response.data ?? false);
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _toggleFavorite(RoomDetailData detail) async {
+    if (isFavoriteLoading) return;
+    setState(() => isFavoriteLoading = true);
+    try {
+      if (isLike) {
+        final response = await _apiService.removeFavorite(detail.id);
+        if (!mounted) return;
+        if (response.isSuccess) {
+          setState(() => isLike = false);
+          _showTip(context, '已取消收藏');
+        }
+      } else {
+        final response = await _apiService.addFavorite(
+          houseId: detail.id,
+          title: detail.title,
+          address: detail.community,
+          price: detail.price.toDouble(),
+          tags: detail.tags,
+          imageUrl: detail.houseImages.isEmpty
+              ? null
+              : detail.houseImages.first,
+        );
+        if (!mounted) return;
+        if (response.isSuccess) {
+          setState(() => isLike = true);
+          _showTip(context, '已收藏房源');
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isFavoriteLoading = false);
+      }
+    }
+  }
+
+  Future<void> _bookViewing(RoomDetailData detail) async {
+    if (isBookingViewing) return;
+    setState(() => isBookingViewing = true);
+    try {
+      final response = await _apiService.createViewingRecord(
+        houseId: detail.id,
+        title: detail.title,
+        address: detail.community,
+        appointmentTime: DateTime.now().add(const Duration(days: 1)),
+        note: '来自房源详情页预约',
+      );
+      if (!mounted) return;
+      _showTip(context, response.isSuccess ? '看房预约已提交' : '预约失败');
+    } finally {
+      if (mounted) {
+        setState(() => isBookingViewing = false);
+      }
     }
   }
 
@@ -268,11 +338,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isLike = !isLike;
-                      });
-                    },
+                    onTap: () => _toggleFavorite(detail),
                     child: SizedBox(
                       height: 50,
                       width: 52,
@@ -316,16 +382,21 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0F8F7A),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          context.tr('book_viewing'),
-                          style: buttonBottomTextStyle,
+                    child: GestureDetector(
+                      onTap: () => _bookViewing(detail),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F8F7A),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            isBookingViewing
+                                ? '提交中'
+                                : context.tr('book_viewing'),
+                            style: buttonBottomTextStyle,
+                          ),
                         ),
                       ),
                     ),
@@ -351,6 +422,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
       child: child,
     );
   }
+}
+
+void _showTip(BuildContext context, String text) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 }
 
 class BaseInfoItem extends StatelessWidget {

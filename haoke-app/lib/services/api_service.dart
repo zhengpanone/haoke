@@ -1,3 +1,5 @@
+// ignore_for_file: use_null_aware_elements
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -6,6 +8,7 @@ import 'package:haoke_app/models/auth/login_request.dart';
 import 'package:haoke_app/models/auth/login_response.dart';
 import 'package:haoke_app/models/city/city_model.dart';
 import 'package:haoke_app/models/community/community_model.dart';
+import 'package:haoke_app/models/profile/profile_models.dart';
 import 'package:haoke_app/models/room/room_model.dart';
 import 'package:haoke_app/models/room/room_publish_request.dart';
 import 'package:haoke_app/models/user/update_user_profile_request.dart';
@@ -339,5 +342,288 @@ class ApiService {
       AppLogger.e('Query publish rooms failed: $e');
       rethrow;
     }
+  }
+
+  Future<ApiResponse<List<ViewingRecordModel>>> queryViewingHistory({
+    int pageNum = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/history/page',
+        data: {'pageNum': pageNum, 'pageSize': pageSize},
+      );
+      return ApiResponse<List<ViewingRecordModel>>.fromJson(
+        response.data,
+        (data) => _extractList(data)
+            .map(
+              (item) =>
+                  ViewingRecordModel.fromJson(item as Map<String, dynamic>),
+            )
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query viewing history failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<ViewingRecordModel>> createViewingRecord({
+    required String houseId,
+    String? title,
+    String? address,
+    DateTime? appointmentTime,
+    String? note,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/history/create',
+        data: {
+          'houseId': houseId,
+          if (title != null) 'title': title,
+          if (address != null) 'address': address,
+          if (appointmentTime != null)
+            'appointmentTime': appointmentTime.toIso8601String(),
+          if (note != null) 'note': note,
+        },
+      );
+      return ApiResponse<ViewingRecordModel>.fromJson(
+        response.data,
+        (data) => ViewingRecordModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Create viewing record failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<HouseOrderModel>>> queryMyOrders({
+    int pageNum = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/order/page',
+        data: {'pageNum': pageNum, 'pageSize': pageSize},
+      );
+      return ApiResponse<List<HouseOrderModel>>.fromJson(
+        response.data,
+        (data) => _extractList(data)
+            .map(
+              (item) => HouseOrderModel.fromJson(item as Map<String, dynamic>),
+            )
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query orders failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<HouseFavoriteModel>>> queryMyFavorites({
+    int pageNum = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/favorite/page',
+        data: {'pageNum': pageNum, 'pageSize': pageSize},
+      );
+      return ApiResponse<List<HouseFavoriteModel>>.fromJson(
+        response.data,
+        (data) => _extractList(data)
+            .map(
+              (item) =>
+                  HouseFavoriteModel.fromJson(item as Map<String, dynamic>),
+            )
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query favorites failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<HouseFavoriteModel>> addFavorite({
+    required String houseId,
+    String? title,
+    String? address,
+    double? price,
+    List<String>? tags,
+    String? imageUrl,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/favorite/create',
+        data: {
+          'houseId': houseId,
+          if (title != null) 'title': title,
+          if (address != null) 'address': address,
+          if (price != null) 'price': price,
+          if (tags != null) 'tags': tags.join(','),
+          if (imageUrl != null) 'imageUrl': imageUrl,
+        },
+      );
+      return ApiResponse<HouseFavoriteModel>.fromJson(
+        response.data,
+        (data) => HouseFavoriteModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Add favorite failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<void>> removeFavorite(String houseId) async {
+    try {
+      final response = await _dio.delete('/api/house/favorite/$houseId');
+      return ApiResponse.emptyFromJson(response.data);
+    } catch (e) {
+      AppLogger.e('Remove favorite failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<bool>> checkFavorite(String houseId) async {
+    try {
+      final response = await _dio.get('/api/house/favorite/check/$houseId');
+      return ApiResponse<bool>.fromJson(response.data, (data) => data == true);
+    } catch (e) {
+      AppLogger.e('Check favorite failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<IdentityVerificationModel>>
+  getIdentityVerification() async {
+    try {
+      final response = await _dio.get('/api/user/identity/me');
+      return ApiResponse<IdentityVerificationModel>.fromJson(
+        response.data,
+        (data) =>
+            IdentityVerificationModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Query identity verification failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<IdentityVerificationModel>> submitIdentityVerification({
+    required String realName,
+    required String idCardNo,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/user/identity/submit',
+        data: {'realName': realName, 'idCardNo': idCardNo},
+      );
+      return ApiResponse<IdentityVerificationModel>.fromJson(
+        response.data,
+        (data) =>
+            IdentityVerificationModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Submit identity verification failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<ContactChannelModel>>> queryContactChannels() async {
+    try {
+      final response = await _dio.get('/api/support/contact');
+      return ApiResponse<List<ContactChannelModel>>.fromJson(
+        response.data,
+        (data) => (data as List<dynamic>)
+            .map(
+              (item) =>
+                  ContactChannelModel.fromJson(item as Map<String, dynamic>),
+            )
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query contact channels failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<HouseContractModel>>> queryContracts({
+    int pageNum = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/house/contract/page',
+        data: {'pageNum': pageNum, 'pageSize': pageSize},
+      );
+      return ApiResponse<List<HouseContractModel>>.fromJson(
+        response.data,
+        (data) => _extractList(data)
+            .map(
+              (item) =>
+                  HouseContractModel.fromJson(item as Map<String, dynamic>),
+            )
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query contracts failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<WalletOverviewModel>> queryWallet() async {
+    try {
+      final response = await _dio.get('/api/wallet/me');
+      return ApiResponse<WalletOverviewModel>.fromJson(
+        response.data,
+        (data) => WalletOverviewModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Query wallet failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<WalletOverviewModel>> rechargeWallet(double amount) async {
+    try {
+      final response = await _dio.post(
+        '/api/wallet/recharge',
+        data: {'amount': amount, 'title': '钱包充值'},
+      );
+      return ApiResponse<WalletOverviewModel>.fromJson(
+        response.data,
+        (data) => WalletOverviewModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Recharge wallet failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<WalletOverviewModel>> withdrawWallet(double amount) async {
+    try {
+      final response = await _dio.post(
+        '/api/wallet/withdraw',
+        data: {'amount': amount, 'title': '余额提现'},
+      );
+      return ApiResponse<WalletOverviewModel>.fromJson(
+        response.data,
+        (data) => WalletOverviewModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Withdraw wallet failed: $e');
+      rethrow;
+    }
+  }
+
+  List<dynamic> _extractList(dynamic data) {
+    if (data is List<dynamic>) {
+      return data;
+    }
+    if (data is Map<String, dynamic>) {
+      final items = data['records'] ?? data['items'] ?? data['list'] ?? [];
+      return items is List<dynamic> ? items : <dynamic>[];
+    }
+    return <dynamic>[];
   }
 }
