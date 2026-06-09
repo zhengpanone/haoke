@@ -1,12 +1,16 @@
 package com.zp.haoke.controller.auth;
 
+import com.zp.haoke.auth.domain.dto.ChangePasswordDTO;
 import com.zp.haoke.auth.domain.convert.SysUserConvert;
 import com.zp.haoke.auth.domain.dto.CreateUserDTO;
+import com.zp.haoke.auth.domain.dto.PhoneBindDTO;
+import com.zp.haoke.auth.domain.dto.PhoneCodeDTO;
 import com.zp.haoke.auth.domain.dto.UpdateUserDTO;
 import com.zp.haoke.auth.domain.po.SysUserPO;
 import com.zp.haoke.auth.domain.vo.UserVO;
 import com.zp.haoke.auth.service.ISysUserService;
 import com.zp.haoke.auth.util.JwtUtil;
+import com.zp.haoke.config.SecurityUtils;
 import com.zp.haoke.framework.core.domain.response.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,6 +36,7 @@ public class SysUserController {
 
     private final ISysUserService sysUserService;
     private final JwtUtil jwtUtil;
+    private final SecurityUtils securityUtils;
 
     private final SysUserConvert sysUserConvert;
 
@@ -110,6 +115,41 @@ public class SysUserController {
         } catch (Exception e) {
             return R.fail(500, "Failed to update user profile: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/password")
+    @Operation(summary = "Change current user password")
+    public R<Void> changePassword(
+            HttpServletRequest request,
+            @Valid @RequestBody ChangePasswordDTO passwordDTO) {
+        String userId = securityUtils.getCurrentUserId(request);
+        sysUserService.changePassword(userId, passwordDTO);
+        return R.ok("密码修改成功", null);
+    }
+
+    @PostMapping("/phone/code")
+    @Operation(summary = "Send phone verification code")
+    public R<String> sendPhoneCode(@Valid @RequestBody PhoneCodeDTO phoneCodeDTO) {
+        String code = sysUserService.sendPhoneCode(phoneCodeDTO);
+        return R.ok("验证码已发送", code);
+    }
+
+    @PostMapping("/phone/bind")
+    @Operation(summary = "Bind current user phone")
+    public R<UserVO> bindPhone(
+            HttpServletRequest request,
+            @Valid @RequestBody PhoneBindDTO phoneBindDTO) {
+        String userId = securityUtils.getCurrentUserId(request);
+        UserVO user = sysUserService.bindPhone(userId, phoneBindDTO);
+        return R.ok("手机号绑定成功", user);
+    }
+
+    @PostMapping({"/phone/unbind", "/unbindPhone"})
+    @Operation(summary = "Unbind current user phone")
+    public R<UserVO> unbindPhone(HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        UserVO user = sysUserService.unbindPhone(userId);
+        return R.ok("手机号解绑成功", user);
     }
 
     private String extractToken(HttpServletRequest request) {

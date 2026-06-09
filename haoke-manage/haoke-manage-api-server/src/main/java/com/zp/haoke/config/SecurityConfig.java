@@ -5,6 +5,7 @@ import com.zp.haoke.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -43,6 +44,13 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/house/resource/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/house/resource/page",
+                                "/api/house/resource/hot",
+                                "/api/house/resource/nearby",
+                                "/api/house/resource/recommend").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/support/contact").permitAll()
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/register",

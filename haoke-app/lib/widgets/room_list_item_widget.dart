@@ -73,7 +73,7 @@ class RoomListItemWidget extends StatelessWidget {
                   const SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
-                      text: '${data.price}',
+                      text: data.price.toStringAsFixed(0),
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,

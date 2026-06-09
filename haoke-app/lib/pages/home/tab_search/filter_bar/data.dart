@@ -1,12 +1,11 @@
-// 结果数据类型
 import 'package:haoke_app/models/filter_model.dart';
 
 class FilterBarResult {
   final Map<String, FilterItem> filters;
+
   FilterBarResult(this.filters);
 }
 
-// 通用类型
 class GeneralType {
   final String name;
   final String id;
@@ -15,34 +14,43 @@ class GeneralType {
 }
 
 List<GeneralType> areaList = [
-  GeneralType('区域1', '11'),
-  GeneralType('区域2', '22'),
+  GeneralType('全部区域', ''),
+  GeneralType('朝阳', '朝阳'),
+  GeneralType('海淀', '海淀'),
+  GeneralType('丰台', '丰台'),
+  GeneralType('通州', '通州'),
 ];
 
 List<GeneralType> priceList = [
-  GeneralType('价格1', '11'),
-  GeneralType('价格2', '22'),
+  GeneralType('不限租金', ''),
+  GeneralType('3000元以下', '0-3000'),
+  GeneralType('3000-5000元', '3000-5000'),
+  GeneralType('5000-8000元', '5000-8000'),
+  GeneralType('8000元以上', '8000-'),
 ];
 
 List<GeneralType> rentTypeList = [
-  GeneralType('出租类型1', '11'),
-  GeneralType('出租类型2', '22'),
+  GeneralType('不限方式', ''),
+  GeneralType('整租', '1'),
+  GeneralType('合租', '2'),
 ];
 
 List<GeneralType> roomTypeList = [
-  GeneralType('房屋类型1', '11'),
-  GeneralType('房屋类型2', '12'),
-  GeneralType('房屋类型3', '13'),
-  GeneralType('房屋类型4', '14'),
-  GeneralType('房屋类型5', '15'),
+  GeneralType('一室', '1室'),
+  GeneralType('两室', '2室'),
+  GeneralType('三室', '3室'),
+  GeneralType('四室及以上', '4室'),
 ];
 
 List<GeneralType> orientedList = [
-  GeneralType('方向1', '21'),
-  GeneralType('方向2', '22'),
+  GeneralType('东', '1'),
+  GeneralType('南', '2'),
+  GeneralType('西', '3'),
+  GeneralType('北', '4'),
 ];
 
 List<GeneralType> floorList = [
-  GeneralType('楼层1', '31'),
-  GeneralType('楼层2', '32'),
+  GeneralType('低楼层', '低'),
+  GeneralType('中楼层', '中'),
+  GeneralType('高楼层', '高'),
 ];

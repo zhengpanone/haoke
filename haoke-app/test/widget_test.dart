@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haoke_app/application.dart';
 import 'package:haoke_app/models/filter_model.dart';
@@ -23,7 +24,7 @@ void main() {
     expect(find.text('好客租房'), findsOneWidget);
     expect(find.text('让租房变得简单'), findsOneWidget);
 
+    await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
   });
 }

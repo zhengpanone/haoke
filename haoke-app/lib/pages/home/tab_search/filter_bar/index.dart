@@ -19,33 +19,25 @@ class FilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final filterModel = context.watch<FilterModel>();
 
-    /// 通知 FilterBarResult 回调
     void notifyChange(FilterModel model) {
       onChange(FilterBarResult(model.filters));
     }
 
-    /// 显示 Picker
-    void showPicker(
+    Future<void> showPicker(
       BuildContext context,
       String key,
       List<GeneralType> options,
     ) async {
-      final filterModel = context.read<FilterModel>();
-
+      final model = context.read<FilterModel>();
       final index = await CommonPicker.showPicker(
         context: context,
         options: options.map((item) => item.name).toList(),
         value: 0,
       );
       if (index != null) {
-        filterModel.setFilter(key, [options[index].id]);
-        notifyChange(filterModel);
+        model.setFilter(key, [options[index].id]);
+        notifyChange(model);
       }
-    }
-
-    /// 打开 Drawer
-    void onFilterChange(context) {
-      scaffoldKey.currentState?.openEndDrawer();
     }
 
     return Container(
@@ -65,7 +57,7 @@ class FilterBar extends StatelessWidget {
           ),
           Builder(
             builder: (context) => FilterBarItem(
-              title: '出租方式',
+              title: '方式',
               isActive: filterModel.filters['rentalType']?.isActive ?? false,
               onTap: (context) =>
                   showPicker(context, 'rentalType', rentTypeList),
@@ -81,10 +73,11 @@ class FilterBar extends StatelessWidget {
           Builder(
             builder: (context) => FilterBarItem(
               title: '筛选',
-              isActive: filterModel.filters['roomType']!.isActive ||
+              isActive:
+                  filterModel.filters['roomType']!.isActive ||
                   filterModel.filters['floor']!.isActive ||
                   filterModel.filters['oriented']!.isActive,
-              onTap: onFilterChange,
+              onTap: (_) => scaffoldKey.currentState?.openEndDrawer(),
             ),
           ),
         ],

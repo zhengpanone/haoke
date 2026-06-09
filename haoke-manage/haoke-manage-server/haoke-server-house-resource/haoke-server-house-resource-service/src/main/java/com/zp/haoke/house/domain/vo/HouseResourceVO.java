@@ -5,71 +5,87 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-@Schema(description = "房源详情响应VO")
+@Schema(description = "House resource list response")
 public class HouseResourceVO {
 
-    @Schema(description = "房源ID", example = "1")
-    private Long id;
+    @Schema(description = "House resource id", example = "1")
+    private String id;
 
-    @Schema(description = "房源标题", example = "南北通透，两室朝南，主卧带阳台")
+    @Schema(description = "House resource title")
     private String title;
 
-    @Schema(description = "楼盘信息")
+    @Schema(description = "Estate info")
     private HouseEstateVO estate;
 
-    @Schema(description = "楼号", example = "A栋")
+    @Schema(description = "Community name")
+    private String communityName;
+
+    @Schema(description = "List cover image")
+    private String imageUrl;
+
+    @Schema(description = "List tags")
+    private List<String> tags;
+
+    @Schema(description = "List subtitle")
+    private String subTitle;
+
+    @Schema(description = "Building number")
     private String buildingNum;
 
-    @Schema(description = "单元号", example = "2单元")
+    @Schema(description = "Building unit")
     private String buildingUnit;
 
-    @Schema(description = "门牌号", example = "803")
+    @Schema(description = "Building floor number")
     private String buildingFloorNum;
 
-    @Schema(description = "租金(元/月)", example = "3500")
+    @Schema(description = "Rent per month")
     private BigDecimal rent;
 
-    @Schema(description = "租赁方式: 1-整租, 2-合租", example = "1")
+    @Schema(description = "Rent method: 1 whole, 2 shared")
     private String rentMethod;
 
-    @Schema(description = "支付方式: 1-付一押一, 2-付三押一, 3-付六押一, 4-年付押一, 5-其它", example = "2")
+    @Schema(description = "Payment method")
     private Integer paymentMethod;
 
-    @Schema(description = "户型", example = "2室1厅1卫")
+    @Schema(description = "House type")
     private String houseType;
 
-    @Schema(description = "建筑面积", example = "89.5㎡")
+    @Schema(description = "Covered area")
     private BigDecimal coveredArea;
 
-    @Schema(description = "使用面积", example = "75.0㎡")
+    @Schema(description = "Use area")
     private String useArea;
 
-    @Schema(description = "楼层", example = "8/26")
+    @Schema(description = "Floor")
     private String floor;
 
-    @Schema(description = "朝向", example = "南")
+    @Schema(description = "Orientation code")
     private String orientation;
 
-    @Schema(description = "装修", example = "精装")
+    @Schema(description = "Decoration code")
     private String decoration;
 
-    @Schema(description = "配套设施", example = "空调,洗衣机,冰箱")
+    @Schema(description = "Facilities")
     private String facilities;
 
-    @Schema(description = "房源描述")
+    @Schema(description = "Description")
     private String description;
 
-    @Schema(description = "联系人")
+    @Schema(description = "Contact name")
     private String contact;
 
-    @Schema(description = "联系电话")
+    @Schema(description = "Contact mobile")
     private String mobile;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Rent status")
+    private String status;
+
+    @Schema(description = "Created time")
     private LocalDateTime created;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Updated time")
     private LocalDateTime updated;
 }

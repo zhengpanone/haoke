@@ -1,8 +1,11 @@
 package com.zp.haoke.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.zp.haoke.auth.domain.dto.ChangePasswordDTO;
 import com.zp.haoke.auth.domain.convert.SysUserConvert;
 import com.zp.haoke.auth.domain.dto.CreateUserDTO;
+import com.zp.haoke.auth.domain.dto.PhoneBindDTO;
+import com.zp.haoke.auth.domain.dto.PhoneCodeDTO;
 import com.zp.haoke.auth.domain.dto.UpdateUserDTO;
 import com.zp.haoke.auth.domain.po.SysUserPO;
 import com.zp.haoke.auth.domain.vo.UserVO;
@@ -19,17 +22,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Service
 public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
+
+    private static final String DEV_PHONE_CODE = "123456";
 
     private final SysUserMapper sysUserMapper;
 
     private final PasswordEncoder passwordEncoder;
 
     private final SysUserConvert sysUserConvert;
+
+    private final Map<String, PhoneCodeCache> phoneCodeCache = new ConcurrentHashMap<>();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -182,10 +191,68 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
         return sysUserConvert.toVO(user);
     }
 
+    @Override
+    public void changePassword(String userId, ChangePasswordDTO request) {
+        SysUserPO user = findById(userId);
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new BizException("当前密码不正确");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setUpdateTime(LocalDateTime.now());
+        sysUserMapper.updateById(user);
+    }
+
+    @Override
+    public String sendPhoneCode(PhoneCodeDTO request) {
+        phoneCodeCache.put(
+                request.getPhone(),
+                new PhoneCodeCache(DEV_PHONE_CODE, LocalDateTime.now().plusMinutes(5))
+        );
+        return DEV_PHONE_CODE;
+    }
+
+    @Override
+    public UserVO bindPhone(String userId, PhoneBindDTO request) {
+        PhoneCodeCache cache = phoneCodeCache.get(request.getPhone());
+        if (cache == null || cache.expiresAt().isBefore(LocalDateTime.now())
+                || !cache.code().equals(request.getCode())) {
+            throw new BizException("验证码错误或已过期");
+        }
+
+        SysUserPO existing = sysUserMapper.selectOne(
+                Wrappers.<SysUserPO>lambdaQuery()
+                        .eq(SysUserPO::getPhone, request.getPhone())
+                        .ne(SysUserPO::getId, userId)
+                        .last("LIMIT 1")
+        );
+        if (existing != null) {
+            throw new BizException("手机号已被绑定");
+        }
+
+        SysUserPO user = findById(userId);
+        user.setPhone(request.getPhone());
+        user.setUpdateTime(LocalDateTime.now());
+        sysUserMapper.updateById(user);
+        phoneCodeCache.remove(request.getPhone());
+        return sysUserConvert.toVO(user);
+    }
+
+    @Override
+    public UserVO unbindPhone(String userId) {
+        SysUserPO user = findById(userId);
+        user.setPhone(null);
+        user.setUpdateTime(LocalDateTime.now());
+        sysUserMapper.updateById(user);
+        return sysUserConvert.toVO(user);
+    }
+
     private String emptyToNull(String value) {
         if (!StringUtils.hasText(value)) {
             return null;
         }
         return value.trim();
+    }
+
+    private record PhoneCodeCache(String code, LocalDateTime expiresAt) {
     }
 }

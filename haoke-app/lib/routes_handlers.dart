@@ -10,6 +10,7 @@ import 'package:haoke_app/pages/my_orders/index.dart';
 import 'package:haoke_app/pages/not_found.dart';
 import 'package:haoke_app/pages/profile_edit/index.dart';
 import 'package:haoke_app/pages/register.dart';
+import 'package:haoke_app/pages/search/index.dart';
 import 'package:haoke_app/pages/wallet/index.dart';
 import 'package:haoke_app/pages/community_select/index.dart';
 import 'package:haoke_app/pages/room_add/index.dart';
@@ -119,5 +120,11 @@ Handler eContractHandler = Handler(
 Handler walletHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return const WalletPage();
+  },
+);
+
+Handler searchHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return const SearchPage();
   },
 );

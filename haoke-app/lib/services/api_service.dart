@@ -186,6 +186,61 @@ class ApiService {
     }
   }
 
+  Future<ApiResponse<void>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/user/password',
+        data: {'oldPassword': oldPassword, 'newPassword': newPassword},
+      );
+      return ApiResponse.emptyFromJson(response.data);
+    } catch (e) {
+      AppLogger.e('Change password failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<String>> sendPhoneCode(String phone) async {
+    try {
+      final response = await _dio.post(
+        '/api/user/phone/code',
+        data: {'phone': phone},
+      );
+      return ApiResponse<String>.fromJson(
+        response.data,
+        (data) => data?.toString() ?? '',
+      );
+    } catch (e) {
+      AppLogger.e('Send phone code failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<UserModel>> bindPhone({
+    required String phone,
+    required String code,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/user/phone/bind',
+        data: {'phone': phone, 'code': code},
+      );
+      final apiResponse = ApiResponse<UserModel>.fromJson(
+        response.data,
+        (data) => UserModel.fromJson(data as Map<String, dynamic>),
+      );
+      if (apiResponse.isSuccess && apiResponse.data != null) {
+        await _storage.saveUser(apiResponse.data!);
+      }
+      return apiResponse;
+    } catch (e) {
+      AppLogger.e('Bind phone failed: $e');
+      rethrow;
+    }
+  }
+
   Future<ApiResponse<String>> uploadAvatar(File file) async {
     try {
       final fileName = file.path.split(RegExp(r'[\\/]')).last;
@@ -296,6 +351,59 @@ class ApiService {
 
   /// 查询房源（我发布的 空置/已出租）
   /// [status] 可选过滤：VACANT（空置中）、RENTED（已出租），不传则查全部
+  Future<ApiResponse<List<RoomModel>>> queryRooms({
+    String? keyword,
+    String? status,
+    List<String>? statusList,
+    int? rentMethod,
+    int? minRent,
+    int? maxRent,
+    List<String>? houseTypes,
+    List<String>? floorKeywords,
+    List<int>? orientations,
+    List<int>? decorations,
+    int pageNum = 1,
+    int pageSize = 10,
+  }) {
+    return _queryRoomList(
+      '/api/house/resource/page',
+      keyword: keyword,
+      status: status,
+      statusList: statusList,
+      rentMethod: rentMethod,
+      minRent: minRent,
+      maxRent: maxRent,
+      houseTypes: houseTypes,
+      floorKeywords: floorKeywords,
+      orientations: orientations,
+      decorations: decorations,
+      pageNum: pageNum,
+      pageSize: pageSize,
+    );
+  }
+
+  Future<ApiResponse<List<RoomModel>>> queryRecommendedRooms({
+    int pageNum = 1,
+    int pageSize = 4,
+  }) {
+    return _queryRoomList(
+      '/api/house/resource/recommend',
+      pageNum: pageNum,
+      pageSize: pageSize,
+    );
+  }
+
+  Future<ApiResponse<List<RoomModel>>> queryHotRooms({
+    int pageNum = 1,
+    int pageSize = 10,
+  }) {
+    return _queryRoomList(
+      '/api/house/resource/hot',
+      pageNum: pageNum,
+      pageSize: pageSize,
+    );
+  }
+
   Future<ApiResponse<List<RoomModel>>> queryPublishRooms({
     String? status,
     List<String>? statusList,
@@ -640,6 +748,75 @@ class ApiService {
       );
     } catch (e) {
       AppLogger.e('Withdraw wallet failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<List<RoomModel>>> _queryRoomList(
+    String path, {
+    String? keyword,
+    String? status,
+    List<String>? statusList,
+    int? rentMethod,
+    int? minRent,
+    int? maxRent,
+    List<String>? houseTypes,
+    List<String>? floorKeywords,
+    List<int>? orientations,
+    List<int>? decorations,
+    int pageNum = 1,
+    int pageSize = 10,
+  }) async {
+    try {
+      final requestData = <String, dynamic>{
+        'pageNum': pageNum,
+        'pageSize': pageSize,
+      };
+      if (keyword != null && keyword.trim().isNotEmpty) {
+        requestData['keyword'] = keyword.trim();
+      }
+      if (status != null && status.isNotEmpty) {
+        requestData['status'] = status;
+      }
+      if (statusList != null && statusList.isNotEmpty) {
+        requestData['statusList'] = statusList;
+      }
+      if (rentMethod != null) {
+        requestData['rentMethod'] = rentMethod;
+      }
+      if (minRent != null) {
+        requestData['minRent'] = minRent;
+      }
+      if (maxRent != null) {
+        requestData['maxRent'] = maxRent;
+      }
+      if (houseTypes != null && houseTypes.isNotEmpty) {
+        requestData['houseTypes'] = houseTypes;
+      }
+      if (floorKeywords != null && floorKeywords.isNotEmpty) {
+        requestData['floorKeywords'] = floorKeywords;
+      }
+      if (orientations != null && orientations.isNotEmpty) {
+        requestData['orientations'] = orientations;
+      }
+      if (decorations != null && decorations.isNotEmpty) {
+        requestData['decorations'] = decorations;
+      }
+
+      final response = await _dio.post(path, data: requestData);
+      final responseData = response.data;
+      if (responseData is! Map<String, dynamic>) {
+        throw FormatException('Invalid rooms response: ${response.statusCode}');
+      }
+
+      return ApiResponse<List<RoomModel>>.fromJson(
+        responseData,
+        (data) => _extractList(data)
+            .map((item) => RoomModel.fromJson(item as Map<String, dynamic>))
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query rooms failed: $e');
       rethrow;
     }
   }

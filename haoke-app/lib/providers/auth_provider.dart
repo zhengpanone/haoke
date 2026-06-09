@@ -119,6 +119,49 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<String?> sendPhoneCode(String phone) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    try {
+      final response = await _apiService.sendPhoneCode(phone);
+      if (response.isSuccess) {
+        return response.data;
+      }
+      _errorMessage = response.message;
+      return null;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> bindPhone(String phone, String code) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    try {
+      final response = await _apiService.bindPhone(phone: phone, code: code);
+      if (response.isSuccess && response.data != null) {
+        _currentUser = response.data;
+        await _storageService.saveUser(_currentUser!);
+        _isLoggedIn = true;
+        return true;
+      }
+      _errorMessage = response.message;
+      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   /// 同步用户信息
   Future<void> _syncUserInfo() async {
     try {
@@ -404,7 +447,25 @@ class AuthProvider with ChangeNotifier {
   // }
 
   Future<bool> changePassword(String oldPassword, String newPassword) async {
-    _errorMessage = 'Change password API is not implemented';
-    return false;
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    try {
+      final response = await _apiService.changePassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      );
+      if (response.isSuccess) {
+        return true;
+      }
+      _errorMessage = response.message;
+      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

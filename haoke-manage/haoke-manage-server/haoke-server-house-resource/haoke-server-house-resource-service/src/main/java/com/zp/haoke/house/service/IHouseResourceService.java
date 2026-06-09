@@ -24,6 +24,12 @@ public interface IHouseResourceService extends IService<HouseResourcePO> {
 
     IPage<HouseResourceVO> queryPageList(HouseResourceQueryDTO queryDTO);
 
+    IPage<HouseResourceVO> queryRecommendPageList(HouseResourceQueryDTO queryDTO);
+
+    IPage<HouseResourceVO> queryHotPageList(HouseResourceQueryDTO queryDTO);
+
+    IPage<HouseResourceVO> queryNearbyPageList(HouseResourceQueryDTO queryDTO);
+
     Boolean deleteByIds(String id);
 
     Boolean updateById(HouseResourceUpdateDTO houseResourceUpdateDTO);

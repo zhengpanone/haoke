@@ -5,16 +5,17 @@ import 'package:haoke_app/widgets/common_title.dart';
 import 'package:provider/provider.dart';
 
 class FilterDrawer extends StatelessWidget {
-  const FilterDrawer({super.key});
+  final VoidCallback? onConfirm;
+
+  const FilterDrawer({super.key, this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
     final filterModel = context.watch<FilterModel>();
 
-    // 构建每个筛选模块
     Widget buildSection(String title, List<GeneralType> list, String key) {
       final model = context.read<FilterModel>();
-      final selectedIds = model.getFilter(key).ids;
+      final selectedIds = filterModel.getFilter(key).ids;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,9 +24,7 @@ class FilterDrawer extends StatelessWidget {
           FilterDrawerItem(
             list: list,
             selectedIds: selectedIds,
-            onChange: (ids) {
-              model.setFilter(key, ids);
-            },
+            onChange: (ids) => model.setFilter(key, ids),
           ),
         ],
       );
@@ -35,7 +34,6 @@ class FilterDrawer extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            // ===== 顶部标题 + 已选数量 + 重置按钮 =====
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
@@ -48,20 +46,22 @@ class FilterDrawer extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       filterModel.resetAll();
+                      onConfirm?.call();
                     },
-                    child:
-                        const Text('重置', style: TextStyle(color: Colors.red)),
+                    child: const Text(
+                      '重置',
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
               ),
             ),
-            // ===== 主体条件列表 =====
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
-                ), // 设置左右和上下间距
+                ),
                 children: [
                   buildSection('户型', roomTypeList, 'roomType'),
                   buildSection('楼层', floorList, 'floor'),
@@ -69,7 +69,6 @@ class FilterDrawer extends StatelessWidget {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
@@ -80,7 +79,10 @@ class FilterDrawer extends StatelessWidget {
                     child: const Text('取消'),
                   ),
                   ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      onConfirm?.call();
+                    },
                     child: const Text('确定'),
                   ),
                 ],
@@ -111,7 +113,7 @@ class FilterDrawerItem extends StatelessWidget {
       spacing: 10,
       runSpacing: 10,
       children: list.map((item) {
-        var isActive = selectedIds.contains(item.id);
+        final isActive = selectedIds.contains(item.id);
         return GestureDetector(
           onTap: () {
             final newSelected = List<String>.from(selectedIds);
