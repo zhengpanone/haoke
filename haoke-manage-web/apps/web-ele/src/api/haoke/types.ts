@@ -94,3 +94,122 @@ export interface NewsArticleQuery {
   status?: number;
   title?: string;
 }
+
+export interface AdminProfileQuery {
+  income?: boolean;
+  keyword?: string;
+  pageNum: number;
+  pageSize: number;
+  recordType?: string;
+  status?: string;
+  userId?: string;
+}
+
+export interface StatusPayload {
+  rejectReason?: string;
+  status: string;
+}
+
+export interface ViewingRecord {
+  address?: string;
+  appointmentTime?: string;
+  contactName?: string;
+  contactPhone?: string;
+  createTime?: string;
+  houseId?: string;
+  id: string;
+  note?: string;
+  status?: string;
+  title?: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface HouseOrder {
+  actionText?: string;
+  address?: string;
+  amount?: number;
+  createTime?: string;
+  houseId?: string;
+  id: string;
+  orderNo?: string;
+  orderTime?: string;
+  status?: string;
+  title?: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface HouseFavorite {
+  address?: string;
+  createTime?: string;
+  favoriteTime?: string;
+  houseId?: string;
+  id: string;
+  imageUrl?: string;
+  price?: number;
+  tags?: string;
+  title?: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface IdentityVerification {
+  createTime?: string;
+  id: string;
+  idCardBack?: string;
+  idCardFront?: string;
+  idCardNo?: string;
+  realName?: string;
+  rejectReason?: string;
+  reviewedAt?: string;
+  status?: string;
+  submittedAt?: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface HouseContract {
+  contractNo?: string;
+  createTime?: string;
+  houseId?: string;
+  id: string;
+  orderId?: string;
+  pdfUrl?: string;
+  periodEnd?: string;
+  periodStart?: string;
+  signUrl?: string;
+  status?: string;
+  title?: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface UserWallet {
+  balance?: number;
+  createTime?: string;
+  frozenAmount?: number;
+  id: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface WalletRecord {
+  amount?: number;
+  createTime?: string;
+  id: string;
+  income?: boolean;
+  recordTime?: string;
+  recordType?: string;
+  status?: string;
+  title?: string;
+  updateTime?: string;
+  userId?: string;
+}
+
+export interface ContactChannel {
+  description?: string;
+  title?: string;
+  type?: string;
+  value?: string;
+}
