@@ -20,6 +20,7 @@ import com.zp.haoke.house.service.IHouseResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +41,18 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
         int rows = baseMapper.insert(houseResourcePO);
         log.info("create house resource done: rows={}", rows);
         return rows;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public HouseResourceVO createByAdmin(HouseResourceCreateDTO houseResourceCreateDTO, String landlordId) {
+        HouseResourcePO houseResourcePO = houseResourceConvert.toEntity(houseResourceCreateDTO);
+        houseResourcePO.setStatus(houseResourceCreateDTO.getStatus() == null
+                ? HouseRentStatus.PENDING
+                : houseResourceCreateDTO.getStatus());
+        houseResourcePO.setLandlordId(landlordId);
+        baseMapper.insert(houseResourcePO);
+        return houseResourceConvert.toVO(houseResourcePO);
     }
 
     @Override
@@ -92,7 +105,43 @@ public class HouseResourceServiceImpl extends ServiceImpl<HouseResourceMapper, H
 
     @Override
     public Boolean updateById(HouseResourceUpdateDTO houseResourceUpdateDTO) {
-        return false;
+        HouseResourcePO houseResourcePO = new HouseResourcePO();
+        houseResourcePO.setId(houseResourceUpdateDTO.getId());
+        fillHouseResource(houseResourcePO, houseResourceUpdateDTO);
+        return baseMapper.updateById(houseResourcePO) > 0;
+    }
+
+    @Override
+    public Boolean updateStatus(String id, HouseRentStatus status) {
+        HouseResourcePO houseResourcePO = new HouseResourcePO();
+        houseResourcePO.setId(id);
+        houseResourcePO.setStatus(status);
+        return baseMapper.updateById(houseResourcePO) > 0;
+    }
+
+    private void fillHouseResource(HouseResourcePO po, HouseResourceUpdateDTO dto) {
+        po.setTitle(dto.getTitle());
+        po.setEstateId(dto.getEstateId());
+        po.setBuildingNum(dto.getBuildingNum());
+        po.setBuildingUnit(dto.getBuildingUnit());
+        po.setBuildingFloorNum(dto.getBuildingFloorNum());
+        po.setRent(dto.getRent());
+        po.setRentMethod(dto.getRentMethod());
+        po.setPaymentMethod(dto.getPaymentMethod());
+        po.setHouseType(dto.getHouseType());
+        po.setCoveredArea(dto.getCoveredArea() == null ? null : String.valueOf(dto.getCoveredArea()));
+        po.setUseArea(dto.getUseArea());
+        po.setFloor(dto.getFloor());
+        po.setOrientation(dto.getOrientation());
+        po.setDecoration(dto.getDecoration());
+        po.setFacilities(dto.getFacilities());
+        po.setPic(dto.getPic());
+        po.setHouseDesc(dto.getHouseDesc());
+        po.setContact(dto.getContact());
+        po.setMobile(dto.getMobile());
+        po.setTime(dto.getTime());
+        po.setPropertyCost(dto.getPropertyCost());
+        po.setStatus(dto.getStatus());
     }
 
     private HouseResourceQueryDTO ensureQuery(HouseResourceQueryDTO queryDTO) {

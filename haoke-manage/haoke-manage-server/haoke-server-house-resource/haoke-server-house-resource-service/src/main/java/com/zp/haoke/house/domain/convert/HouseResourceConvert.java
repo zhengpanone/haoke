@@ -28,6 +28,7 @@ public interface HouseResourceConvert {
         HouseResourceVO vo = new HouseResourceVO();
         vo.setId(po.getId());
         vo.setTitle(po.getTitle());
+        vo.setEstateId(po.getEstateId());
         vo.setBuildingNum(po.getBuildingNum());
         vo.setBuildingUnit(po.getBuildingUnit());
         vo.setBuildingFloorNum(po.getBuildingFloorNum());

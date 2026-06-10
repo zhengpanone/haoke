@@ -8,6 +8,7 @@ import 'package:haoke_app/models/auth/login_request.dart';
 import 'package:haoke_app/models/auth/login_response.dart';
 import 'package:haoke_app/models/city/city_model.dart';
 import 'package:haoke_app/models/community/community_model.dart';
+import 'package:haoke_app/models/news/news_article.dart';
 import 'package:haoke_app/models/profile/profile_models.dart';
 import 'package:haoke_app/models/room/room_model.dart';
 import 'package:haoke_app/models/room/room_publish_request.dart';
@@ -402,6 +403,40 @@ class ApiService {
       pageNum: pageNum,
       pageSize: pageSize,
     );
+  }
+
+  Future<ApiResponse<List<NewsArticle>>> queryNewsArticles({
+    int pageNum = 1,
+    int pageSize = 10,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/api/news/page',
+        data: {'pageNum': pageNum, 'pageSize': pageSize},
+      );
+      return ApiResponse<List<NewsArticle>>.fromJson(
+        response.data,
+        (data) => _extractList(data)
+            .map((item) => NewsArticle.fromJson(item as Map<String, dynamic>))
+            .toList(),
+      );
+    } catch (e) {
+      AppLogger.e('Query news articles failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<NewsArticle>> queryNewsArticleDetail(String id) async {
+    try {
+      final response = await _dio.get('/api/news/$id');
+      return ApiResponse<NewsArticle>.fromJson(
+        response.data,
+        (data) => NewsArticle.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Query news detail failed: $e');
+      rethrow;
+    }
   }
 
   Future<ApiResponse<List<RoomModel>>> queryPublishRooms({

@@ -50,6 +50,8 @@ public class SecurityConfig {
                                 "/api/house/resource/hot",
                                 "/api/house/resource/nearby",
                                 "/api/house/resource/recommend").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/news/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/news/page").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/support/contact").permitAll()
                         .requestMatchers(
                                 "/api/auth/login",

@@ -20,6 +20,8 @@ public interface IHouseResourceService extends IService<HouseResourcePO> {
      */
     int saveHouseResource(@Valid HouseResourceCreateDTO houseResourceCreateDTO, String landlordId);
 
+    HouseResourceVO createByAdmin(@Valid HouseResourceCreateDTO houseResourceCreateDTO, String landlordId);
+
     HouseResourceDetailVO queryById(String id);
 
     IPage<HouseResourceVO> queryPageList(HouseResourceQueryDTO queryDTO);
@@ -33,4 +35,6 @@ public interface IHouseResourceService extends IService<HouseResourcePO> {
     Boolean deleteByIds(String id);
 
     Boolean updateById(HouseResourceUpdateDTO houseResourceUpdateDTO);
+
+    Boolean updateStatus(String id, com.zp.haoke.framework.core.enums.HouseRentStatus status);
 }

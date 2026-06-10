@@ -20,6 +20,9 @@ public class HouseResourceVO {
     @Schema(description = "Estate info")
     private HouseEstateVO estate;
 
+    @Schema(description = "Estate id")
+    private String estateId;
+
     @Schema(description = "Community name")
     private String communityName;
 

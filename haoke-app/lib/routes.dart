@@ -22,6 +22,7 @@ class Routes {
   static const String eContract = '/eContract';
   static const String wallet = '/wallet';
   static const String search = '/search';
+  static const String newsDetail = '/newsDetail/:newsId';
 
   // 2. 配置路由
   static void configureRoutes(FluroRouter router) {
@@ -46,5 +47,6 @@ class Routes {
     router.define(eContract, handler: eContractHandler);
     router.define(wallet, handler: walletHandler);
     router.define(search, handler: searchHandler);
+    router.define(newsDetail, handler: newsDetailHandler);
   }
 }

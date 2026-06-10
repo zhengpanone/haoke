@@ -17,7 +17,7 @@ class _IndexRecommondState extends State<IndexRecommond> {
   final ApiService _apiService = ApiService();
 
   bool _isLoading = true;
-  List<IndexRecommandItem> _items = indexRecommandItemList;
+  List<IndexRecommandItem> _items = [];
 
   @override
   void initState() {
@@ -33,15 +33,13 @@ class _IndexRecommondState extends State<IndexRecommond> {
           ? response.data!
           : <RoomModel>[];
       setState(() {
-        _items = rooms.isEmpty
-            ? indexRecommandItemList
-            : rooms.map(IndexRecommandItem.fromRoom).toList();
+        _items = rooms.map(IndexRecommandItem.fromRoom).toList();
         _isLoading = false;
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _items = indexRecommandItemList;
+        _items = [];
         _isLoading = false;
       });
     }
@@ -86,6 +84,16 @@ class _IndexRecommondState extends State<IndexRecommond> {
             const SizedBox(
               height: 82,
               child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            )
+          else if (_items.isEmpty)
+            SizedBox(
+              height: 82,
+              child: Center(
+                child: Text(
+                  '暂无推荐房源',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              ),
             )
           else
             Wrap(

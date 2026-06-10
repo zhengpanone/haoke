@@ -7,6 +7,7 @@ import 'package:haoke_app/pages/identity_verification/index.dart';
 import 'package:haoke_app/pages/login.dart';
 import 'package:haoke_app/pages/my_favorites/index.dart';
 import 'package:haoke_app/pages/my_orders/index.dart';
+import 'package:haoke_app/pages/news_detail/index.dart';
 import 'package:haoke_app/pages/not_found.dart';
 import 'package:haoke_app/pages/profile_edit/index.dart';
 import 'package:haoke_app/pages/register.dart';
@@ -126,5 +127,11 @@ Handler walletHandler = Handler(
 Handler searchHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return const SearchPage();
+  },
+);
+
+Handler newsDetailHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return NewsDetailPage(newsId: params['newsId']![0]);
   },
 );
