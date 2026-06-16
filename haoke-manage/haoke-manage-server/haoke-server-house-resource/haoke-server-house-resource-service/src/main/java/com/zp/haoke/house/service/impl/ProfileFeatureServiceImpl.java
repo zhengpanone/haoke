@@ -229,6 +229,38 @@ public class ProfileFeatureServiceImpl implements IProfileFeatureService {
         return toHouseContractVO(po);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public HouseContractVO signContract(String userId, String id) {
+        HouseContractPO contract = houseContractMapper.selectOne(new LambdaQueryWrapper<HouseContractPO>()
+                .eq(HouseContractPO::getUserId, userId)
+                .eq(HouseContractPO::getId, id)
+                .last("limit 1"));
+        if (contract == null) {
+            throw new IllegalArgumentException("合同不存在");
+        }
+        if (!"PENDING_SIGN".equals(contract.getStatus())) {
+            throw new IllegalArgumentException("当前合同状态不可签署");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        String signedAt = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(now);
+        contract.setStatus("SIGNED");
+        contract.setPdfUrl(defaultText(contract.getPdfUrl(), "https://files.haoke.com/contract/" + contract.getContractNo() + ".pdf"));
+        contract.setSignUrl("https://files.haoke.com/contract/" + contract.getContractNo() + "-" + signedAt + ".sign");
+        houseContractMapper.updateById(contract);
+
+        if (StringUtils.isNotBlank(contract.getOrderId())) {
+            HouseOrderPO order = houseOrderMapper.selectById(contract.getOrderId());
+            if (order != null && "PENDING_SIGN".equals(order.getStatus())) {
+                order.setStatus("PAID");
+                order.setActionText("查看合同");
+                houseOrderMapper.updateById(order);
+            }
+        }
+        return toHouseContractVO(contract);
+    }
+
     @Override
     public WalletOverviewVO getWallet(String userId) {
         UserWalletPO wallet = getOrCreateWallet(userId);

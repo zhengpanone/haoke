@@ -52,8 +52,9 @@ class _RoomAddState extends State<RoomAdd> {
   }
 
   Future<void> _chooseCommunity() async {
-    final result =
-        await Navigator.of(context).pushNamed(Routes.communitySelect);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(Routes.communitySelect);
     if (!mounted || result is! CommunityModel || result.name.trim().isEmpty) {
       return;
     }
@@ -74,19 +75,59 @@ class _RoomAddState extends State<RoomAdd> {
     return community?.id ?? '';
   }
 
+  // 楼层下标 -> 后端楼层文案
+  static const List<String> _floorLabels = ['高楼层', '中楼层', '低楼层'];
+
+  String get _floorValue {
+    return floor >= 0 && floor < _floorLabels.length ? _floorLabels[floor] : '';
+  }
+
+  // 设施名称 -> 后端设施 ID（与后端 HouseResourceConvert.facilityName 对应）
+  static const Map<String, String> _facilityIds = {
+    '空调': '1',
+    '冰箱': '2',
+    '洗衣机': '3',
+    '电视机': '4',
+    '宽带': '5',
+  };
+
+  String get _facilitiesValue {
+    return selectedAppliances
+        .map((name) => _facilityIds[name])
+        .whereType<String>()
+        .join(',');
+  }
+
+  Future<String> _uploadRoomImages() async {
+    final urls = <String>[];
+    for (final image in roomImages) {
+      final response = await apiService.uploadHouseImage(image);
+      if (response.isSuccess && (response.data ?? '').isNotEmpty) {
+        urls.add(response.data!);
+      } else {
+        throw Exception(response.message.isEmpty ? '图片上传失败' : response.message);
+      }
+    }
+    return urls.join(',');
+  }
+
   Future<void> _publishRoom() async {
     if (isPublishing) {
       return;
     }
     if (community == null) {
-      CommonToast.showToast(context.tr('please_choose_community'),
-          context: context);
+      CommonToast.showToast(
+        context.tr('please_choose_community'),
+        context: context,
+      );
       return;
     }
     final estateId = _estateId;
     if (StringUtil.isBlank(estateId)) {
-      CommonToast.showToast(context.tr('please_choose_valid_community'),
-          context: context);
+      CommonToast.showToast(
+        context.tr('please_choose_valid_community'),
+        context: context,
+      );
       return;
     }
     if (rentController.text.trim().isEmpty) {
@@ -108,8 +149,10 @@ class _RoomAddState extends State<RoomAdd> {
       return;
     }
     if (titleController.text.trim().isEmpty) {
-      CommonToast.showToast(context.tr('please_input_listing_title'),
-          context: context);
+      CommonToast.showToast(
+        context.tr('please_input_listing_title'),
+        context: context,
+      );
       return;
     }
 
@@ -118,6 +161,11 @@ class _RoomAddState extends State<RoomAdd> {
     });
 
     try {
+      final pic = await _uploadRoomImages();
+      if (!mounted) {
+        return;
+      }
+
       final response = await apiService.publishRoom(
         RoomPublishRequest(
           title: titleController.text.trim(),
@@ -128,6 +176,10 @@ class _RoomAddState extends State<RoomAdd> {
           coveredArea: area,
           orientation: oriented + 1,
           decoration: decorationType + 1,
+          floor: _floorValue,
+          facilities: _facilitiesValue,
+          pic: pic,
+          houseDesc: descController.text.trim(),
         ),
       );
 
@@ -282,9 +334,11 @@ class _RoomAddState extends State<RoomAdd> {
             },
           ),
           CommonTitle(context.tr('property_photos')),
-          CommonImagePicker(onChange: (List<File> files) {
-            roomImages = files;
-          }),
+          CommonImagePicker(
+            onChange: (List<File> files) {
+              roomImages = files;
+            },
+          ),
           CommonTitle(context.tr('listing_title')),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -311,12 +365,14 @@ class _RoomAddState extends State<RoomAdd> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: const Color(0xFFE5EEEB)),
             ),
-            child: RoomAppliance(onChange: (data) {
-              selectedAppliances = data
-                  .where((item) => item.isChecked)
-                  .map((item) => item.title)
-                  .toList();
-            }),
+            child: RoomAppliance(
+              onChange: (data) {
+                selectedAppliances = data
+                    .where((item) => item.isChecked)
+                    .map((item) => item.title)
+                    .toList();
+              },
+            ),
           ),
           CommonTitle(context.tr('description')),
           Container(

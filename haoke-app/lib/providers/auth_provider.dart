@@ -100,16 +100,17 @@ class AuthProvider with ChangeNotifier {
   Future<bool> unbindPhone() async {
     _isLoading = true;
     _errorMessage = null;
+    notifyListeners();
     try {
       final response = await _apiService.unbindPhone();
-      if (response.isSuccess) {
+      if (response.isSuccess && response.data != null) {
+        _currentUser = response.data;
+        await _storageService.saveUser(_currentUser!);
         _isLoggedIn = true;
-        await _syncUserInfo();
         return true;
-      } else {
-        _errorMessage = response.message;
-        return false;
       }
+      _errorMessage = response.message;
+      return false;
     } catch (e) {
       _errorMessage = e.toString();
       return false;

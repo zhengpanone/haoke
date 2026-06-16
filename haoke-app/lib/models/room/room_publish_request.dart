@@ -7,6 +7,10 @@ class RoomPublishRequest {
   final double coveredArea;
   final int orientation;
   final int decoration;
+  final String? floor;
+  final String? facilities;
+  final String? pic;
+  final String? houseDesc;
 
   const RoomPublishRequest({
     required this.title,
@@ -17,6 +21,10 @@ class RoomPublishRequest {
     required this.coveredArea,
     required this.orientation,
     required this.decoration,
+    this.floor,
+    this.facilities,
+    this.pic,
+    this.houseDesc,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +37,11 @@ class RoomPublishRequest {
       'coveredArea': coveredArea,
       'orientation': orientation,
       'decoration': decoration,
+      if (floor != null && floor!.isNotEmpty) 'floor': floor,
+      if (facilities != null && facilities!.isNotEmpty)
+        'facilities': facilities,
+      if (pic != null && pic!.isNotEmpty) 'pic': pic,
+      if (houseDesc != null && houseDesc!.isNotEmpty) 'houseDesc': houseDesc,
     };
   }
 }

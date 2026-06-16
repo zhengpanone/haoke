@@ -28,6 +28,15 @@ public class FileController {
 
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public R<String> uploadAvatar(@RequestPart("file") MultipartFile file) {
+        return store(file, "avatars");
+    }
+
+    @PostMapping(value = "/house", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public R<String> uploadHouseImage(@RequestPart("file") MultipartFile file) {
+        return store(file, "houses");
+    }
+
+    private R<String> store(MultipartFile file, String subDir) {
         if (file.isEmpty()) {
             return R.fail(400, "File is empty");
         }
@@ -46,14 +55,14 @@ public class FileController {
         }
 
         try {
-            Path avatarDir = UPLOAD_ROOT.resolve("avatars");
-            Files.createDirectories(avatarDir);
+            Path targetDir = UPLOAD_ROOT.resolve(subDir);
+            Files.createDirectories(targetDir);
 
             String fileName = UUID.randomUUID() + "." + extension;
-            Path target = avatarDir.resolve(fileName);
+            Path target = targetDir.resolve(fileName);
             file.transferTo(target);
 
-            return R.ok("Upload successful", "avatars/" + fileName);
+            return R.ok("Upload successful", subDir + "/" + fileName);
         } catch (IOException e) {
             return R.fail(500, "Upload failed: " + e.getMessage());
         }

@@ -7,6 +7,7 @@ import com.zp.haoke.auth.domain.dto.PhoneCodeDTO;
 import com.zp.haoke.auth.domain.dto.UpdateUserDTO;
 import com.zp.haoke.auth.domain.po.SysUserPO;
 import com.zp.haoke.auth.domain.vo.UserVO;
+import com.zp.haoke.framework.core.domain.response.PageVO;
 import jakarta.validation.Valid;
 
 public interface ISysUserService {
@@ -14,6 +15,12 @@ public interface ISysUserService {
     SysUserPO findByUsername(String username);
 
     SysUserPO findById(String id);
+
+    UserVO getUser(Long id);
+
+    PageVO<UserVO> queryUsers(int page, int size);
+
+    UserVO updateUserStatus(Long id, String status);
 
     UserVO createUser(CreateUserDTO request);
 

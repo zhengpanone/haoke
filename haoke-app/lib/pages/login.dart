@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
 import 'package:haoke_app/providers/auth_provider.dart';
+import 'package:haoke_app/services/storage_service.dart';
 import 'package:haoke_app/utils/validators.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loadRememberUser() async {
-    // TODO: Load remembered account if needed.
+    final rememberedUsername = await StorageService.instance.getString(
+      'remembered_username',
+    );
+    if (!mounted || rememberedUsername == null || rememberedUsername.isEmpty) {
+      return;
+    }
+    setState(() {
+      _usernameController.text = rememberedUsername;
+      _rememberMe = true;
+    });
   }
 
   Future<void> _login() async {
@@ -37,21 +47,32 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
+      final username = _usernameController.text.trim();
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final success = await authProvider.login(
-        _usernameController.text.trim(),
+        username,
         _passwordController.text.trim(),
       );
 
       if (!mounted) return;
 
       if (success) {
+        if (_rememberMe) {
+          await StorageService.instance.setString(
+            'remembered_username',
+            username,
+          );
+        } else {
+          await StorageService.instance.deleteString('remembered_username');
+        }
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text(authProvider.errorMessage ?? context.tr('login_failed')),
+            content: Text(
+              authProvider.errorMessage ?? context.tr('login_failed'),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -209,8 +230,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Text(
                                   context.tr('remember_me'),
-                                  style:
-                                      const TextStyle(color: Color(0xFF55607A)),
+                                  style: const TextStyle(
+                                    color: Color(0xFF55607A),
+                                  ),
                                 ),
                               ],
                             ),
@@ -235,8 +257,8 @@ class _LoginPageState extends State<LoginPage> {
                                           strokeWidth: 2.2,
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                            Colors.white,
-                                          ),
+                                                Colors.white,
+                                              ),
                                         ),
                                       )
                                     : Text(
@@ -253,9 +275,9 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: _isLoading
                                   ? null
                                   : () => Navigator.pushReplacementNamed(
-                                        context,
-                                        '/register',
-                                      ),
+                                      context,
+                                      '/register',
+                                    ),
                               child: Text(context.tr('no_account_register')),
                             ),
                           ],

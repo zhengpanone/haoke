@@ -27,6 +27,12 @@ public class HouseContractController {
         return R.ok(profileFeatureService.getContract(userId, id));
     }
 
+    @RequestMapping(value = "/{id}/sign", method = {RequestMethod.POST, RequestMethod.PUT})
+    public R<HouseContractVO> sign(@PathVariable String id, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.signContract(userId, id));
+    }
+
     @RequestMapping(value = "/page", method = {RequestMethod.POST, RequestMethod.PUT})
     public R<PageVO<HouseContractVO>> getPageList(@RequestBody(required = false) ProfilePageQueryDTO queryDTO,
                                                   HttpServletRequest request) {

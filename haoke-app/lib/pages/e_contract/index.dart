@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
 import 'package:haoke_app/models/profile/profile_models.dart';
 import 'package:haoke_app/services/api_service.dart';
@@ -41,6 +42,27 @@ class _EContractPageState extends State<EContractPage> {
     await _future;
   }
 
+  Future<void> _signContract(HouseContractModel item) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final response = await _apiService.signContract(item.id);
+      if (!mounted) return;
+      if (response.isSuccess) {
+        messenger.showSnackBar(const SnackBar(content: Text('合同签署成功')));
+        _reload();
+      } else {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(response.message.isEmpty ? '签署失败' : response.message),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text('签署失败：$e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +93,7 @@ class _EContractPageState extends State<EContractPage> {
               itemCount: contracts.length,
               separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (context, index) =>
-                  _ContractCard(item: contracts[index]),
+                  _ContractCard(item: contracts[index], onSign: _signContract),
             ),
           );
         },
@@ -82,13 +104,15 @@ class _EContractPageState extends State<EContractPage> {
 
 class _ContractCard extends StatelessWidget {
   final HouseContractModel item;
+  final Future<void> Function(HouseContractModel item) onSign;
 
-  const _ContractCard({required this.item});
+  const _ContractCard({required this.item, required this.onSign});
 
   @override
   Widget build(BuildContext context) {
     final period =
         '${formatProfileDate(item.periodStart, dateOnly: true)} 至 ${formatProfileDate(item.periodEnd, dateOnly: true)}';
+    final pendingSign = item.status == 'PENDING_SIGN';
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -146,18 +170,19 @@ class _ContractCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => _showTip(
-                    context,
-                    item.pdfUrl.isEmpty ? '合同 PDF 暂未生成' : item.pdfUrl,
-                  ),
+                  onPressed: () => item.pdfUrl.isEmpty
+                      ? _showTip(context, '合同 PDF 暂未生成')
+                      : _openLink(context, item.pdfUrl),
                   child: const Text('下载 PDF'),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => _showTip(context, '合同 ${item.contractNo}'),
-                  child: const Text('查看合同'),
+                  onPressed: pendingSign
+                      ? () => onSign(item)
+                      : () => _viewContract(context, item),
+                  child: Text(pendingSign ? '立即签署' : '查看合同'),
                 ),
               ),
             ],
@@ -170,4 +195,90 @@ class _ContractCard extends StatelessWidget {
 
 void _showTip(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+}
+
+Future<void> _openLink(BuildContext context, String url) async {
+  await Clipboard.setData(ClipboardData(text: url));
+  if (!context.mounted) return;
+  _showTip(context, '链接已复制，请在浏览器中打开');
+}
+
+void _viewContract(BuildContext context, HouseContractModel item) {
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (sheetContext) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1F2B2A),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _ContractInfoRow(label: '合同编号', value: item.contractNo),
+              _ContractInfoRow(label: '合同状态', value: item.statusText),
+              _ContractInfoRow(
+                label: '租期',
+                value:
+                    '${formatProfileDate(item.periodStart, dateOnly: true)} 至 ${formatProfileDate(item.periodEnd, dateOnly: true)}',
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: item.signUrl.isEmpty
+                      ? null
+                      : () {
+                          Navigator.of(sheetContext).pop();
+                          _openLink(context, item.signUrl);
+                        },
+                  child: Text(item.signUrl.isEmpty ? '签署文件待生成' : '查看签署文件'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+class _ContractInfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _ContractInfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 72,
+            child: Text(
+              label,
+              style: const TextStyle(color: Color(0xFF7D8B88), fontSize: 13),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value.isEmpty ? '-' : value,
+              style: const TextStyle(color: Color(0xFF1F2B2A), fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

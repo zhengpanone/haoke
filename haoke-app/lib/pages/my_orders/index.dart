@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
 import 'package:haoke_app/models/profile/profile_models.dart';
+import 'package:haoke_app/pages/e_contract/index.dart';
 import 'package:haoke_app/services/api_service.dart';
 import 'package:haoke_app/widgets/common_icon_badge.dart';
 import 'package:haoke_app/widgets/profile_feature_widgets.dart';
@@ -41,6 +42,53 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     await _future;
   }
 
+  Future<void> _signOrderContract(HouseOrderModel item) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final contractsResponse = await _apiService.queryContracts(pageSize: 100);
+      if (!mounted) return;
+      if (!contractsResponse.isSuccess) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              contractsResponse.message.isEmpty
+                  ? '合同加载失败'
+                  : contractsResponse.message,
+            ),
+          ),
+        );
+        return;
+      }
+
+      final contract = (contractsResponse.data ?? <HouseContractModel>[])
+          .where((contract) => contract.orderId == item.id)
+          .cast<HouseContractModel?>()
+          .firstWhere((contract) => contract != null, orElse: () => null);
+      if (contract == null) {
+        messenger.showSnackBar(const SnackBar(content: Text('未找到待签署合同')));
+        return;
+      }
+
+      final signResponse = await _apiService.signContract(contract.id);
+      if (!mounted) return;
+      if (signResponse.isSuccess) {
+        messenger.showSnackBar(const SnackBar(content: Text('合同签署成功')));
+        _reload();
+      } else {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              signResponse.message.isEmpty ? '签署失败' : signResponse.message,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(SnackBar(content: Text('签署失败：$e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +118,8 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 20),
               itemCount: orders.length,
               separatorBuilder: (_, _) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => _OrderCard(item: orders[index]),
+              itemBuilder: (context, index) =>
+                  _OrderCard(item: orders[index], onSign: _signOrderContract),
             ),
           );
         },
@@ -81,11 +130,14 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
 
 class _OrderCard extends StatelessWidget {
   final HouseOrderModel item;
+  final Future<void> Function(HouseOrderModel item) onSign;
 
-  const _OrderCard({required this.item});
+  const _OrderCard({required this.item, required this.onSign});
 
   @override
   Widget build(BuildContext context) {
+    final pendingSign = item.status == 'PENDING_SIGN';
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: profileCardDecoration(),
@@ -141,14 +193,16 @@ class _OrderCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => _showTip(context, '订单金额 ¥${item.amount}'),
+                  onPressed: () => _showOrderDetail(context, item),
                   child: const Text('查看详情'),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => _showTip(context, '${item.actionText}已提交'),
+                  onPressed: pendingSign
+                      ? () => onSign(item)
+                      : () => _showTip(context, '${item.actionText}已提交'),
                   child: Text(item.actionText),
                 ),
               ),
@@ -162,4 +216,87 @@ class _OrderCard extends StatelessWidget {
 
 void _showTip(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+}
+
+void _showOrderDetail(BuildContext context, HouseOrderModel item) {
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (sheetContext) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1F2B2A),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _OrderInfoRow(label: '订单号', value: item.orderNo),
+              _OrderInfoRow(label: '订单状态', value: item.statusText),
+              _OrderInfoRow(label: '订单金额', value: '¥${item.amount}'),
+              if (item.address.isNotEmpty)
+                _OrderInfoRow(label: '地址', value: item.address),
+              if (item.orderTime != null)
+                _OrderInfoRow(
+                  label: '下单时间',
+                  value: formatProfileDate(item.orderTime),
+                ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(sheetContext).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const EContractPage()),
+                    );
+                  },
+                  child: const Text('查看电子合同'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+class _OrderInfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _OrderInfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 72,
+            child: Text(
+              label,
+              style: const TextStyle(color: Color(0xFF7D8B88), fontSize: 13),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value.isEmpty ? '-' : value,
+              style: const TextStyle(color: Color(0xFF1F2B2A), fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

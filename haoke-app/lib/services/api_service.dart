@@ -129,7 +129,7 @@ class ApiService {
   }
 
   /// 解绑手机号
-  Future<ApiResponse<void>> unbindPhone() async {
+  Future<ApiResponse<UserModel>> unbindPhone() async {
     try {
       final token = await _storage.getToken();
       if (token == null) {
@@ -139,8 +139,14 @@ class ApiService {
         '/api/user/unbindPhone',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      // TODO 需要更新用户数据
-      return ApiResponse.emptyFromJson(response.data);
+      final apiResponse = ApiResponse<UserModel>.fromJson(
+        response.data,
+        (data) => UserModel.fromJson(data as Map<String, dynamic>),
+      );
+      if (apiResponse.isSuccess && apiResponse.data != null) {
+        await _storage.saveUser(apiResponse.data!);
+      }
+      return apiResponse;
     } catch (e) {
       AppLogger.e('解绑手机号失败: $e');
       rethrow;
@@ -257,6 +263,25 @@ class ApiService {
       );
     } catch (e) {
       AppLogger.e('Upload avatar failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<String>> uploadHouseImage(File file) async {
+    try {
+      final fileName = file.path.split(RegExp(r'[\\/]')).last;
+      final response = await _dio.post(
+        '/api/file/house',
+        data: FormData.fromMap({
+          'file': await MultipartFile.fromFile(file.path, filename: fileName),
+        }),
+      );
+      return ApiResponse<String>.fromJson(
+        response.data,
+        (data) => data.toString(),
+      );
+    } catch (e) {
+      AppLogger.e('Upload house image failed: $e');
       rethrow;
     }
   }
@@ -738,6 +763,21 @@ class ApiService {
       );
     } catch (e) {
       AppLogger.e('Query contracts failed: $e');
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse<HouseContractModel>> signContract(
+    String contractId,
+  ) async {
+    try {
+      final response = await _dio.post('/api/house/contract/$contractId/sign');
+      return ApiResponse<HouseContractModel>.fromJson(
+        response.data,
+        (data) => HouseContractModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Sign contract failed: $e');
       rethrow;
     }
   }

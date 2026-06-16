@@ -1,6 +1,7 @@
 package com.zp.haoke.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zp.haoke.auth.domain.dto.ChangePasswordDTO;
 import com.zp.haoke.auth.domain.convert.SysUserConvert;
 import com.zp.haoke.auth.domain.dto.CreateUserDTO;
@@ -12,6 +13,8 @@ import com.zp.haoke.auth.domain.vo.UserVO;
 import com.zp.haoke.auth.enums.UserErrorCode;
 import com.zp.haoke.auth.mapper.SysUserMapper;
 import com.zp.haoke.auth.service.ISysUserService;
+import com.zp.haoke.framework.core.domain.response.PageVO;
+import com.zp.haoke.framework.core.enums.UserStatus;
 import com.zp.haoke.framework.core.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,14 +56,18 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
             throw new UsernameNotFoundException("用户不存在");
         }
 
+        boolean disabled = UserStatus.DISABLE.name().equals(user.getStatus())
+                || UserStatus.DELETED.name().equals(user.getStatus());
+        boolean locked = UserStatus.LOCKED.name().equals(user.getStatus());
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
                 .authorities("ROLE_USER") // 先写死，后面再扩展
                 .accountExpired(false)
-                .accountLocked(false)
+                .accountLocked(locked)
                 .credentialsExpired(false)
-                .disabled(false)
+                .disabled(disabled)
                 .build();
     }
 
@@ -119,12 +126,41 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
         user.setNickname(StringUtils.hasText(request.getNickname())
                 ? request.getNickname()
                 : request.getUsername());
+        user.setStatus(request.getStatus() == null ? UserStatus.ACTIVE.name() : request.getStatus().name());
 //        user.setGender(request.getGender());
 //        user.setType(request.getType());
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
 
         sysUserMapper.insert(user);
+        return sysUserConvert.toVO(user);
+    }
+
+    @Override
+    public UserVO getUser(Long id) {
+        return sysUserConvert.toVO(findById(String.valueOf(id)));
+    }
+
+    @Override
+    public PageVO<UserVO> queryUsers(int page, int size) {
+        long current = page < 1 ? 1 : page;
+        long pageSize = size < 1 ? 20 : Math.min(size, 100);
+        Page<SysUserPO> result = sysUserMapper.selectPage(
+                Page.of(current, pageSize),
+                Wrappers.<SysUserPO>lambdaQuery()
+                        .ne(SysUserPO::getStatus, UserStatus.DELETED.name())
+                        .orderByDesc(SysUserPO::getCreateTime)
+        );
+        return PageVO.of(result.convert(sysUserConvert::toVO));
+    }
+
+    @Override
+    public UserVO updateUserStatus(Long id, String status) {
+        UserStatus userStatus = parseStatus(status);
+        SysUserPO user = findById(String.valueOf(id));
+        user.setStatus(userStatus.name());
+        user.setUpdateTime(LocalDateTime.now());
+        sysUserMapper.updateById(user);
         return sysUserConvert.toVO(user);
     }
 
@@ -244,6 +280,20 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
         user.setUpdateTime(LocalDateTime.now());
         sysUserMapper.updateById(user);
         return sysUserConvert.toVO(user);
+    }
+
+    private UserStatus parseStatus(String status) {
+        if (!StringUtils.hasText(status)) {
+            throw new BizException("用户状态不能为空");
+        }
+        String normalized = status.trim();
+        for (UserStatus userStatus : UserStatus.values()) {
+            if (userStatus.name().equalsIgnoreCase(normalized)
+                    || userStatus.getCode().equals(normalized)) {
+                return userStatus;
+            }
+        }
+        throw new BizException("用户状态不合法");
     }
 
     private String emptyToNull(String value) {

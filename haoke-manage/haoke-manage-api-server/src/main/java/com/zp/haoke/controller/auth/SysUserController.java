@@ -11,6 +11,7 @@ import com.zp.haoke.auth.domain.vo.UserVO;
 import com.zp.haoke.auth.service.ISysUserService;
 import com.zp.haoke.auth.util.JwtUtil;
 import com.zp.haoke.config.SecurityUtils;
+import com.zp.haoke.framework.core.domain.response.PageVO;
 import com.zp.haoke.framework.core.domain.response.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -178,8 +178,7 @@ public class SysUserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public R<UserVO> getUser(@PathVariable Long id) {
-        // 这里简化处理，实际应该查询并返回用户信息
-        return R.ok("获取成功", null);
+        return R.ok("获取成功", sysUserService.getUser(id));
     }
 
     /**
@@ -187,11 +186,10 @@ public class SysUserController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public R<List<UserVO>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
+    public R<PageVO<UserVO>> getUsers(
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
-        // 这里简化处理，实际应该分页查询
-        return R.ok("获取成功", null);
+        return R.ok("获取成功", sysUserService.queryUsers(page, size));
     }
 
     /**
@@ -212,7 +210,6 @@ public class SysUserController {
     public R<UserVO> updateUserStatus(
             @PathVariable Long id,
             @RequestParam String status) {
-        // 这里简化处理，实际应该根据status参数更新用户状态
-        return R.ok("状态更新成功", null);
+        return R.ok("状态更新成功", sysUserService.updateUserStatus(id, status));
     }
 }

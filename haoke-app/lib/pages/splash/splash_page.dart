@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:haoke_app/config/app_config.dart';
 import 'package:haoke_app/pages/home/index.dart';
+import 'package:haoke_app/pages/login.dart';
+import 'package:haoke_app/services/storage_service.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -13,14 +15,16 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    // TODO
     Future.delayed(const Duration(seconds: 2), () async {
+      final isLoggedIn = await StorageService.instance.isLoggedIn();
       if (!mounted) {
         return;
       }
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => isLoggedIn ? const HomePage() : const LoginPage(),
+        ),
+      );
     });
   }
 
