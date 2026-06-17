@@ -393,7 +393,13 @@ public class ProfileFeatureServiceImpl implements IProfileFeatureService {
         contract.setHouseId(order.getHouseId());
         contract.setOrderId(order.getId());
         contract.setContractNo("HT" + DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()));
-        contract.setTitle(order.getTitle().replace("租房订单", "租赁合同"));
+
+        // 基于订单地址生成合同标题，不依赖字符串替换
+        String contractTitle = StringUtils.isBlank(order.getAddress())
+                ? "房屋租赁合同"
+                : order.getAddress() + " 租赁合同";
+        contract.setTitle(contractTitle);
+
         contract.setPeriodStart(LocalDate.now().plusDays(1));
         contract.setPeriodEnd(LocalDate.now().plusYears(1));
         contract.setStatus("PENDING_SIGN");

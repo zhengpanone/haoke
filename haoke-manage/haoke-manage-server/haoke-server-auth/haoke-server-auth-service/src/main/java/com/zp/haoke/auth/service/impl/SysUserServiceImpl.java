@@ -41,6 +41,10 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
 
     private final SysUserConvert sysUserConvert;
 
+    // TODO: 内存缓存存在两个问题：
+    //  1. 过期项不会自动清理，长期运行会内存泄漏
+    //  2. 多实例部署时各节点缓存不共享，验证码无法跨节点验证
+    //  建议生产环境替换为 Redis，TTL 自动过期
     private final Map<String, PhoneCodeCache> phoneCodeCache = new ConcurrentHashMap<>();
 
     @Override
@@ -99,22 +103,7 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
      * 创建用户
      */
     public UserVO createUser(CreateUserDTO request) {
-        // 验证用户名是否已存在
-//        if (sysUserMapper.existsByUsername(request.getUsername())) {
-//            throw new RuntimeException("用户名已存在");
-//        }
-//
-//        // 验证邮箱是否已存在
-//        if (StringUtils.hasText(request.getEmail()) &&
-//                sysUserMapper.existsByEmail(request.getEmail())) {
-//            throw new RuntimeException("邮箱已存在");
-//        }
-//
-//        // 验证手机号是否已存在
-//        if (StringUtils.hasText(request.getPhone()) &&
-//                sysUserMapper.existsByPhone(request.getPhone())) {
-//            throw new RuntimeException("手机号已存在");
-//        }
+        // TODO: 实现唯一性校验（用户名/邮箱/手机号）
 
         // 创建用户实体
         SysUserPO user = new SysUserPO();
@@ -127,8 +116,6 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
                 ? request.getNickname()
                 : request.getUsername());
         user.setStatus(request.getStatus() == null ? UserStatus.ACTIVE.name() : request.getStatus().name());
-//        user.setGender(request.getGender());
-//        user.setType(request.getType());
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
 
@@ -171,7 +158,8 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
 
     @Override
     public void deleteUser(Long id) {
-        sysUserMapper.deleteById(id);
+        // 软删除：标记为已删除状态而非物理删除
+        updateUserStatus(id, UserStatus.DELETED.name());
     }
 
     /**
@@ -181,14 +169,7 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
     public UserVO updateUser(String userId, UpdateUserDTO userDTO) {
         SysUserPO user = findById(userId);
 
-        // 验证唯一性（排除当前用户）
-//        if (sysUserMapper.existsByUsernameOrEmailOrPhoneExcludingId(
-//                userDTO.getUsername(),
-//                userDTO.getEmail(),
-//                userDTO.getPhone(),
-//                userId)) {
-//            throw new RuntimeException("用户名、邮箱或手机号已存在");
-//        }
+        // TODO: 实现唯一性校验（排除当前用户）
 
         // 更新用户信息
         if (StringUtils.hasText(userDTO.getUsername())) {
@@ -209,18 +190,6 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
         if (userDTO.getNickname() != null) {
             user.setNickname(emptyToNull(userDTO.getNickname()));
         }
-//        if (StringUtils.hasText(userDTO.getNickname())) {
-//            user.setNickname(userDTO.getNickname());
-//        }
-//        if (userDTO.getGender() != null) {
-//            user.setGender(userDTO.getGender());
-//        }
-//        if (userDTO.getStatus() != null) {
-//            user.setStatus(userDTO.getStatus());
-//        }
-//        if (userDTO.getType() != null) {
-//            user.setType(userDTO.getType());
-//        }
 
         user.setUpdateTime(LocalDateTime.now());
         sysUserMapper.updateById(user);
@@ -255,6 +224,8 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
             throw new BizException("验证码错误或已过期");
         }
 
+        // 先查后插存在并发竞态窗口，依赖数据库唯一索引兜底
+        // 见 V0.1.6__add_phone_unique_index.sql
         SysUserPO existing = sysUserMapper.selectOne(
                 Wrappers.<SysUserPO>lambdaQuery()
                         .eq(SysUserPO::getPhone, request.getPhone())

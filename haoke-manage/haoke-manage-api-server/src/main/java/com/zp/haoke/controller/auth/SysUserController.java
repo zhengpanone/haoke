@@ -56,65 +56,48 @@ public class SysUserController {
     @GetMapping("/me")
     @Operation(summary = "获取当前登录用户信息")
     public R<UserVO> getCurrentUser(HttpServletRequest request) {
-        try {
-            // 方式2: 从token中获取用户信息
-            String token = extractToken(request);
-            if (token != null) {
-                String userId = jwtUtil.getUserIdFromToken(token);
-                SysUserPO user = sysUserService.findById(userId);
-                return R.ok("获取成功", sysUserConvert.toVO(user));
-            }
-            // 如果Token不存在，从SecurityContext获取
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated() ||
-                    "anonymousUser".equals(authentication.getPrincipal())) {
-                return R.fail(401, "未登录");
-            }
-            Object principal = authentication.getPrincipal();
-            String username;
-            if (principal instanceof UserDetails) {
-                // 如果是UserDetails形式的用户名
-                username = ((UserDetails) principal).getUsername();
-            } else if (principal instanceof String) {
-                // 如果是字符串形式的用户名
-                username = (String) principal;
-            } else {
-                return R.fail(401, "无法获取用户信息");
-            }
-            // 通过用户名查询用户
-            SysUserPO user = sysUserService.findByUsername(username);
+        // 优先从 token 中获取用户信息
+        String token = extractToken(request);
+        if (token != null) {
+            String userId = jwtUtil.getUserIdFromToken(token);
+            SysUserPO user = sysUserService.findById(userId);
             return R.ok("获取成功", sysUserConvert.toVO(user));
-
-        } catch (RuntimeException e) {
-            return R.fail(404, e.getMessage());
-        } catch (Exception e) {
-            return R.fail(500, "获取用户信息失败: " + e.getMessage());
         }
 
+        // token 不存在时从 SecurityContext 获取
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                "anonymousUser".equals(authentication.getPrincipal())) {
+            return R.fail(401, "未登录");
+        }
+
+        Object principal = authentication.getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            username = (String) principal;
+        } else {
+            return R.fail(401, "无法获取用户信息");
+        }
+
+        SysUserPO user = sysUserService.findByUsername(username);
+        return R.ok("获取成功", sysUserConvert.toVO(user));
     }
 
-    /**
-     * 从请求中提取Token
-     */
     @PutMapping("/me")
     @Operation(summary = "Update current user profile")
     public R<UserVO> updateCurrentUser(
             HttpServletRequest request,
             @Valid @RequestBody UpdateUserDTO userDTO) {
-        try {
-            String token = extractToken(request);
-            if (token == null) {
-                return R.fail(401, "Not logged in");
-            }
-
-            String userId = jwtUtil.getUserIdFromToken(token);
-            UserVO user = sysUserService.updateUser(userId, userDTO);
-            return R.ok("User updated successfully", user);
-        } catch (RuntimeException e) {
-            return R.fail(400, e.getMessage());
-        } catch (Exception e) {
-            return R.fail(500, "Failed to update user profile: " + e.getMessage());
+        String token = extractToken(request);
+        if (token == null) {
+            return R.fail(401, "Not logged in");
         }
+
+        String userId = jwtUtil.getUserIdFromToken(token);
+        UserVO user = sysUserService.updateUser(userId, userDTO);
+        return R.ok("User updated successfully", user);
     }
 
     @PostMapping("/password")
