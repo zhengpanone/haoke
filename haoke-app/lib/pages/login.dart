@@ -23,10 +23,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    // 异步加载记住的用户名，完成后更新 UI
     _loadRememberUser();
   }
 
-  void _loadRememberUser() async {
+  Future<void> _loadRememberUser() async {
     final rememberedUsername = await StorageService.instance.getString(
       'remembered_username',
     );

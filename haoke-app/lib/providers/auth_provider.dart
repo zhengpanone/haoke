@@ -187,7 +187,7 @@ class AuthProvider with ChangeNotifier {
   /// 支持强制刷新和缓存策略
   Future<bool> syncUserInfo({bool forceRefresh = false}) async {
     // 检查是否需要同步
-    if (!forceRefresh && _shouldUseCache()) {
+    if (!forceRefresh && await _shouldUseCache()) {
       _currentUser = await _storageService.getUser();
       if (_currentUser != null) {
         AppLogger.i('使用缓存的用户信息');
@@ -241,11 +241,14 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// 检查是否应该使用缓存
-  bool _shouldUseCache() {
-    final lastSyncTime = _storageService.getString('last_sync_time');
-
+  Future<bool> _shouldUseCache() async {
     try {
-      final lastSync = DateTime.parse(lastSyncTime as String);
+      final lastSyncTime = await _storageService.getString('last_sync_time');
+      if (lastSyncTime is! String) {
+        return false;
+      }
+
+      final lastSync = DateTime.parse(lastSyncTime);
       final now = DateTime.now();
       final diff = now.difference(lastSync);
 
@@ -316,136 +319,6 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
-
-  // 更新用户信息
-  // Future<bool> updateUserInfo(Map<String, dynamic> data) async {
-  //   if (_currentUser == null) {
-  //     return false;
-  //   }
-  //
-  //   _isLoading = true;
-  //   _errorMessage = null;
-  //   notifyListeners();
-  //
-  //   try {
-  //     final response = await _apiService.updateCurrentUser(data);
-  //
-  //     if (response.isSuccess && response.data != null) {
-  //       _currentUser = response.data;
-  //       await _storageService.saveUser(_currentUser!);
-  //
-  //       _isLoading = false;
-  //       notifyListeners();
-  //
-  //       // 显示成功提示
-  //       _showSuccessMessage('用户信息更新成功');
-  //       return true;
-  //     } else {
-  //       _errorMessage = response.message;
-  //
-  //       _isLoading = false;
-  //       notifyListeners();
-  //
-  //       _showErrorMessage(_errorMessage ?? '更新失败');
-  //       return false;
-  //     }
-  //   } catch (e, stackTrace) {
-  //     _errorMessage = '更新失败: $e';
-  //
-  //     _isLoading = false;
-  //     notifyListeners();
-  //
-  //     _showErrorMessage(_errorMessage!);
-  //     AppLogger.e('更新用户信息异常', e, stackTrace);
-  //     return false;
-  //   }
-  // }
-
-  // 更新头像
-  // Future<bool> updateAvatar(String avatarUrl) async {
-  //   if (_currentUser == null) {
-  //     return false;
-  //   }
-  //
-  //   _isLoading = true;
-  //   _errorMessage = null;
-  //   notifyListeners();
-  //
-  //   try {
-  //     final response = await _apiService.updateAvatar(avatarUrl);
-  //
-  //     if (response.isSuccess && response.data != null) {
-  //       _currentUser = response.data;
-  //       await _storageService.saveUser(_currentUser!);
-  //
-  //       _isLoading = false;
-  //       notifyListeners();
-  //
-  //       _showSuccessMessage('头像更新成功');
-  //       return true;
-  //     } else {
-  //       _errorMessage = response.message;
-  //
-  //       _isLoading = false;
-  //       notifyListeners();
-  //
-  //       _showErrorMessage(_errorMessage ?? '头像更新失败');
-  //       return false;
-  //     }
-  //   } catch (e, stackTrace) {
-  //     _errorMessage = '头像更新失败: $e';
-  //
-  //     _isLoading = false;
-  //     notifyListeners();
-  //
-  //     _showErrorMessage(_errorMessage!);
-  //     AppLogger.e('更新头像异常', e, stackTrace);
-  //     return false;
-  //   }
-  // }
-
-  // 修改密码
-  // Future<bool> changePassword(String oldPassword, String newPassword) async {
-  //   if (_currentUser == null) {
-  //     return false;
-  //   }
-  //
-  //   _isLoading = true;
-  //   _errorMessage = null;
-  //   notifyListeners();
-  //
-  //   try {
-  //     final response = await _apiService.changePassword(
-  //       oldPassword: oldPassword,
-  //       newPassword: newPassword,
-  //     );
-  //
-  //     if (response.isSuccess) {
-  //       _isLoading = false;
-  //       notifyListeners();
-  //
-  //       _showSuccessMessage('密码修改成功');
-  //       return true;
-  //     } else {
-  //       _errorMessage = response.message;
-  //
-  //       _isLoading = false;
-  //       notifyListeners();
-  //
-  //       _showErrorMessage(_errorMessage ?? '密码修改失败');
-  //       return false;
-  //     }
-  //   } catch (e, stackTrace) {
-  //     _errorMessage = '密码修改失败: $e';
-  //
-  //     _isLoading = false;
-  //     notifyListeners();
-  //
-  //     _showErrorMessage(_errorMessage!);
-  //     AppLogger.e('修改密码异常', e, stackTrace);
-  //     return false;
-  //   }
-  // }
 
   Future<bool> changePassword(String oldPassword, String newPassword) async {
     _isLoading = true;

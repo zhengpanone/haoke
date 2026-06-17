@@ -3,6 +3,7 @@ import 'package:haoke_app/l10n/app_localizations.dart';
 import 'package:haoke_app/models/profile/profile_models.dart';
 import 'package:haoke_app/pages/e_contract/index.dart';
 import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/utils/ui_utils.dart';
 import 'package:haoke_app/widgets/common_icon_badge.dart';
 import 'package:haoke_app/widgets/profile_feature_widgets.dart';
 
@@ -45,6 +46,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
   Future<void> _signOrderContract(HouseOrderModel item) async {
     final messenger = ScaffoldMessenger.of(context);
     try {
+      // TODO: 后端应提供 /api/contract/by-order/{orderId} 接口避免拉取全量列表
       final contractsResponse = await _apiService.queryContracts(pageSize: 100);
       if (!mounted) return;
       if (!contractsResponse.isSuccess) {
@@ -202,7 +204,7 @@ class _OrderCard extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: pendingSign
                       ? () => onSign(item)
-                      : () => _showTip(context, '${item.actionText}已提交'),
+                      : () => showSnackBarTip(context, '${item.actionText}已提交'),
                   child: Text(item.actionText),
                 ),
               ),
@@ -212,10 +214,6 @@ class _OrderCard extends StatelessWidget {
       ),
     );
   }
-}
-
-void _showTip(BuildContext context, String text) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 }
 
 void _showOrderDetail(BuildContext context, HouseOrderModel item) {

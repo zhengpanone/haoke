@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:haoke_app/l10n/app_localizations.dart';
 import 'package:haoke_app/models/profile/profile_models.dart';
 import 'package:haoke_app/services/api_service.dart';
+import 'package:haoke_app/utils/ui_utils.dart';
 import 'package:haoke_app/widgets/common_icon_badge.dart';
 import 'package:haoke_app/widgets/profile_feature_widgets.dart';
 
@@ -171,7 +172,7 @@ class _ContractCard extends StatelessWidget {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () => item.pdfUrl.isEmpty
-                      ? _showTip(context, '合同 PDF 暂未生成')
+                      ? showSnackBarTip(context, '合同 PDF 暂未生成')
                       : _openLink(context, item.pdfUrl),
                   child: const Text('下载 PDF'),
                 ),
@@ -193,14 +194,10 @@ class _ContractCard extends StatelessWidget {
   }
 }
 
-void _showTip(BuildContext context, String text) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
-}
-
 Future<void> _openLink(BuildContext context, String url) async {
   await Clipboard.setData(ClipboardData(text: url));
   if (!context.mounted) return;
-  _showTip(context, '链接已复制，请在浏览器中打开');
+  showSnackBarTip(context, '链接已复制，请在浏览器中打开');
 }
 
 void _viewContract(BuildContext context, HouseContractModel item) {

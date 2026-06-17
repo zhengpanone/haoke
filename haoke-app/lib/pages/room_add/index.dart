@@ -100,12 +100,22 @@ class _RoomAddState extends State<RoomAdd> {
 
   Future<String> _uploadRoomImages() async {
     final urls = <String>[];
-    for (final image in roomImages) {
-      final response = await apiService.uploadHouseImage(image);
-      if (response.isSuccess && (response.data ?? '').isNotEmpty) {
-        urls.add(response.data!);
-      } else {
-        throw Exception(response.message.isEmpty ? '图片上传失败' : response.message);
+    for (int i = 0; i < roomImages.length; i++) {
+      final image = roomImages[i];
+      try {
+        final response = await apiService.uploadHouseImage(image);
+        if (response.isSuccess && (response.data ?? '').isNotEmpty) {
+          urls.add(response.data!);
+        } else {
+          throw Exception(
+            response.message.isEmpty
+                ? '第 ${i + 1} 张图片上传失败'
+                : response.message,
+          );
+        }
+      } catch (e) {
+        // 上传失败时提供更详细的错误信息
+        throw Exception('第 ${i + 1} 张图片上传失败：$e');
       }
     }
     return urls.join(',');
@@ -156,6 +166,20 @@ class _RoomAddState extends State<RoomAdd> {
       return;
     }
 
+    // 前置校验图片文件大小
+    const maxImageSize = 5 * 1024 * 1024; // 5MB
+    for (int i = 0; i < roomImages.length; i++) {
+      final size = await roomImages[i].length();
+      if (size > maxImageSize) {
+        if (!mounted) return;
+        CommonToast.showToast(
+          '第 ${i + 1} 张图片超过 5MB 限制',
+          context: context,
+        );
+        return;
+      }
+    }
+
     setState(() {
       isPublishing = true;
     });
@@ -200,7 +224,10 @@ class _RoomAddState extends State<RoomAdd> {
       }
     } catch (e) {
       if (mounted) {
-        CommonToast.showToast(context.tr('publish_failed'), context: context);
+        CommonToast.showToast(
+          e.toString().replaceFirst('Exception: ', ''),
+          context: context,
+        );
       }
     } finally {
       if (mounted) {
