@@ -21,11 +21,11 @@ public enum UserErrorCode implements IErrorCode {
 
     @Override
     public int code() {
-        return 0;
+        return this.code;
     }
 
     @Override
     public String message() {
-        return "";
+        return this.message;
     }
 }
