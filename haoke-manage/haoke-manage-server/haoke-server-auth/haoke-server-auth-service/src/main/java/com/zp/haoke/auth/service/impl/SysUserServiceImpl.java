@@ -103,7 +103,10 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
      * 创建用户
      */
     public UserVO createUser(CreateUserDTO request) {
-        // TODO: 实现唯一性校验（用户名/邮箱/手机号）
+        // 唯一性校验：用户名/邮箱/手机号
+        checkUsernameUnique(request.getUsername(), null);
+        checkEmailUnique(request.getEmail(), null);
+        checkPhoneUnique(request.getPhone(), null);
 
         // 创建用户实体
         SysUserPO user = new SysUserPO();
@@ -169,7 +172,10 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
     public UserVO updateUser(String userId, UpdateUserDTO userDTO) {
         SysUserPO user = findById(userId);
 
-        // TODO: 实现唯一性校验（排除当前用户）
+        // 唯一性校验（排除当前用户）
+        checkUsernameUnique(userDTO.getUsername(), userId);
+        checkEmailUnique(userDTO.getEmail(), userId);
+        checkPhoneUnique(userDTO.getPhone(), userId);
 
         // 更新用户信息
         if (StringUtils.hasText(userDTO.getUsername())) {
@@ -251,6 +257,53 @@ public class SysUserServiceImpl implements ISysUserService, UserDetailsService {
         user.setUpdateTime(LocalDateTime.now());
         sysUserMapper.updateById(user);
         return sysUserConvert.toVO(user);
+    }
+
+    private void checkUsernameUnique(String username, String excludeUserId) {
+        if (!StringUtils.hasText(username)) {
+            return;
+        }
+        boolean exists = sysUserMapper.exists(
+                Wrappers.<SysUserPO>lambdaQuery()
+                        .eq(SysUserPO::getUsername, username.trim())
+                        .ne(SysUserPO::getStatus, UserStatus.DELETED.name())
+                        .ne(excludeUserId != null, SysUserPO::getId, excludeUserId)
+        );
+        if (exists) {
+            throw new BizException("用户名已存在");
+        }
+    }
+
+    private void checkEmailUnique(String email, String excludeUserId) {
+        String normalized = emptyToNull(email);
+        if (normalized == null) {
+            return;
+        }
+        boolean exists = sysUserMapper.exists(
+                Wrappers.<SysUserPO>lambdaQuery()
+                        .eq(SysUserPO::getEmail, normalized)
+                        .ne(SysUserPO::getStatus, UserStatus.DELETED.name())
+                        .ne(excludeUserId != null, SysUserPO::getId, excludeUserId)
+        );
+        if (exists) {
+            throw new BizException("邮箱已被使用");
+        }
+    }
+
+    private void checkPhoneUnique(String phone, String excludeUserId) {
+        String normalized = emptyToNull(phone);
+        if (normalized == null) {
+            return;
+        }
+        boolean exists = sysUserMapper.exists(
+                Wrappers.<SysUserPO>lambdaQuery()
+                        .eq(SysUserPO::getPhone, normalized)
+                        .ne(SysUserPO::getStatus, UserStatus.DELETED.name())
+                        .ne(excludeUserId != null, SysUserPO::getId, excludeUserId)
+        );
+        if (exists) {
+            throw new BizException("手机号已被使用");
+        }
     }
 
     private UserStatus parseStatus(String status) {

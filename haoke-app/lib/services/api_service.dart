@@ -767,6 +767,21 @@ class ApiService {
     }
   }
 
+  Future<ApiResponse<HouseContractModel>> getContractByOrderId(
+    String orderId,
+  ) async {
+    try {
+      final response = await _dio.get('/api/house/contract/by-order/$orderId');
+      return ApiResponse<HouseContractModel>.fromJson(
+        response.data,
+        (data) => HouseContractModel.fromJson(data as Map<String, dynamic>),
+      );
+    } catch (e) {
+      AppLogger.e('Query contract by order failed: $e');
+      rethrow;
+    }
+  }
+
   Future<ApiResponse<HouseContractModel>> signContract(
     String contractId,
   ) async {

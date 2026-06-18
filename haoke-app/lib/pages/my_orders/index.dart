@@ -46,32 +46,24 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
   Future<void> _signOrderContract(HouseOrderModel item) async {
     final messenger = ScaffoldMessenger.of(context);
     try {
-      // TODO: 后端应提供 /api/contract/by-order/{orderId} 接口避免拉取全量列表
-      final contractsResponse = await _apiService.queryContracts(pageSize: 100);
+      final contractResponse = await _apiService.getContractByOrderId(item.id);
       if (!mounted) return;
-      if (!contractsResponse.isSuccess) {
+      if (!contractResponse.isSuccess || contractResponse.data == null) {
         messenger.showSnackBar(
           SnackBar(
             content: Text(
-              contractsResponse.message.isEmpty
-                  ? '合同加载失败'
-                  : contractsResponse.message,
+              contractResponse.message.isEmpty
+                  ? '未找到待签署合同'
+                  : contractResponse.message,
             ),
           ),
         );
         return;
       }
 
-      final contract = (contractsResponse.data ?? <HouseContractModel>[])
-          .where((contract) => contract.orderId == item.id)
-          .cast<HouseContractModel?>()
-          .firstWhere((contract) => contract != null, orElse: () => null);
-      if (contract == null) {
-        messenger.showSnackBar(const SnackBar(content: Text('未找到待签署合同')));
-        return;
-      }
-
-      final signResponse = await _apiService.signContract(contract.id);
+      final signResponse = await _apiService.signContract(
+        contractResponse.data!.id,
+      );
       if (!mounted) return;
       if (signResponse.isSuccess) {
         messenger.showSnackBar(const SnackBar(content: Text('合同签署成功')));

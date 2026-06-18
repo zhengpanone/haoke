@@ -27,6 +27,12 @@ public class HouseContractController {
         return R.ok(profileFeatureService.getContract(userId, id));
     }
 
+    @RequestMapping(value = "/by-order/{orderId}", method = RequestMethod.GET)
+    public R<HouseContractVO> getByOrderId(@PathVariable String orderId, HttpServletRequest request) {
+        String userId = securityUtils.getCurrentUserId(request);
+        return R.ok(profileFeatureService.getContractByOrderId(userId, orderId));
+    }
+
     @RequestMapping(value = "/{id}/sign", method = {RequestMethod.POST, RequestMethod.PUT})
     public R<HouseContractVO> sign(@PathVariable String id, HttpServletRequest request) {
         String userId = securityUtils.getCurrentUserId(request);

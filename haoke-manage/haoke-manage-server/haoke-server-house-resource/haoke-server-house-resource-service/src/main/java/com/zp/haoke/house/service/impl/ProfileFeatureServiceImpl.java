@@ -229,6 +229,22 @@ public class ProfileFeatureServiceImpl implements IProfileFeatureService {
         return toHouseContractVO(po);
     }
 
+    @Override
+    public HouseContractVO getContractByOrderId(String userId, String orderId) {
+        if (StringUtils.isBlank(orderId)) {
+            throw new IllegalArgumentException("订单ID不能为空");
+        }
+        HouseContractPO po = houseContractMapper.selectOne(new LambdaQueryWrapper<HouseContractPO>()
+                .eq(HouseContractPO::getUserId, userId)
+                .eq(HouseContractPO::getOrderId, orderId)
+                .orderByDesc(HouseContractPO::getCreateTime)
+                .last("limit 1"));
+        if (po == null) {
+            throw new IllegalArgumentException("合同不存在");
+        }
+        return toHouseContractVO(po);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public HouseContractVO signContract(String userId, String id) {

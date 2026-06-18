@@ -42,6 +42,8 @@ public interface IProfileFeatureService {
 
     HouseContractVO getContract(String userId, String id);
 
+    HouseContractVO getContractByOrderId(String userId, String orderId);
+
     HouseContractVO signContract(String userId, String id);
 
     WalletOverviewVO getWallet(String userId);
