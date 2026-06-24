@@ -42,24 +42,7 @@ class ApiService {
         (data) => LoginResponse.fromJson(data as Map<String, dynamic>),
       );
       if (apiResponse.isSuccess && apiResponse.data != null) {
-        // 保存Token
-        await _storage.saveToken(apiResponse.data!.token);
-
-        // 保存用户信息
-        final user = UserModel(
-          id: apiResponse.data!.userId,
-          username: apiResponse.data!.username,
-          email: apiResponse.data!.email,
-          phone: apiResponse.data!.phone,
-          avatar: apiResponse.data!.avatar,
-          nickname: apiResponse.data!.nickname,
-          gender: apiResponse.data!.gender ?? 'UNKNOWN',
-          type: apiResponse.data!.type ?? 'NORMAL',
-          createTime: DateTime.now(),
-          updateTime: DateTime.now(),
-        );
-        await _storage.saveUser(user);
-        await _storage.saveLoginState(true);
+        await _persistLoginSession(apiResponse.data!);
       }
       return apiResponse;
     } catch (e) {
@@ -81,24 +64,7 @@ class ApiService {
       );
 
       if (apiResponse.isSuccess && apiResponse.data != null) {
-        // 保存 Token
-        await _storage.saveToken(apiResponse.data!.token);
-        // 保存用户信息
-        // 保存用户信息
-        final user = UserModel(
-          id: apiResponse.data!.userId,
-          username: apiResponse.data!.username,
-          email: apiResponse.data!.email,
-          phone: apiResponse.data!.phone,
-          avatar: apiResponse.data!.avatar,
-          nickname: apiResponse.data!.nickname,
-          gender: apiResponse.data!.gender ?? 'UNKNOWN',
-          type: apiResponse.data!.type ?? 'NORMAL',
-          createTime: DateTime.now(),
-          updateTime: DateTime.now(),
-        );
-        await _storage.saveUser(user);
-        await _storage.saveLoginState(true);
+        await _persistLoginSession(apiResponse.data!);
       }
       AppLogger.i(apiResponse);
       return apiResponse;
@@ -108,37 +74,44 @@ class ApiService {
     }
   }
 
+  /// 持久化登录会话：保存 Token、用户信息与登录态
+  Future<void> _persistLoginSession(LoginResponse data) async {
+    await _storage.saveToken(data.token);
+    final user = UserModel(
+      id: data.userId,
+      username: data.username,
+      email: data.email,
+      phone: data.phone,
+      avatar: data.avatar,
+      nickname: data.nickname,
+      gender: data.gender ?? 'UNKNOWN',
+      type: data.type ?? 'NORMAL',
+      createTime: DateTime.now(),
+      updateTime: DateTime.now(),
+    );
+    await _storage.saveUser(user);
+    await _storage.saveLoginState(true);
+  }
+
   /// 退出登录
   Future<ApiResponse<void>> logout() async {
     try {
-      final token = await _storage.getToken();
-      if (token == null) {
-        throw Exception('未找到Token');
-      }
-      final response = await _dio.post(
-        '/api/auth/logout',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
-      // 清除本地存储
-      await _storage.clearAll();
+      // Authorization 头由 DioClient 的鉴权拦截器统一附加
+      final response = await _dio.post('/api/auth/logout');
       return ApiResponse.emptyFromJson(response.data);
     } catch (e) {
       AppLogger.e('退出登录失败: $e');
       rethrow;
+    } finally {
+      // 无论服务端登出成败，都清除本地登录态
+      await _storage.clearAll();
     }
   }
 
   /// 解绑手机号
   Future<ApiResponse<UserModel>> unbindPhone() async {
     try {
-      final token = await _storage.getToken();
-      if (token == null) {
-        throw Exception('未找到Token');
-      }
-      final response = await _dio.post(
-        '/api/user/unbindPhone',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
+      final response = await _dio.post('/api/user/unbindPhone');
       final apiResponse = ApiResponse<UserModel>.fromJson(
         response.data,
         (data) => UserModel.fromJson(data as Map<String, dynamic>),
@@ -156,14 +129,7 @@ class ApiService {
   //获取当前用户信息
   Future<ApiResponse<UserModel>> getCurrentUser() async {
     try {
-      final token = await _storage.getToken();
-      if (token == null) {
-        throw Exception('未找到Token');
-      }
-      final response = await _dio.get(
-        "/api/user/me",
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
+      final response = await _dio.get('/api/user/me');
       return ApiResponse<UserModel>.fromJson(
         response.data,
         (data) => UserModel.fromJson(data as Map<String, dynamic>),

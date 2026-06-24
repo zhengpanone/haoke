@@ -57,18 +57,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理运行时异常
+     * 处理非法参数异常（业务校验类，消息可安全返回客户端）
      */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<R<Void>> handleBusinessException(RuntimeException ex) {
-        log.error("运行时异常: {}", ex.getMessage(), ex);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<R<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("非法参数: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(R.fail(400, ex.getMessage()));
     }
 
-
     /**
-     * 处理其他异常
+     * 处理其他异常（含未预期的运行时异常，视为服务端错误，不向客户端泄漏内部信息）
      */
     @ExceptionHandler(Exception.class)
     public R<?> handleException(Exception e) {
